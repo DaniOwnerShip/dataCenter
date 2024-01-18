@@ -18,6 +18,22 @@
     color: rgb(255, 140, 0);
     width: 100%;
 }
+.container-headBlock-double { 
+    border: 1px dashed rgb(151, 5, 235);
+    color: rgb(183, 0, 255);
+    width: 45%;
+    display: flex;
+}
+.container-headBlock-double .text{ 
+    border: 1px dashed rgb(194, 124, 235);
+    color: rgb(204, 104, 243); 
+}
+.container-headBlock-double .unit{ 
+    border: 1px dashed rgb(194, 124, 235);
+    color: rgb(204, 104, 243); 
+    right: 46%;
+    position: absolute;
+}
 
 .container-block {
     border: 1px dashed rgb(93, 235, 5);
@@ -36,8 +52,8 @@
     border: 1px dashed rgb(255, 0, 0);
     color: rgb(0, 255, 221);
     display: grid; 
-    margin: 0%;
-    padding: 1%;
+    width: 60px;
+    align-content: center;
 } 
  
 .textarea {

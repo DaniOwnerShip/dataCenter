@@ -1,17 +1,25 @@
 "use client"
 import shiftTemplate from "../shiftChangeTemplate.json"
-import CardDataBlock from "../components/cardDataBlock";
+import CardSimple from "../components/cardSimple";
+import CardDouble from "../components/cardDouble";
+import downloadTxt from "../utils/downloader"; 
+import genPDFweb from "../utils/genPDFweb";
 
-import "../styles/shift.css"
- import React, { useRef } from 'react';
+import "../styles/shift.css" 
 
 export default function ShiftChange() {
 
     // console.log("ShiftChange", template);
 
-    console.log("shiftTemplate->", shiftTemplate[1].Seguridad[0].name);
-    const seg = shiftTemplate[1].Seguridad;
-     const inputRef1 = useRef(null);
+    // console.log("shiftTemplate->", shiftTemplate[1].Seguridad[0].name);
+    const seg = shiftTemplate[1].Seguridad; 
+    const production = shiftTemplate[2].Produccion; 
+    // console.log("Produccion", production);
+    const pushButton = () => {
+        console.log('data :', shiftTemplate ); 
+        // downloadTxt(shiftTemplate);
+        genPDFweb('public/output.pdf');
+    };
 
     return (
         <div className="container">
@@ -20,33 +28,14 @@ export default function ShiftChange() {
                 <p>test header</p>
             </div> 
 
-            <CardDataBlock data={seg} />
-
-
-
-            <div className="container-headBlock">
-                <h3>{seg[0].name}</h3>
-            </div>
-
-            <div className="container-block">
-                <div className="container-content">
-                    <p>{seg[1].desc}</p>
-                </div>
-
-                <div className="boxChecker" >
-                    <div>
-                        <label>OK</label>
-                        <input type="checkbox" />
-                    </div>
-                    <div>
-                        <label>NOK</label>
-                        <input type="checkbox" />
-                    </div>
-                </div>
-
-                <textarea className="textarea" placeholder="Escribe algo aquí"></textarea>
-
-            </div>
+            <CardSimple data={seg} />
+            <CardDouble data={production} />  
+ 
+            <button 
+            onClick={pushButton}
+            >
+                 Check 
+            </button>
 
         </div>
 

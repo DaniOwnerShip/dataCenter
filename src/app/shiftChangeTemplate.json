@@ -13,27 +13,82 @@
             },
             {
                 "desc": "Eventos de seguridad reportados dentro del turno",
-                "res": "",
+                "oknok": "",
                 "coments": ""
             },
             {
                 "desc": "Nuevos descargos abiertos o cerrados",
-                "res": "",
+                "oknok": "",
                 "coments": ""
             },
             {
                 "desc": "Alarmas del Sistema PCI/ incidencias camión bomberos",
-                "res": "",
+                "oknok": "",
                 "coments": "" 
             },
             {
                 "desc": "Cumplido Objetivo de SWO's planificadas para el turno",
-                "res": "",
+                "oknok": "",
                 "coments": ""  
             },
             {
                 "desc": "Comentario de seguridad del día (DJP de trabajos del día, Yellow, Red, Blue o Green bulletins)",
-                "res": "",
+                "oknok": "",
+                "coments": ""  
+            }
+        ]
+    },
+    {
+        "Produccion": [
+            {
+                "name": "Producción"
+            },
+            {
+                "desc": "Logs Máximo creados en el turno. Reporte por excepción",
+                "oknok1": "",
+                "oknok2": "",
+                "coments": ""
+            },
+            {
+                "desc": "Desviaciones de operación durante el turno y reportado en POD",
+                "oknok1": "",
+                "oknok2": "",
+                "coments": ""
+            },
+            {
+                "desc": "EFOR Off-Spect abiertos en el turno",
+                "oknok1": "",
+                "oknok2": "",
+                "coments": "" 
+            },
+            {
+                "desc": "Nuevos TOI/TMOD's creados o return to normal",
+                "oknok1": "",
+                "oknok2": "",
+                "coments": ""  
+            },
+            {
+                "desc": "Equipos forzados incluidos en TOI's / TMOD",
+                "oknok1": "",
+                "oknok2": "",
+                "coments": ""  
+            },
+            {
+                "desc": "IOW UNSAT: comentado en cambio de turno y reporte en LOG",
+                "oknok1": "",
+                "oknok2": "",
+                "coments": ""  
+            },
+            {
+                "desc": "Programación / ajuste mercado enviado",
+                "oknok1": "",
+                "oknok2": "",
+                "coments": ""  
+            },
+            {
+                "desc": "Datos en GADS",
+                "oknok1": "",
+                "oknok2": "",
                 "coments": ""  
             }
         ]
