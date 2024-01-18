@@ -1,7 +1,9 @@
-// "use client"
+"use client"
 import shiftTemplate from "../shiftChangeTemplate.json"
+import CardDataBlock from "../components/cardDataBlock";
+
 import "../styles/shift.css"
-// import React, { useRef } from 'react';
+ import React, { useRef } from 'react';
 
 export default function ShiftChange() {
 
@@ -9,14 +11,18 @@ export default function ShiftChange() {
 
     console.log("shiftTemplate->", shiftTemplate[1].Seguridad[0].name);
     const seg = shiftTemplate[1].Seguridad;
-    // const inputRef1 = useRef(null);
+     const inputRef1 = useRef(null);
 
     return (
         <div className="container">
 
             <div className="container-head">
                 <p>test header</p>
-            </div>
+            </div> 
+
+            <CardDataBlock data={seg} />
+
+
 
             <div className="container-headBlock">
                 <h3>{seg[0].name}</h3>
@@ -25,7 +31,7 @@ export default function ShiftChange() {
             <div className="container-block">
                 <div className="container-content">
                     <p>{seg[1].desc}</p>
-                </div> 
+                </div>
 
                 <div className="boxChecker" >
                     <div>
@@ -38,8 +44,8 @@ export default function ShiftChange() {
                     </div>
                 </div>
 
-            <textarea className="textarea" placeholder="Escribe algo aquí"></textarea>  
-            
+                <textarea className="textarea" placeholder="Escribe algo aquí"></textarea>
+
             </div>
 
         </div>
