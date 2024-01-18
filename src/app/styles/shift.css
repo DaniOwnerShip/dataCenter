@@ -1,0 +1,47 @@
+.container {
+    position: absolute;
+    border: 1px dashed rgb(0, 122, 8);
+    top: 3%;
+    left: 3%;
+    width: 90%;
+    height: 90%;
+}
+
+.container-head {
+    border: 1px dashed rgb(206, 213, 3);
+    color: red;
+    width: 100%;
+}
+
+.container-headBlock {
+    border: 1px dashed rgb(235, 185, 5);
+    color: rgb(255, 140, 0);
+    width: 100%;
+}
+
+.container-block {
+    border: 1px dashed rgb(93, 235, 5);
+    color: rgb(191, 255, 0);
+    width: 100%;
+    display: flex;
+}
+
+.container-content {
+    border: 1px dashed rgb(130, 28, 255);
+    color: rgb(191, 255, 0);
+    width: 45%;
+}
+
+.boxChecker{
+    border: 1px dashed rgb(255, 0, 0);
+    color: rgb(0, 255, 221);
+    display: grid; 
+    margin: 0%;
+    padding: 1%;
+} 
+ 
+.textarea {
+    resize: vertical;
+    width: 45%;
+    margin: 5px;
+}

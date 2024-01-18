@@ -1,0 +1,41 @@
+[
+    {
+        "Cambio de turno": {
+            "PTL": "",
+            "Turno entrante": "",
+            "Turno saliente": ""
+        }
+    },
+    {
+        "Seguridad": [
+            {
+                "name": "Seguridad"
+            },
+            {
+                "desc": "Eventos de seguridad reportados dentro del turno",
+                "res": "",
+                "coments": ""
+            },
+            {
+                "desc": "Nuevos descargos abiertos o cerrados",
+                "res": "",
+                "coments": ""
+            },
+            {
+                "desc": "Alarmas del Sistema PCI/ incidencias camión bomberos",
+                "res": "",
+                "coments": "" 
+            },
+            {
+                "desc": "Comentario de seguridad del día (DJP de trabajos del día, Yellow, Red, Blue o Green bulletins)",
+                "res": "",
+                "coments": ""  
+            },
+            {
+                "desc": "Comentario de seguridad del día (DJP de trabajos del día, Yellow, Red, Blue o Green bulletins)",
+                "res": "",
+                "coments": ""  
+            }
+        ]
+    }
+]

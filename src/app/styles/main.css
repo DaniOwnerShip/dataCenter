@@ -1,0 +1,17 @@
+body{
+    background-color: rgb(54, 54, 54);
+    color: whitesmoke
+}
+ 
+a {
+    color: rgb(0, 238, 255);  
+    text-decoration: none;  
+  } 
+  a:visited {
+    color: rgb(139, 73, 246); 
+  }
+   
+  a:hover {
+    color: rgb(0, 200, 255); /* Color cuando el ratón está sobre el enlace */
+  }
+  
