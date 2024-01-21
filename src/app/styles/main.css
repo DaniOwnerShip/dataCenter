@@ -1,17 +1,34 @@
-body{
-    background-color: rgb(54, 54, 54);
-    color: whitesmoke
+body {
+  background-color: rgb(54, 54, 54);
+  color: whitesmoke;
+  font-family: sans-serif;
 }
- 
+
 a {
-    color: rgb(0, 238, 255);  
-    text-decoration: none;  
-  } 
-  a:visited {
-    color: rgb(139, 73, 246); 
-  }
-   
-  a:hover {
-    color: rgb(0, 200, 255); /* Color cuando el ratón está sobre el enlace */
-  }
-  
+  color: rgb(66, 148, 255);
+  text-decoration: none;
+}
+
+a:visited {
+  color: rgb(139, 73, 246);
+}
+
+a:hover {
+  color: rgb(0, 200, 255);
+  /* Color cuando el ratón está sobre el enlace */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 5px;
+}
+
+h2 {
+  text-align: center; 
+  padding: 10px;
+}
