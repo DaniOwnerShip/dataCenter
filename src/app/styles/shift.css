@@ -195,30 +195,34 @@
     text-align: center; 
 } */
 
-textarea {
-    resize: vertical;
-    /* border-radius: 1rem; */
-}
-
 textarea,
 .textInput-num,
 .textInput {
     margin-left: 5px;
+    margin-top: 5px;
     padding-left: 8px;
     background-color: #343541;
-    border: 1px solid rgb(103 103 103);
-    /* border: none; */
+    border: 1px solid rgb(75, 74, 74); 
     color: whitesmoke;
-    /* font-family: system-ui; */
+    font-family: system-ui;
     font-size: .9rem;
     outline: none;
     overflow: auto;
     /* font-weight: 600; */
     border-radius: 10px;
+    height: 1.2rem;
+}
+
+textarea {
+    resize: vertical;
+    border: none; 
+    height: auto;
+    margin-top: 0;
 }
 
 .textInput-num {
     width: 1rem;
+    height: 1rem;
 }
 
 textarea:focus,
