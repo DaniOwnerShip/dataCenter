@@ -5,7 +5,7 @@ export default function NameColumns() {
 
         <div className="blockItem">
 
-            <div className="blockItem-columns">
+            <div className="blockItem-tittle">
                 <h4>Área</h4>
             </div>
 
@@ -13,7 +13,7 @@ export default function NameColumns() {
                 <h4>Estado</h4> 
             </div>
 
-            <div className="blockItem-columns">
+            <div className="blockItem-tittle">
                 <h4>Comentarios</h4>
             </div>
 

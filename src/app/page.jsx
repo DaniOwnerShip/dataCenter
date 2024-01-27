@@ -10,7 +10,7 @@ export default function Home() {
       </h1> 
       
       <p>
-        <Link href="/shiftChange">ShiftChange</Link>
+        <Link href="/pages/handshake">handshake</Link>
       </p>
 
     </main>

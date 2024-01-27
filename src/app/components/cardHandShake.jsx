@@ -1,86 +1,75 @@
-import { useState } from 'react';
+import { useState } from "react";
+
+import Calendar from "./calendar";
 
 
-export default function CardHandShake({ hs }) {
+export default function CardHandshake({ hs, setInformeR }) {
 
-    console.log("Ca ", hs.name)
-    const [comments, SetComments] = useState('');
-    const [autor, SetAutor] = useState(hs.author);
+    console.log("CardHandShake");
 
-    const handleChange = (event) => {
-        // SetComments(event.target.value); 
-        SetAutor(event.target.value);
-        // data.coments = comments;
+    const [forceRender, setFR] = useState(false);
+
+    const onChangeNum = (event, indexTeam) => {
+        if (isNaN(event.target.value) || event.target.value >= 10 || event.target.value === 0) {
+            window.alert("Escribe un número del 1 al 9"); event.target.value = ""; return;
+        }
+        const txtNum = document.getElementById(event.target.id);
+        if (txtNum) {
+            hs.party[indexTeam].number = event.target.value;
+            console.log("hs.party[indexTeam].teamNumer ", hs.party[indexTeam].number)
+            forceRender ? setFR(false) : setFR(true);
+        }
+        else { window.alert("Error _id"); return; }
     };
 
+
+    const onChangeName = (event, indexTeam) => {
+        const txtName = document.getElementById(event.target.id);
+        if (txtName) {
+            hs.party[indexTeam].leader = event.target.value;
+            forceRender ? setFR(false) : setFR(true);
+        }
+        else { window.alert("Error _id"); return; }
+    };
+
+
+
     return (
-        <div className="handShake">
-            <h2>{hs.name}</h2>
-            <div className="blockItem">
 
-                <h4>Turno Entrante</h4>
-                <h4> Nº: </h4>
-                <input
-                    type="text"
-                    className="textInput-num"  // Puedes mantener la clase si la estás utilizando para estilos específicos 
-                    value={hs.teamIn?.number}
-                    onChange={handleChange}
-                />
-                <h4> PTL: </h4>
-                <input
-                    type="text"
-                    className="textInput"  // Puedes mantener la clase si la estás utilizando para estilos específicos 
-                    value={hs.teamIn?.PTL}
-                    onChange={handleChange}
-                />
+        <div className="flex">
 
-                <h4>Turno Saliente</h4>
+            {hs.party.map((team, indexTeam) => (
 
-                <h4>Nº:</h4>
-                <input
-                    type="text"
-                    className="textInput-num"  // Puedes mantener la clase si la estás utilizando para estilos específicos 
-                    value={autor}
-                    onChange={handleChange}
-                />
-                <h4>PTL:</h4>
-                <input
-                    type="text"
-                    className="textInput"
-                    value={autor}
-                    onChange={handleChange}
-                />
-            </div>
+                <div key={`party-${indexTeam}`} className="flex">
 
-            {/* <div className="blockItem">
-                <h4>Autor:</h4>
+                    <h4>{team.type}</h4>
 
-                <input
-                    type="text"
-                    className="textInput"  // Puedes mantener la clase si la estás utilizando para estilos específicos
-                    placeholder="Introduce un comentario"
-                    value={autor}
-                    onChange={handleChange}
-                />
+                    <h4> Nº </h4>
+                    <input
+                        type="text"
+                        className="textInput-num"
+                        id={`txt-num-${indexTeam}`}
+                        onChange={(event) => onChangeNum(event, indexTeam)}
+                        value={hs.party[indexTeam].number}
+                    />
 
-            </div> */}
+                    <h4> PTL </h4>
+                    <input
+                        type="text"
+                        className="textInput"
+                        id={`txt-PTL-${indexTeam}`}
+                        onChange={(event) => onChangeName(event, indexTeam)}
+                        value={hs.party[indexTeam].leader}
+                    />
 
 
+                </div>
 
+            ))}
 
-            {/* <p>{data.TurnoEntrante}</p> 
-                <p>{data.TurnoSaliente}</p>  */}
-
-
-
-
-            {/* <div className="container-headBlock">
-                <h3>{blockName}</h3>
-            </div>
-            {dataItems.map((items, index) => (
-                <ItemSimple key={`cs+${index}`} data={items} />
-            ))} */}
+            <Calendar setInformeR={setInformeR} />
 
         </div>
+
     );
 }

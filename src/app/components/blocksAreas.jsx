@@ -1,96 +1,208 @@
+import { useState } from "react";
+import ImageUploader from "./imageUploader";
 
 
 export default function BlocksAreas({ blocksAreas }) {
 
-    console.log("blocksAreas", blocksAreas);
+    const itemsState = [];
+    const itemsComments = [];
 
-    const onChangeState = (event, indexArea, indexItem, indexstate) => {
-        event.stopPropagation();
+    console.log('BlocksAreas');
 
-        var state = blocksAreas[indexArea].areaItems[indexItem].state[indexstate];
-        const buttonState = document.getElementById(event.target.id);
+    blocksAreas.map((ai, iai) => {
+        itemsState.push([]);
+        itemsComments.push([]);
+        ai.areaItems.map((i, ii) => {
+            itemsState[iai].push(i.state);
+            itemsComments[iai].push(i.comments);
+        });
+    });
 
-        if (buttonState) {
-            state = !state;
-            blocksAreas[indexArea].areaItems[indexItem].state[0] = state;
-            if (state) {
-                buttonState.classList.add('active');
-                buttonState.textContent = "OK";
-            } else {
-                buttonState.classList.remove('active');
-                buttonState.textContent = "NOK";
-            }
-        }
-        else {
-            window.alert("Error _id");
-            return;
-        }
+    const [itemState, setItemState] = useState(itemsState);
+    const [comnentsState, setCommentstate] = useState(itemsComments);
+
+    const n = blocksAreas.length;
+    const na = Array.from({ length: n }, () => false);
+    const [showArea, setShowArea] = useState(na);
+
+    const toggleShowArea = (indexArea) => {
+        const x = [...showArea];
+        x[indexArea] = !x[indexArea];
+        setShowArea(x);
+    };
+
+
+    const expandAreas = () => {
+        const x = {};
+        showArea.forEach(area => {
+            x[area] = true;
+        });
+        return x;
     }
+
 
 
     return (
 
-        <>
+        <div  >
 
             {blocksAreas.map((area, indexArea) => (
 
-                <div key={`area-${indexArea}`} >
+                <div key={`area-${indexArea}`} className="block--area">
 
-                    <div className="blockItem">
-                        <div className="blockItem-tittle">
-                            <h4>{area.areaName}</h4>
-                        </div>
+                    <Areas name={area.areaName} units={area.units} toggleShowArea={toggleShowArea} showArea={showArea} indexArea={indexArea} />
 
-                        <div className="blockItem-state">
-                            <h4>{area.units}</h4>
-                        </div>
-                        <div className="blockItem-tittle">
-                            <h4>Comentarios</h4>
-                        </div>
-                    </div>
+                    {showArea[indexArea] && <div className="block">
 
-                    {area.areaItems.map((item, indexItem) => (
-                        <div key={`item-${indexItem}`}>
+                        {area.areaItems.map((item, indexItem) => (
 
-                            <div className="blockItem">
+                            <div key={`item-${indexArea}-${indexItem}`} className="grid3x">
 
-                                <div className="blockItem-desc">
-                                    <p>{item.desc}</p>
-                                </div>
+                                <p>{item.desc}</p>
 
-                                <div className="blockItem-state">
+                                <Buttons blocksAreas={blocksAreas} indexArea={indexArea} indexItem={indexItem} setItemState={setItemState} />
 
-                                    {item.state.map((state, indexstate) => (
-                                        <div key={`state-${indexstate}`}
-                                            className="blockItem-state-button"
-                                            id={`button-${indexArea}-${indexItem}-${indexstate}`}
-                                            onClick={(event) => onChangeState(event, indexArea, indexItem, indexstate)}
-                                        >
-                                            {`${state ? 'OK' : 'NOK'}`}
-
-                                        </div>
-                                    ))}
-
-                                </div>
-                                
-                                    <textarea
-                                        className="textarea"
-                                        placeholder="introduce un comentario"
-                                        // value={comments}
-                                        // onChange={handleChange}
-                                    ></textarea>
-
-
+                                <Commensts blocksAreas={blocksAreas} indexArea={indexArea} indexItem={indexItem} setCommentstate={setCommentstate} comnentsState={comnentsState} />
 
                             </div>
 
-                        </div>
-                    ))}
+                        ))}
+
+                        <ImageUploader area={area.areaName} blocksAreas={blocksAreas} indexArea={indexArea} />
+
+                    </div>}
+
 
                 </div>
+
             ))}
 
 
-        </>
+        </div>
     );
 }
+
+
+
+
+function Areas({ name, units, toggleShowArea, showArea, indexArea }) {
+    return (
+        <div className="grid3x--areaTittle">
+            <h4 className="paddingL">{name}</h4>
+            <h5 className="flex-center">{units}</h5>
+            <h4>Comentarios</h4>
+            <button className={`${showArea[indexArea] ? "button-area-active" : "button"}`}
+                onClick={() => toggleShowArea(indexArea)}>
+                {`${showArea[indexArea] ? "contraer" : "expandir"}`}
+            </button>
+        </div>
+    );
+}
+
+
+
+function Commensts({ blocksAreas, indexArea, indexItem, setCommentstate, comnentsState }) {
+
+    const ekey = (indexArea + "-" + indexItem).toString();
+
+    const onChangeTxtarea = (event, indexArea, indexItem) => {
+        blocksAreas[indexArea].areaItems[indexItem].comments = event.target.value;
+
+        setCommentstate(prevState => {
+            const x = [...prevState];
+            x[indexArea][indexItem] = event.target.value;
+            blocksAreas[indexArea].areaItems[indexItem].comments = event.target.value;
+            return x;
+        });
+    }
+
+    return (
+        <textarea
+            id={`txtarea-${ekey}`}
+            placeholder="comentarios"
+            value={comnentsState[indexArea][indexItem]}
+            onChange={(event) => onChangeTxtarea(event, indexArea, indexItem)}
+        ></textarea>
+    );
+}
+
+
+
+
+
+function Buttons({ blocksAreas, indexArea, indexItem, setItemState }) {
+
+    const ekey = (indexArea + "-" + indexItem).toString();
+
+    const onClickButton = (indexArea, indexItem, indexstate) => {
+
+        let state = blocksAreas[indexArea].areaItems[indexItem].state[indexstate];
+        state = !state;
+
+        setItemState(prevState => {
+            const x = [...prevState];
+            x[indexArea][indexItem] = state;
+            blocksAreas[indexArea].areaItems[indexItem].state[indexstate] = state;
+            return x;
+        });
+    }
+
+    return (
+        <div className="flex-center">
+            {blocksAreas[indexArea].areaItems[indexItem].state.map((state, indexstate) => (
+                <input type="button"
+                    key={`state-${ekey}-${indexstate}`}
+                    value={`${state ? 'OK' : 'NOK'}`}
+                    className={` ${state ? 'button-green' : 'button-red'}`}
+                    id={`button-${ekey}-${indexstate}`}
+                    onClick={(event) => onClickButton(indexArea, indexItem, indexstate)}
+                />
+            ))}
+        </div>
+    );
+}
+
+
+
+// export function expandAreas() {
+//     const x = {};
+//     showArea.forEach(area => {
+//       x[area] = true;
+//     });
+//     return x;
+// }
+
+
+
+
+// function setStyleButtons(blocksAreas) {
+
+//     console.log('setStyleButtons');
+//     blocksAreas.map((area, indexArea) => (
+
+//         area.areaItems.map((item, indexItem) => (
+
+//             item.state.map((state, indexState) => {
+
+//                 const id = `button-${indexArea}${indexItem}${indexState}`;
+//                 const btn = document.getElementById(id);
+//                 if (!btn) {
+//                     console.log("Error buttons map");
+//                     return null;
+//                 }
+//                 if (state) {
+//                     btn.classList.add('active');
+//                     btn.value = "OK";
+//                 } else {
+//                     btn.classList.remove('active');
+//                     btn.value = "NOK";
+//                 }
+
+//             })
+
+//         ))
+
+//     ));
+
+// }
+

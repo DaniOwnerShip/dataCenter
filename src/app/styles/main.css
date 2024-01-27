@@ -1,7 +1,10 @@
 body {
-  background-color: rgb(54, 54, 54);
-  color: whitesmoke;
-  font-family: sans-serif;
+  /* background-color: var(--background-color); #343541
+  background-color: #2b2a2a;*/
+  background-color: #343541;
+  color: whitesmoke;  
+  font-family: ui-sans-serif, system-ui, sans-serif; 
+  padding-top: 3rem;
 }
 
 a {
@@ -25,10 +28,14 @@ h4,
 h5,
 h6,
 p {
-  margin: 5px;
+  margin: 3px;
 }
 
-h2 {
-  text-align: center; 
+h1 {
+  text-align: center;
   padding: 10px;
+}
+
+input[type="file"] {
+  display: none;
 }
