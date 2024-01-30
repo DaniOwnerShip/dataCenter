@@ -1,8 +1,8 @@
 body {
   /* background-color: var(--background-color); #343541
-  background-color: #2b2a2a;*/
+  background-color: #2b2a2a;#d1d5db*/
   background-color: #343541;
-  color: whitesmoke;  
+  color: #d1d5db;  
   font-family: ui-sans-serif, system-ui, sans-serif; 
   padding-top: 3rem;
 }

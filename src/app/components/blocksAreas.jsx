@@ -2,7 +2,7 @@ import { useState } from "react";
 import ImageUploader from "./imageUploader";
 
 
-export default function BlocksAreas({ blocksAreas }) {
+export default function BlocksAreas({ blocksAreas, showArea, setShowArea }) {
 
     const itemsState = [];
     const itemsComments = [];
@@ -21,9 +21,6 @@ export default function BlocksAreas({ blocksAreas }) {
     const [itemState, setItemState] = useState(itemsState);
     const [comnentsState, setCommentstate] = useState(itemsComments);
 
-    const n = blocksAreas.length;
-    const na = Array.from({ length: n }, () => false);
-    const [showArea, setShowArea] = useState(na);
 
     const toggleShowArea = (indexArea) => {
         const x = [...showArea];
@@ -32,23 +29,13 @@ export default function BlocksAreas({ blocksAreas }) {
     };
 
 
-    const expandAreas = () => {
-        const x = {};
-        showArea.forEach(area => {
-            x[area] = true;
-        });
-        return x;
-    }
-
-
-
     return (
 
-        <div  >
+        <>
 
             {blocksAreas.map((area, indexArea) => (
 
-                <div key={`area-${indexArea}`} className="block--area">
+                <section key={`area-${indexArea}`} className="mainContainer">
 
                     <Areas name={area.areaName} units={area.units} toggleShowArea={toggleShowArea} showArea={showArea} indexArea={indexArea} />
 
@@ -68,17 +55,17 @@ export default function BlocksAreas({ blocksAreas }) {
 
                         ))}
 
-                        <ImageUploader area={area.areaName} blocksAreas={blocksAreas} indexArea={indexArea} />
+                        <ImageUploader blocksAreas={blocksAreas} indexArea={indexArea} />
 
                     </div>}
 
 
-                </div>
+                </section>
 
             ))}
 
 
-        </div>
+        </>
     );
 }
 
@@ -91,7 +78,7 @@ function Areas({ name, units, toggleShowArea, showArea, indexArea }) {
             <h4 className="paddingL">{name}</h4>
             <h5 className="flex-center">{units}</h5>
             <h4>Comentarios</h4>
-            <button className={`${showArea[indexArea] ? "button-area-active" : "button"}`}
+            <button className={`${showArea[indexArea] ? "button" : "button-area-active"}`}//
                 onClick={() => toggleShowArea(indexArea)}>
                 {`${showArea[indexArea] ? "contraer" : "expandir"}`}
             </button>
@@ -150,13 +137,21 @@ function Buttons({ blocksAreas, indexArea, indexItem, setItemState }) {
     return (
         <div className="flex-center">
             {blocksAreas[indexArea].areaItems[indexItem].state.map((state, indexstate) => (
-                <input type="button"
+                <button
                     key={`state-${ekey}-${indexstate}`}
-                    value={`${state ? 'OK' : 'NOK'}`}
                     className={` ${state ? 'button-green' : 'button-red'}`}
                     id={`button-${ekey}-${indexstate}`}
                     onClick={(event) => onClickButton(indexArea, indexItem, indexstate)}
-                />
+                >
+                    {`${state ? 'OK' : 'NOK'}`}
+                </button>
+                // <input type="button"
+                //     key={`state-${ekey}-${indexstate}`}
+                //     value={`${state ? 'OK' : 'NOK'}`}
+                //     className={` ${state ? 'button-green' : 'button-red'}`}
+                //     id={`button-${ekey}-${indexstate}`}
+                //     onClick={(event) => onClickButton(indexArea, indexItem, indexstate)}
+                // />
             ))}
         </div>
     );

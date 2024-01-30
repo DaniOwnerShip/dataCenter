@@ -1,51 +1,55 @@
 "use client"
 
-import CardHandshake from "../../components/cardHandshake"; 
+import CardHandshake from "../../components/cardHandshake";
 // import NameColumns from "../components/nameColumns";
-import BlocksAreas from "../../components/blocksAreas"; 
-import {expandAreas} from "../../components/blocksAreas";
-import Loading from "../../components/loading"; 
-import saveReportJson from "../../utils/handshake/fileIO/saveReportJson"; 
+import BlocksAreas from "../../components/blocksAreas";
+import { expandAreas } from "../../components/blocksAreas";
+import Loading from "../../components/loading";
+import saveReportJson from "../../utils/handshake/fileIO/saveReportJson";
 
 import downloadPDF from "../../utils/handshake/fileIO/downloadPDF";
 import React, { useState, useEffect } from 'react';
-import APIReport from "../../apis/apiReport";  
+import APIReport from "../../apis/apiReport";
 
 
 //MAIN
 export default function Handshake() {
 
     console.log('Handshake');
-    // const areaRef = useRef(null);
     const [informeR, setInformeR] = useState();
+    const [showArea, setShowArea] = useState();
 
     useEffect(() => {
-          console.log("Handshake useEffect");
+        console.log("Handshake useEffect");
         if (!informeR) {
-            // console.log("gettingInforme");
             APIReport.getReportByName("lastReport.json")
                 .then(data => {
-                    // console.log("data>>", data);
                     setInformeR(data);
-                    // console.log("data", informeR);
+                    const nAreas = data[1].blocksAreas.length;
+                    const na = Array.from({ length: nAreas }, () => false);
+                    setShowArea(na);
                 })
                 .catch(error => {
-                    console.error("Error al obtener el informe:", error); 
+                    console.error("Error al obtener el informe:", error);
                 });
         }
 
     }, [informeR]);
 
 
+
     const startdownloadPDF = () => {
-        // if (areaRef.current) {
-        //     areaRef.current.expandAreas();
-        //   }
+        console.log("showArea1 ", showArea);
+        const x = showArea.map(() => true);
+        setShowArea(x);
+        const conf = window.confirm("¿Descargar Informe?");
+        if (conf) {
         downloadPDF();
-       // saveReportJson(informeR);
-        //sspdf();
+    }
     };
-    const startsaveReportJson = () => { 
+
+
+    const startsaveReportJson = () => {
         saveReportJson(informeR);
         //sspdf();
     };
@@ -56,9 +60,9 @@ export default function Handshake() {
             {informeR ? (
                 <div  >
                     <CardHandshake hs={informeR[0].handshake} setInformeR={setInformeR} />
-                    {/* <NameColumns /> */} 
+                    {/* <NameColumns /> */}
                     {/* <ImageUploader /> */}
-                    <BlocksAreas blocksAreas={informeR[1].blocksAreas}/>
+                    <BlocksAreas blocksAreas={informeR[1].blocksAreas} showArea={showArea} setShowArea={setShowArea} />
                     {/* <BlocksAreas blocksAreas={informeR[1].blocksAreas}   ref={areaRef}/>
                     <BlocksAreas blocksAreas={informeR[1].blocksAreas} />
                     <BlocksAreas blocksAreas={informeR[1].blocksAreas} /> */}

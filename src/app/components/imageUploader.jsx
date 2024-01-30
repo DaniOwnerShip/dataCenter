@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function ImageUploader({ area, blocksAreas, indexArea }) {
+export default function ImageUploader({ blocksAreas, indexArea }) {
 
   // console.log('Image area:', area);
   const areaName = blocksAreas[indexArea].areaName;
@@ -57,7 +57,7 @@ export default function ImageUploader({ area, blocksAreas, indexArea }) {
       console.error('Error uploading image:', error);
     }
   };
-
+  
   return (
 
     <div className="block" >
@@ -66,26 +66,26 @@ export default function ImageUploader({ area, blocksAreas, indexArea }) {
       <div className="flex-spacebtw">
 
         <div className="block" >
-          <label htmlFor="fileInput" >
+          <label htmlFor= {`fi-${areaName}`}>
             {fileName}
           </label>
           <input
-            id="fileInput"
+            id={`fi-${areaName}`}
             type="file"
             onChange={handleFileChange}
           />
-          <button className="button" onClick={handleUpload}>Subir</button> 
-         
-
+          <button className="button" onClick={handleUpload}>Subir</button>
         </div>
 
         {blocksAreas[indexArea].urlImages && <div className="flex">
           <p>{blocksAreas[indexArea].urlImages?.length} imágenes</p>
           <button className="button"
-            onClick={showImages}>{`${imageIsVisible ? "Ocultar" : "Mostrar"}`}
+            onClick={showImages}
+          >
+            {`${imageIsVisible ? "Ocultar" : "Mostrar"}`}
           </button>
-
         </div>}
+
 
       </div>
 

@@ -1,8 +1,8 @@
 
 export default async function downloadPDF() {
     console.log('try download');
-    const conf = window.confirm("¿Descargar Informe?");
-    if (conf) {
+    // const conf = window.confirm("¿Descargar Informe?");
+    // if (conf) {
 
         try {
 
@@ -79,7 +79,7 @@ export default async function downloadPDF() {
             console.error('Error de red:', error);
 
         }
-    }
+    // }
 
 };
 

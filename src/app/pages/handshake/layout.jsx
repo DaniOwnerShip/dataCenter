@@ -12,7 +12,7 @@ export default function handshakeLayout({ children }) {
     return (
         <>
             <h1>Cambio de Turno</h1>
-            <div className="mainContainer">
+            <div className="mainContainer main">
 
                 {/* <Calendar setInforme={setInforme} />*/}
                 {children}

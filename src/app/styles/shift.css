@@ -8,11 +8,26 @@
     --background-color-1: rgb(126, 0, 151);
 }
 
-.mainContainer {
+/* .mainContainer {
     max-width: 1200px;
     margin: 3rem auto auto auto;
     padding: 0.5rem;
     box-shadow: 0px 0px 6px 5px #2b2a2a;
+} */
+main,
+.mainContainer {
+    max-width: 1200px;
+    margin: 1rem auto auto auto;
+    padding: 0.5rem;
+    box-shadow: -3px -3px 3px -3px #ffffff;
+    border-radius: 10px;
+    background-color: #44444b;
+}
+
+.main {
+    box-shadow: -2px -2px 7px -6px #dbdbdb;
+    /* border: 1px solid rgb(103 103 103); */
+    background-color: #333333;
 }
 
 .block--area,
@@ -21,16 +36,19 @@
 .block {
     padding: 0.2rem;
     margin: 0.2rem;
+    display: block;
 }
 
 .block--area {
-    border: 1px solid rgb(103 103 103);
-    border-radius: 25px;
-    margin: 0.4rem 0 0 0;
+    /* background-color: #1a1a1a; 
+    border: 1px solid rgb(88, 88, 88);*/
+    border-radius: 2px;
+    margin: 0.6rem 0 0 0;
     padding: 0.4rem 0 0 0;
-    /* background-color: #1a1a1a; */
+    box-shadow: 0px 0px 6px 5px #2b2a2a;
 }
 
+.flex-border,
 .flex-spacebtw,
 .flex-center,
 .flex {
@@ -55,13 +73,15 @@
 .grid3x {
     display: grid;
     grid-template-columns: 45% 10% auto;
-    border: 1px solid rgb(103 103 103);
-    border-radius: 10px;
+    /* border: 1px solid rgb(103 103 103); */
+    /* border-radius: 10px; */
+    /* box-shadow: -3px -3px 3px -3px #ffffff; */
 }
 
 .grid3x--areaTittle {
-    border: none;
-    grid-template-columns: 45% 10% auto 10% 2%;
+    /* border: none; */
+    grid-template-columns: 45% 10% auto 10% 1%;
+    /* box-shadow: none; */
 }
 
 .paddingL {
@@ -77,9 +97,10 @@
     padding: 0.2rem 0.5rem 0.2rem 0.5rem;
     border-radius: 10px;
     transition: all 300ms ease;
+    /* background-color: rgb(68 68 75); */
     background-color: transparent;
     border: 1px solid rgb(103 103 103);
-    color: whitesmoke;
+    color: whitesmoke; 
 }
 
 .button-red {
@@ -113,32 +134,10 @@
     background-color: royalblue;
     color: #2b2a2a;
 } */
+hr { 
+    border: 1px solid #575757;
+  }
 
-.blockItem-aplication-button,
-.blockItem-state-button {
-    margin: 2px;
-    padding: 5px;
-    border-radius: 10px;
-    font-weight: 600;
-    background-color: rgb(54 54 54);
-    color: rgb(170, 0, 0);
-    box-shadow: 0px 2px 3px 0px rgb(253 32 32);
-    transition: all 300ms ease;
-}
-
-.blockItem-aplication-button {
-    width: auto;
-    color: whitesmoke;
-    box-shadow: none;
-    background-color: rgb(170 0 0 / 0%);
-    margin-left: 0.5rem;
-}
-
-.blockItem-state-button.active {
-    /* background-color: rgb(0, 161, 27); */
-    box-shadow: 0px 3px 3px -2px rgb(140, 245, 114);
-    color: rgb(0, 161, 27);
-}
 
 .areaImagesContainer {
     display: flex;
@@ -159,65 +158,49 @@
     display: flex;
 }
 
-
+.react-datepicker-wrapper {
+    display: inline-block;
+    padding: 0;
+    border: 0;
+    border: 1px solid rgb(103 103 103);
+    color: rgb(0, 161, 27) !important;
+}
 
 /* Media query para pantallas más pequeñas */
 @media screen and (max-width: 850px) {
-    .party {
+
+    .flex-spacebtw,
+    .flex-center,
+    .flex {
         flex-direction: column;
-        /* Cambia a una columna */
     }
 
-    .blockItem {
-        grid-template-columns: 40% 20% 40%;
-    }
-
-    .blockItem,
-    .blockItem-state {
-        font-size: 0.8rem;
-    }
-
-    .blockItem-state-button {
-        font-size: 0.6rem;
+    .flex-spacebtw {
+        align-items: flex-start;
     }
 
 }
 
-/* 
-.blockItem-columns {
-    background-color: rgb(20, 71, 100);
-    font-size: 10px;
-} */
-
-/* .blockItems-tittle { 
-    border: 1px dashed rgb(192, 38, 38);
-    width: 100%; 
-    text-align: center; 
-} */
 
 textarea,
-.textInput-num,
-.textInput {
-    margin-left: 5px;
-    margin-top: 5px;
+input {
+    margin: 5px 0 0 5px;
     padding-left: 8px;
     background-color: #343541;
-    border: 1px solid rgb(75, 74, 74); 
+    border: 1px solid rgb(75, 74, 74);
     color: whitesmoke;
     font-family: system-ui;
     font-size: .9rem;
     outline: none;
     overflow: auto;
-    /* font-weight: 600; */
+    font-weight: 600;
     border-radius: 10px;
     height: 1.2rem;
+    width: 5rem;
 }
 
-textarea {
-    resize: vertical;
-    border: none; 
-    height: auto;
-    margin-top: 0;
+.textInput {
+    width: auto;
 }
 
 .textInput-num {
@@ -225,11 +208,20 @@ textarea {
     height: 1rem;
 }
 
+textarea {
+    resize: vertical;
+    border: none;
+    height: auto;
+    margin-top: 0;
+    width: auto;
+}
+
 textarea:focus,
-.textInput-num:focus,
-.textInput:focus {
+input:focus {
     background-color: rgb(10 10 10);
 }
+
+
 
 /* 
 

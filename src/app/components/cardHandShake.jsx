@@ -36,32 +36,31 @@ export default function CardHandshake({ hs, setInformeR }) {
 
     return (
 
-        <div className="flex">
+        <section className="flex-spacebtw">
 
             {hs.party.map((team, indexTeam) => (
 
                 <div key={`party-${indexTeam}`} className="flex">
 
-                    <h4>{team.type}</h4>
+                    <p className="block">{team.type} Nº
+                        <input
+                            type="text"
+                            className="textInput-num"
+                            id={`txt-num-${indexTeam}`}
+                            onChange={(event) => onChangeNum(event, indexTeam)}
+                            value={hs.party[indexTeam].number}
+                        />
+                    </p>
 
-                    <h4> Nº </h4>
-                    <input
-                        type="text"
-                        className="textInput-num"
-                        id={`txt-num-${indexTeam}`}
-                        onChange={(event) => onChangeNum(event, indexTeam)}
-                        value={hs.party[indexTeam].number}
-                    />
-
-                    <h4> PTL </h4>
-                    <input
-                        type="text"
-                        className="textInput"
-                        id={`txt-PTL-${indexTeam}`}
-                        onChange={(event) => onChangeName(event, indexTeam)}
-                        value={hs.party[indexTeam].leader}
-                    />
-
+                    <p className="block"> PTL
+                        <input
+                            type="text"
+                            className="textInput"
+                            id={`txt-PTL-${indexTeam}`}
+                            onChange={(event) => onChangeName(event, indexTeam)}
+                            value={hs.party[indexTeam].leader}
+                        />
+                    </p>
 
                 </div>
 
@@ -69,7 +68,7 @@ export default function CardHandshake({ hs, setInformeR }) {
 
             <Calendar setInformeR={setInformeR} />
 
-        </div>
+        </section >
 
     );
 }
