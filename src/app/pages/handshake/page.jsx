@@ -1,127 +1,110 @@
 "use client"
 
 import CardHandshake from "../../components/cardHandshake";
-// import NameColumns from "../components/nameColumns";
+// import NameColumns from "../../components/nameColumns";
 import BlocksAreas from "../../components/blocksAreas";
 import { expandAreas } from "../../components/blocksAreas";
 import Loading from "../../components/loading";
-import saveReportJson from "../../utils/handshake/fileIO/saveReportJson";
 
 import downloadPDF from "../../utils/handshake/fileIO/downloadPDF";
 import React, { useState, useEffect } from 'react';
 import APIReport from "../../apis/apiReport";
+import FileIO from "../../components/fileIO";
 
+import Calendar from "../../components/calendar";
 
+function resizeAllTxtareas(blocksAreas) {
+    blocksAreas.map((ai, iai) => {
+        ai.areaItems.map((i, ii) => {
+            const textarea = document.getElementById(`txtarea-${iai}-${ii}`);
+            // textarea.style.height = 'auto'; 
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
+    });
+}
+function resizeOneAreaTxtareas(blocksArea, indexArea) {
+    console.log("indexArea", indexArea);
+    blocksArea[indexArea].areaItems.map((i, ii) => {
+        const textarea = document.getElementById(`txtarea-${indexArea}-${ii}`);
+        // textarea.style.height = 'auto'; 
+        textarea.style.height = textarea.scrollHeight + 'px';
+    });
+}
 //MAIN
 export default function Handshake() {
 
     console.log('Handshake');
+
     const [informeR, setInformeR] = useState();
     const [showArea, setShowArea] = useState();
+    const [needResizeTxt, setNeedResizeTxt] = useState({ need: false, i: 0 });
+
+    function expandAreas(indexArea) {
+        console.log("expandAreas");
+        const b = [...showArea];
+        b[indexArea] = !b[indexArea];
+        setShowArea(b);
+        if (b[indexArea]) {
+            setNeedResizeTxt({ need: true, i: indexArea })
+        }
+    }
+
 
     useEffect(() => {
         console.log("Handshake useEffect");
         if (!informeR) {
-            APIReport.getReportByName("lastReport.json")
+            APIReport.downloadJson("lastReport.json")
                 .then(data => {
                     setInformeR(data);
                     const nAreas = data[1].blocksAreas.length;
-                    const na = Array.from({ length: nAreas }, () => false);
+                    const na = Array.from({ length: nAreas }, () => true);
                     setShowArea(na);
+                    resizeAllTxtareas(data[1].blocksAreas);
                 })
-                .catch(error => {
-                    console.error("Error al obtener el informe:", error);
-                });
+                .catch(() => { console.error('error json'); });
         }
 
-    }, [informeR]);
+        if (needResizeTxt.need) {
 
+            console.log("needResizeTxt", needResizeTxt.need);
+            resizeOneAreaTxtareas(informeR[1].blocksAreas, needResizeTxt.i);
+            setNeedResizeTxt({ need: false, i: 0 })
+        }
 
-
-    const startdownloadPDF = () => {
-        console.log("showArea1 ", showArea);
-        const x = showArea.map(() => true);
-        setShowArea(x);
-        const conf = window.confirm("¿Descargar Informe?");
-        if (conf) {
-        downloadPDF();
-    }
-    };
-
-
-    const startsaveReportJson = () => {
-        saveReportJson(informeR);
-        //sspdf();
-    };
+    }, [informeR, needResizeTxt]);
 
 
     return (
-        <>
+        <div className="mainContainer" >
             {informeR ? (
-                <div  >
+
+                <  >
+
                     <CardHandshake hs={informeR[0].handshake} setInformeR={setInformeR} />
-                    {/* <NameColumns /> */}
-                    {/* <ImageUploader /> */}
-                    <BlocksAreas blocksAreas={informeR[1].blocksAreas} showArea={showArea} setShowArea={setShowArea} />
-                    {/* <BlocksAreas blocksAreas={informeR[1].blocksAreas}   ref={areaRef}/>
-                    <BlocksAreas blocksAreas={informeR[1].blocksAreas} />
-                    <BlocksAreas blocksAreas={informeR[1].blocksAreas} /> */}
 
-                    <button className="button-io" onClick={startdownloadPDF}>DescargarPDF</button>
-                    <button className="button-io" onClick={startsaveReportJson}>saveReport</button>
 
-                </div>
+                    <BlocksAreas blocksAreas={informeR[1].blocksAreas} showArea={showArea} setShowArea={setShowArea} expandAreas={expandAreas} />
+
+
+
+                    <div className="flex fileIO-bar" >
+                        <FileIO informeR={informeR} showArea={showArea} setShowArea={setShowArea} />
+                        <Calendar setInformeR={setInformeR} />
+                    </div>
+
+
+                </ >
+
+
             ) : (
                 <Loading />
             )}
-        </>
+
+        </div>
+
+
     );
 
 
 
-
-    // return (
-    //     <>
-    //         {informeR ? (
-    //             <div className="mainContainer">
-
-    //                 {/* <Calendar setInforme={setInforme} />*/}
-    //                 <h1>{informeR[0].handshake.tittle}</h1>
-
-    //                 <CardHandshake hs={informeR[0].handshake} setInformeR={setInformeR} />
-    //                 {/* <NameColumns /> */}
-    //                 <BlocksAreas blocksAreas={informeR[1].blocksAreas} />
-
-    //                 <button onClick={startDownload}>DescargarPDF</button>
-
-    //             </div>
-    //         ) : (
-    //             <Loading />
-    //         )}
-    //     </>
-    // );
-
-
-
-    // return (
-    //     <>
-    //         <Suspense fallback={<Loading />}>
-
-    //             {informeR && <div className="mainContainer">
-
-    //                 {/* <Calendar setInforme={setInforme} />*/}
-    //                 <h1>{informeR[0].handshake.tittle}</h1>
-
-    //                 <CardHandshake hs={informeR[0].handshake} setInformeR={setInformeR} />
-    //                 {/* <NameColumns /> */}
-    //                 <BlocksAreas blocksAreas={informeR[1].blocksAreas} />
-
-    //                 <button onClick={startDownload}>DescargarPDF</button>
-
-    //             </div>}
-    //         </Suspense>
-
-    //     </>
-
-    // );
 }

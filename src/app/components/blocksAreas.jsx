@@ -1,14 +1,40 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ImageUploader from "./imageUploader";
+import VideoUploader from "./videoUploader";
+import Multimedia from "./multimedia";
+// import NameColumns from "./nameColumns";id={`txtarea-${ekey}`}
 
+// function resizeAllTxtareas(blocksAreas) {
+//     blocksAreas.map((ai, iai) => { 
+//         ai.areaItems.map((i, ii) => {
+//             const textarea = document.getElementById(`txtarea-${iai}-${ii}`);
+//             // textarea.style.height = 'auto'; 
+//             textarea.style.height = textarea.scrollHeight + 'px';
+//         });
+//     });
+// }
 
-export default function BlocksAreas({ blocksAreas, showArea, setShowArea }) {
+// function resizeOneAreaTxtareas(indexArea) { 
+//         ai.areaItems.map((i, ii) => {
+//             const textarea = document.getElementById(`txtarea-${indexArea}-${ii}`);
+//             // textarea.style.height = 'auto'; 
+//             textarea.style.height = textarea.scrollHeight + 'px';
+//         }); 
+// }
 
+// function resizeOneItemTxtareas(blocksAreas) {
+//     blocksAreas.map((ai, iai) => { 
+//         ai.areaItems.map((i, ii) => {
+//             const textarea = document.getElementById(`txtarea-${iai}-${ii}`);
+//             // textarea.style.height = 'auto'; 
+//             textarea.style.height = textarea.scrollHeight + 'px';
+//         });
+//     });
+// }
+
+function mapStates(blocksAreas) {
     const itemsState = [];
     const itemsComments = [];
-
-    console.log('BlocksAreas');
-
     blocksAreas.map((ai, iai) => {
         itemsState.push([]);
         itemsComments.push([]);
@@ -18,69 +44,97 @@ export default function BlocksAreas({ blocksAreas, showArea, setShowArea }) {
         });
     });
 
-    const [itemState, setItemState] = useState(itemsState);
-    const [comnentsState, setCommentstate] = useState(itemsComments);
+    return { itemsState, itemsComments }
+}
 
+
+export default function BlocksAreas({ blocksAreas, showArea, setShowArea, expandAreas }) {
+
+    const objetStates = useMemo(() => mapStates(blocksAreas), [blocksAreas]);
+
+    const [buttons, setButtons] = useState(objetStates.itemsState);
+    const [comments, setComments] = useState(objetStates.itemsComments);
 
     const toggleShowArea = (indexArea) => {
-        const x = [...showArea];
-        x[indexArea] = !x[indexArea];
-        setShowArea(x);
+        // const b = [...showArea];
+        // b[indexArea] = !b[indexArea];
+        // setShowArea(b);
+        expandAreas(indexArea);
+        // resizeOneAreaTxtareas(indexArea);
     };
+
+    useEffect(() => {
+        setButtons(objetStates.itemsState);
+        setComments(objetStates.itemsComments);
+        // resizeTxtareas(blocksAreas);
+    }, [blocksAreas]);
+
+
 
 
     return (
-
         <>
 
             {blocksAreas.map((area, indexArea) => (
 
-                <section key={`area-${indexArea}`} className="mainContainer">
+                <section key={`area-${indexArea}`} className="area">
 
-                    <Areas name={area.areaName} units={area.units} toggleShowArea={toggleShowArea} showArea={showArea} indexArea={indexArea} />
+                    <AreaTittle name={area.areaName} units={area.units} toggleShowArea={toggleShowArea} showArea={showArea} indexArea={indexArea} />
 
-                    {showArea[indexArea] && <div className="block">
 
-                        {area.areaItems.map((item, indexItem) => (
+                    {showArea[indexArea] && <>
 
-                            <div key={`item-${indexArea}-${indexItem}`} className="grid3x">
+                        <div className="area-items-container">
 
-                                <p>{item.desc}</p>
+                            {area.areaItems.map((item, indexItem) => (
 
-                                <Buttons blocksAreas={blocksAreas} indexArea={indexArea} indexItem={indexItem} setItemState={setItemState} />
+                                <div key={`item-${indexArea}-${indexItem}`} className="area-items">
 
-                                <Commensts blocksAreas={blocksAreas} indexArea={indexArea} indexItem={indexItem} setCommentstate={setCommentstate} comnentsState={comnentsState} />
+                                    <p>{item.desc}</p>
 
-                            </div>
+                                    <Buttons blocksAreas={blocksAreas} indexArea={indexArea} indexItem={indexItem} setButtons={setButtons} />
 
-                        ))}
+                                    <Commensts blocksAreas={blocksAreas} indexArea={indexArea} indexItem={indexItem} setComments={setComments} comments={comments} />
 
-                        <ImageUploader blocksAreas={blocksAreas} indexArea={indexArea} />
+                                </div>
 
-                    </div>}
+                            ))}
+
+                        </div>
+
+
+                        <Multimedia blocksAreas={blocksAreas} indexArea={indexArea} />
+
+
+                    </>}
+
 
 
                 </section>
 
+
             ))}
 
-
         </>
+
+
     );
+
+
 }
 
 
 
 
-function Areas({ name, units, toggleShowArea, showArea, indexArea }) {
+function AreaTittle({ name, units, toggleShowArea, showArea, indexArea }) {
     return (
-        <div className="grid3x--areaTittle">
-            <h4 className="paddingL">{name}</h4>
-            <h5 className="flex-center">{units}</h5>
+        <div className="area-tittle">
+            <h4 >{name}</h4>
+            <h4 className="flex center">{units}</h4>
             <h4>Comentarios</h4>
-            <button className={`${showArea[indexArea] ? "button" : "button-area-active"}`}//
+            <button className="button-area-expand"
                 onClick={() => toggleShowArea(indexArea)}>
-                {`${showArea[indexArea] ? "contraer" : "expandir"}`}
+                {`${showArea[indexArea] ? "➖" : "➕"}`}
             </button>
         </div>
     );
@@ -88,28 +142,58 @@ function Areas({ name, units, toggleShowArea, showArea, indexArea }) {
 
 
 
-function Commensts({ blocksAreas, indexArea, indexItem, setCommentstate, comnentsState }) {
+function Commensts({ blocksAreas, indexArea, indexItem, setComments, comments }) {
 
     const ekey = (indexArea + "-" + indexItem).toString();
+    const [isExpanded, setIsExpanded] = useState(true);
 
     const onChangeTxtarea = (event, indexArea, indexItem) => {
         blocksAreas[indexArea].areaItems[indexItem].comments = event.target.value;
-
-        setCommentstate(prevState => {
+        const textarea = event.target;
+        textarea.style.height = 'auto';  
+        textarea.style.height = textarea.scrollHeight + 'px';
+        setComments(prevState => {
             const x = [...prevState];
             x[indexArea][indexItem] = event.target.value;
             blocksAreas[indexArea].areaItems[indexItem].comments = event.target.value;
             return x;
         });
+        setIsExpanded(true);
     }
 
+    const toggletxtarea = (e) => {
+        console.log("toggletxtarea", e.target.id);
+        console.log("toggletxtarea", `txtarea-${ekey}`);
+        const txt = document.getElementById(`txtarea-${ekey}`);
+        if (!txt) { return; }
+        if (isExpanded) {
+            txt.style.height = '1rem';
+        } else {
+            txt.style.height = 'auto';  
+            txt.style.height = txt.scrollHeight + 'px';
+        }
+        setIsExpanded(!isExpanded);
+    };
+
     return (
-        <textarea
-            id={`txtarea-${ekey}`}
-            placeholder="comentarios"
-            value={comnentsState[indexArea][indexItem]}
-            onChange={(event) => onChangeTxtarea(event, indexArea, indexItem)}
-        ></textarea>
+
+        <div className="textarea-container">
+
+            <button id={`tbt-${ekey}`} className="textarea-button" onClick={(e) => toggletxtarea(e)}> {`${isExpanded ? '-' : '+'}`}   </button>
+
+            <textarea
+                id={`txtarea-${ekey}`}
+                placeholder="comentarios"
+                value={comments[indexArea][indexItem]}
+                onChange={(event) => onChangeTxtarea(event, indexArea, indexItem)}
+            >
+
+
+            </textarea>
+
+
+        </div>
+
     );
 }
 
@@ -117,7 +201,7 @@ function Commensts({ blocksAreas, indexArea, indexItem, setCommentstate, comnent
 
 
 
-function Buttons({ blocksAreas, indexArea, indexItem, setItemState }) {
+function Buttons({ blocksAreas, indexArea, indexItem, setButtons }) {
 
     const ekey = (indexArea + "-" + indexItem).toString();
 
@@ -126,7 +210,7 @@ function Buttons({ blocksAreas, indexArea, indexItem, setItemState }) {
         let state = blocksAreas[indexArea].areaItems[indexItem].state[indexstate];
         state = !state;
 
-        setItemState(prevState => {
+        setButtons(prevState => {
             const x = [...prevState];
             x[indexArea][indexItem] = state;
             blocksAreas[indexArea].areaItems[indexItem].state[indexstate] = state;
@@ -135,69 +219,20 @@ function Buttons({ blocksAreas, indexArea, indexItem, setItemState }) {
     }
 
     return (
-        <div className="flex-center">
+        <div className="flex center">
             {blocksAreas[indexArea].areaItems[indexItem].state.map((state, indexstate) => (
                 <button
                     key={`state-${ekey}-${indexstate}`}
-                    className={` ${state ? 'button-green' : 'button-red'}`}
+                    className="button-area-item-state"
                     id={`button-${ekey}-${indexstate}`}
-                    onClick={(event) => onClickButton(indexArea, indexItem, indexstate)}
+                    onClick={() => onClickButton(indexArea, indexItem, indexstate)}
                 >
-                    {`${state ? 'OK' : 'NOK'}`}
+                    {`${state ? '✅' : '❌'}`}
                 </button>
-                // <input type="button"
-                //     key={`state-${ekey}-${indexstate}`}
-                //     value={`${state ? 'OK' : 'NOK'}`}
-                //     className={` ${state ? 'button-green' : 'button-red'}`}
-                //     id={`button-${ekey}-${indexstate}`}
-                //     onClick={(event) => onClickButton(indexArea, indexItem, indexstate)}
-                // />
+
             ))}
         </div>
     );
 }
 
-
-
-// export function expandAreas() {
-//     const x = {};
-//     showArea.forEach(area => {
-//       x[area] = true;
-//     });
-//     return x;
-// }
-
-
-
-
-// function setStyleButtons(blocksAreas) {
-
-//     console.log('setStyleButtons');
-//     blocksAreas.map((area, indexArea) => (
-
-//         area.areaItems.map((item, indexItem) => (
-
-//             item.state.map((state, indexState) => {
-
-//                 const id = `button-${indexArea}${indexItem}${indexState}`;
-//                 const btn = document.getElementById(id);
-//                 if (!btn) {
-//                     console.log("Error buttons map");
-//                     return null;
-//                 }
-//                 if (state) {
-//                     btn.classList.add('active');
-//                     btn.value = "OK";
-//                 } else {
-//                     btn.classList.remove('active');
-//                     btn.value = "NOK";
-//                 }
-
-//             })
-
-//         ))
-
-//     ));
-
-// }
 

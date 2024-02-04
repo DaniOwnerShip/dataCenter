@@ -21,29 +21,34 @@ export default function Calendar({ setInformeR }) {
 
   const [startDate, setStartDate] = useState(new Date());
 
-  const handleClick = () => {
+  const downloadjson = () => {
     const fileName = `informe${formatDate(startDate)}.json`;
     console.log("formatDate", fileName);
-    APIReport.getReportByName(fileName)
+    APIReport.downloadJson(fileName)
       .then(data => {
         console.log("data", data);
-        setInformeR(data);
-      });
+        setInformeR(data); 
+        window.alert(`✅ Descarga completada \n ${fileName}`);
+      })
+      .catch(() => { console.error('error json'); });
   };
 
 
   return (
-    <div className="flex">
+    
+    <div className="flex center datepicker">
+
+      <button className="button" onClick={downloadjson}>
+        ▶️ Descargar informe
+      </button>
+
       <DatePicker
         id="calendar"
         selected={startDate}
         onChange={(date) => setStartDate(date)}
         dateFormat="dd-MM-yy"
       />
-      <button className="button" onClick={handleClick}
-      >
-        Descargar informe
-      </button> 
+
 
     </div>
 

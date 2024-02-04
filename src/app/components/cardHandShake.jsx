@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-import Calendar from "./calendar";
 
+export default function CardHandshake({ hs }) {
 
-export default function CardHandshake({ hs, setInformeR }) {
+    console.log("CardHandShake", hs.fileID);
 
-    console.log("CardHandShake");
+    const spl = hs.fileID.split('.');
+    const loadedFile = spl[0];
 
     const [forceRender, setFR] = useState(false);
 
@@ -36,37 +37,42 @@ export default function CardHandshake({ hs, setInformeR }) {
 
     return (
 
-        <section className="flex-spacebtw">
+        <section className="handshake">
 
             {hs.party.map((team, indexTeam) => (
 
                 <div key={`party-${indexTeam}`} className="flex">
+                    ⚒️
+                    <p>{team.type + " Nº" }  </p>
+                    <input
+                        type="text"
+                        className="input-num"
+                        id={`txt-num-${indexTeam}`}
+                        onChange={(event) => onChangeNum(event, indexTeam)}
+                        value={hs.party[indexTeam].number}
+                    />
 
-                    <p className="block">{team.type} Nº
-                        <input
-                            type="text"
-                            className="textInput-num"
-                            id={`txt-num-${indexTeam}`}
-                            onChange={(event) => onChangeNum(event, indexTeam)}
-                            value={hs.party[indexTeam].number}
-                        />
-                    </p>
 
-                    <p className="block"> PTL
-                        <input
-                            type="text"
-                            className="textInput"
-                            id={`txt-PTL-${indexTeam}`}
-                            onChange={(event) => onChangeName(event, indexTeam)}
-                            value={hs.party[indexTeam].leader}
-                        />
-                    </p>
+                    <p> PTL </p>
+                    <input
+                        type="text" 
+                        id={`txt-PTL-${indexTeam}`}
+                        onChange={(event) => onChangeName(event, indexTeam)}
+                        value={hs.party[indexTeam].leader}
+                    />
+
 
                 </div>
 
             ))}
 
-            <Calendar setInformeR={setInformeR} />
+            <p>📑 {loadedFile} </p>
+
+
+
+
+
+
 
         </section >
 

@@ -1,8 +1,9 @@
 body {
   /* background-color: var(--background-color); #343541
-  background-color: #2b2a2a;#d1d5db*/
-  background-color: #343541;
-  color: #d1d5db;  
+  background-color: #2b2a2a;#d1d5db
+  background-color: #343541;*/
+  background-color: var(--background-color);
+  color: var(--body-txt-color);  
   font-family: ui-sans-serif, system-ui, sans-serif; 
   padding-top: 3rem;
 }
@@ -20,7 +21,7 @@ a:hover {
   color: rgb(0, 200, 255);
   /* Color cuando el ratón está sobre el enlace */
 }
-
+ 
 h1,
 h2,
 h3,
@@ -28,7 +29,7 @@ h4,
 h5,
 h6,
 p {
-  margin: 3px;
+  margin: 1px;
 }
 
 h1 {

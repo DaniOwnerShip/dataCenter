@@ -1,5 +1,5 @@
 
-import "../../styles/shift.css"
+import "../../styles/handshake.css"
 
 export const metadata = {
     title: 'handshake',
@@ -12,12 +12,9 @@ export default function handshakeLayout({ children }) {
     return (
         <>
             <h1>Cambio de Turno</h1>
-            <div className="mainContainer main">
 
-                {/* <Calendar setInforme={setInforme} />*/}
-                {children}
+            {children}
 
-            </div>
         </>
 
 
@@ -25,7 +22,7 @@ export default function handshakeLayout({ children }) {
 
 
 
-    //   return (
+    // 🌀  return (
 
     //     <section>
     //     {/* Include shared UI here e.g. a header or sidebar 
