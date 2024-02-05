@@ -17,17 +17,17 @@ export default class APIReport {
             });
 
             if (!res.ok) {
-                throw new Error(`download json Error: ${res.status}, ${res.statusText}`);
+                throw new Error(`${res.status}, ${res.statusText}`);
             }
 
             const data = await res.json();
             return data;
         }
 
-        catch (e) { 
-            window.alert(`❌ ${e.message}`); 
-        } 
-    } 
+        catch (e) {
+            throw e;
+        }
+    }
 
 
 
@@ -48,7 +48,7 @@ export default class APIReport {
 
             const url = 'http://localhost:3001/apiHs/saveJson';
 
-            const response = await fetch(url, {
+            const res = await fetch(url, {
                 method: 'POST',
                 body: blob,
                 headers: {
@@ -56,61 +56,27 @@ export default class APIReport {
                 },
             })
 
+            if (!res.ok) {
 
-            if (!response.ok) {
-
-                const ct = response.headers.get('Content-Type');
+                const ct = res.headers.get('Content-Type');
 
                 if (ct && ct.includes('application/json')) {
-                    const res = await response.json();
-                    throw new Error(JSON.stringify(res));
+                    const resData = await res.json();
+                    throw new Error(JSON.stringify(resData));
                 }
-                else {
-                    throw new Error(`${response.status}, ${response.statusText}`);
-                }
+
+                throw new Error(`${res.status}, ${res.statusText}`);
 
             }
 
-            const res = await response.json();
+            const resData = await res.json();
+            return resData;
 
-            window.alert(`✅ ${res}`); 
-
-        } 
-        catch (e) { 
-            window.alert(`❌ ${e.message}`); 
-        }  
-    } 
-
-
-
-
-
-
-
-static async uploadImage(formData){
-    
-    try {
-        const response = await fetch('http://localhost:3001/apiHs/upload-img', {
-          method: 'POST',
-          body: formData,
-        });
-  
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}, ${response.statusText}`);
         }
-  
-        const responseData = await response.json(); 
-        return responseData;
-  
-      } 
-      
-      catch (e) {
-        console.error('Error uploading image:', e.message);
-        window.alert(`❌${e.message}`);
-      }  
-}
-
-
+        catch (e) {
+            throw e;
+        }
+    }
 
 
 
@@ -121,18 +87,18 @@ static async uploadImage(formData){
 
             const url = 'http://localhost:3001/apiHs/download-pdf';
 
-            const response = await fetch(url, {
+            const res = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/pdf',
                 },
             })
 
-            if (!response.ok) {
-                throw new Error(`download PDF Error: ${response.status},  ${response.statusText}`);
+            if (!res.ok) {
+                throw new Error(`download PDF Error: ${res.status},  ${res.statusText}`);
             }
 
-            const headers = response.headers;
+            const headers = res.headers;
             const cd = headers.get('Content-Disposition');
             const cl = headers.get('content-length');
             const ct = headers.get('content-type');
@@ -140,11 +106,11 @@ static async uploadImage(formData){
             const content = cd ? cd.split(';')[0] : 'undefined';
 
             if (cl > 10 * (1024 ** 2) || !ct.startsWith('application/pdf') || content != 'attachment') {
-                throw new Error(`downloadPDF Error: La respuesta no cumple los requisitos`);
+                throw new Error(`Error: La respuesta no cumple los requisitos`);
             }
 
             const fileName = cd.split('filename=')[1].replace(/"/g, '');
-            const blob = await response.blob();
+            const blob = await res.blob();
             const downloadLink = document.createElement('a');
             const Wurl = window.URL.createObjectURL(blob);
 
@@ -155,14 +121,66 @@ static async uploadImage(formData){
             document.body.removeChild(downloadLink);
             window.URL.revokeObjectURL(Wurl);
 
-            window.alert(`✅ Descarga completada \n ${fileName}  \n última actualización: ${lm}`);
+            return { fileName, lm };
+        }
+
+        catch (e) {
+            throw e;
+        }
+    }
+
+
+
+
+
+    static async uploadImage(formData) {
+
+        try {
+            const response = await fetch('http://localhost:3001/apiHs/upload-img', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}, ${response.statusText}`);
+            }
+
+            const responseData = await response.json();
+            return responseData;
 
         }
 
-        catch (e) { 
-            window.alert(`❌ ${e.message}`);  
+        catch (e) {
+            throw e;
+        }
+    }
+
+
+
+
+    static async uploadVideo(formData) {
+
+        try {
+            const response = await fetch('http://localhost:3001/apiHs/uploadvideo', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}, ${response.statusText}`);
+            }
+
+            const responseData = await response.json();
+            return responseData;  
         } 
-    } 
+        
+        catch (e) {
+            throw e;
+        }
+    }
+
+
+
 
 
 
@@ -173,8 +191,8 @@ static async uploadImage(formData){
 
     static async deleteFile(urlFile) {
 
-        console.log("deleteFile", urlFile); 
- 
+        console.log("deleteFile", urlFile);
+
         try {
 
             const url = `http://localhost:3001/apiHs/delete-file?urlFile=${urlFile}`;
@@ -182,7 +200,6 @@ static async uploadImage(formData){
             const res = await fetch(url);
 
             if (!res.ok) {
-            console.log("res", res);
                 throw new Error(`delete-image Error: ${res.status}, ${res.statusText}`);
             }
 
@@ -190,11 +207,10 @@ static async uploadImage(formData){
             return data;
         }
 
-        catch (e) { 
-            window.alert(`❌ ${e.message}`); 
+        catch (e) {
             throw e;
-        } 
-    } 
+        }
+    }
 
 
 

@@ -17,25 +17,25 @@ const formatDate = (date) => {
 
 export default function Calendar({ setInformeR }) {
 
-  console.log("Calendar");
-
   const [startDate, setStartDate] = useState(new Date());
 
+
   const downloadjson = () => {
+
     const fileName = `informe${formatDate(startDate)}.json`;
-    console.log("formatDate", fileName);
+
     APIReport.downloadJson(fileName)
       .then(data => {
-        console.log("data", data);
-        setInformeR(data); 
-        window.alert(`✅ Descarga completada \n ${fileName}`);
+        setInformeR(data);
+        window.alert(`✅ Datos descargados al formualario \n\n archivo: ${fileName}`);
       })
-      .catch(() => { console.error('error json'); });
+      .catch((e) => { window.alert(`❌ ${e.message}`); });  
   };
 
 
+
   return (
-    
+
     <div className="flex center datepicker">
 
       <button className="button" onClick={downloadjson}>

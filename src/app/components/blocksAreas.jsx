@@ -100,14 +100,11 @@ export default function BlocksAreas({ blocksAreas, showArea, setShowArea, expand
 
                             ))}
 
-                        </div>
+                        </div> 
 
+                        <Multimedia blocksAreas={blocksAreas} indexArea={indexArea} /> 
 
-                        <Multimedia blocksAreas={blocksAreas} indexArea={indexArea} />
-
-
-                    </>}
-
+                    </>} 
 
 
                 </section>
