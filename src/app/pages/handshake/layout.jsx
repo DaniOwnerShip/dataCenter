@@ -1,13 +1,12 @@
 
-import "../../styles/handshake.css"
+import "../../styles/shiftChange.css"
 
 export const metadata = {
-    title: 'handshake',
+    title: 'ShiftChange',
 }
 
-export default function handshakeLayout({ children }) {
+export default function ShiftChangeLayout({ children }) {
 
-    console.log('handshakeLayout');
 
     return (
         <>
@@ -20,18 +19,6 @@ export default function handshakeLayout({ children }) {
 
     );
 
-
-
-    // 🌀  return (
-
-    //     <section>
-    //     {/* Include shared UI here e.g. a header or sidebar 
-    //     <nav></nav>*/}
-    //     <p>handshakeLayout</p>
-
-    //     {children}
-    //   </section>
-    //   );
 
 }
 

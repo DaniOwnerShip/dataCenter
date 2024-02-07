@@ -59,8 +59,8 @@ base:#A8BA2D
 
 .handshake {
     display: grid;
-    grid-template-columns: 35% 35% 15%;
-    justify-content: space-evenly;
+    grid-template-columns: 42% 42% 16%;
+    justify-content: start;
     justify-items: center;
     margin: 3px;
     padding: 3px;
@@ -71,7 +71,7 @@ base:#A8BA2D
 
 
 .mainContainer {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 5px auto auto auto;
     padding: 0.5rem;
     border-radius: 15px;
