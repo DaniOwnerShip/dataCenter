@@ -96,10 +96,7 @@ base:#A8BA2D
     border-radius: 5px 5px 0 0;
 }
 
-.area-items-container {
-    margin: 0px 3px;
-}
-
+ 
 
 .area-items {
     display: grid;

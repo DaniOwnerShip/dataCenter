@@ -1,93 +1,119 @@
-import { useEffect, useMemo, useState } from "react"; 
+import { useEffect, useState } from "react";
 import Multimedia from "./multimedia";
 
- 
-
-export default function Areas({ blocksAreas }) {
-
-    const allocE = useMemo(() => Array(blocksAreas.length).fill(true)); 
-    const [expandArea, setExpandArea] = useState(allocE);  
 
 
-    const toggleShowArea = (indexArea) => {  
-        const b = [...expandArea];
-        b[indexArea] = !b[indexArea];
-        setExpandArea(b);  
-    };  
+export default function Area({ area, indexArea }) {
 
+    const [expandArea, setExpandArea] = useState(true);
 
     return (
-        <> 
-            {blocksAreas.map((area, indexArea) => (
+        <>
+            <div className="area-tittle">
 
-                <section key={`area-${indexArea}`} className="area">
+                <h4 >{area.areaName}</h4>
 
-                    <AreaTittle name={area.areaName} units={area.units} toggleShowArea={toggleShowArea} expandArea={expandArea} indexArea={indexArea} />
+                <h4 className="flex center">{area.units}</h4>
 
+                <h4>Comentarios</h4>
 
-                    {expandArea[indexArea] && <>
+                <button className="button-area-expand"
+                    onClick={() => setExpandArea(!expandArea)}>
+                    {`${expandArea ? "➖" : "➕"}`}
+                </button>
 
-                        <div className="area-items-container">
-
-                            {area.areaItems.map((item, indexItem) => (
-
-                                <div key={`item-${indexArea}-${indexItem}`} className="area-items">
-
-                                    <p>{item.desc}</p>
-
-                                    <Buttons blocksAreas={blocksAreas} indexArea={indexArea} indexItem={indexItem} />
-
-                                    <Commensts blocksAreas={blocksAreas} indexArea={indexArea} indexItem={indexItem} />
-
-                                </div>
-
-                            ))}
-
-                        </div>
-
-                        <Multimedia blocksAreas={blocksAreas} indexArea={indexArea} />
-
-                    </>}
+            </div>
 
 
-                </section>
+            {expandArea && <>
+
+                {area.areaItems.map((area, indexItem) => (
+
+                    <div key={`item-${indexArea}-${indexItem}`} className="area-items" >
+
+                        <AreaItem area={area} ikey={`${indexArea}-${indexItem}`} />
+
+                    </div>
+
+                ))}
+
+                <Multimedia area={area} indexArea={indexArea} />
+
+            </>}
 
 
-            ))}
-
-        </> 
-
-    ); 
-
-} 
-
-
-
-
-function AreaTittle({ name, units, toggleShowArea, expandArea, indexArea }) { 
-
-    return (
-
-        <div className="area-tittle">
-            <h4 >{name}</h4>
-            <h4 className="flex center">{units}</h4>
-            <h4>Comentarios</h4>
-            <button className="button-area-expand"
-                onClick={() => toggleShowArea(indexArea)}>
-                {`${expandArea[indexArea] ? "➖" : "➕"}`}
-            </button>
-        </div>
+        </>
 
     );
 }
 
 
 
-function Commensts({ blocksAreas, indexArea, indexItem }) {
 
-    const ekey = (indexArea + "-" + indexItem).toString();
-    const id = `txtarea-${ekey}`
-    const item = blocksAreas[indexArea].areaItems[indexItem];
+
+function AreaItem({ area, ikey }) {
+
+    return (
+
+        <>
+
+            <p>{area.desc}</p>
+
+            <ButtonsStates areaItem={area} ikey={ikey} />
+
+            <Commensts areaItem={area} ikey={ikey} />
+
+        </>
+    );
+
+}
+
+
+
+
+
+function ButtonsStates({ areaItem, ikey }) {
+
+    const [forceRender, setForceRender] = useState(false);
+    const buttonStates = areaItem.state;
+
+    const buttonState = (indexstate) => {
+        buttonStates[indexstate] = !buttonStates[indexstate];
+        setForceRender(!forceRender);
+    }
+
+    return (
+
+        <div className="flex center">
+
+            {areaItem.state.map((states, indexstate) => (
+
+                <button
+                    key={`btnstate-${ikey}-${indexstate}`}
+                    className="button-area-item-state"
+                    id={`btnstate-${ikey}-${indexstate}`}
+                    onClick={() => buttonState(indexstate)}
+                >
+                    {`${states ? '✅' : '❌'}`}
+
+                </button>
+
+            ))}
+
+
+        </div>
+    );
+}
+
+
+
+
+
+
+function Commensts({ areaItem, ikey }) {
+
+    const id = `txtarea-${ikey}`
+    const item = areaItem;
     const [isExpanded, setIsExpanded] = useState(true);
     const [forceRender, setForceRender] = useState(false);
 
@@ -120,64 +146,27 @@ function Commensts({ blocksAreas, indexArea, indexItem }) {
         }
         txtObj.style.height = 'auto';
         txtObj.style.height = txtObj.scrollHeight + 'px';
-    }, [ekey]);
+    }, [ikey]);
 
 
     return (
 
         <div className="textarea-container">
 
-            <button id={`tbt-${ekey}`} className="textarea-button" onClick={() => toggletxtareaButton()}>
+            <button id={`tbt-${ikey}`} className="textarea-button" onClick={() => toggletxtareaButton()}>
                 {`${isExpanded ? '-' : '+'}`}
             </button>
 
             <textarea
                 id={id}
                 placeholder="comentarios"
-                value={blocksAreas[indexArea].areaItems[indexItem].comments}
+                value={areaItem.comments}
                 onChange={(e) => onChangeTxtarea(e)}
             >
             </textarea>
 
         </div>
 
-    );
-}
-
-
-
-
-
-function Buttons({ blocksAreas, indexArea, indexItem }) {
-
-    const ekey = (indexArea + "-" + indexItem).toString();
-    const [forceRender, setForceRender] = useState(false);
-    const buttonStates = blocksAreas[indexArea].areaItems[indexItem].state;
-
-    const buttonState = () => {
-        buttonStates[indexArea] = !buttonStates[indexArea];
-        setForceRender(!forceRender);
-    }
-
-    return (
-        
-        <div className="flex center">
-
-            {blocksAreas[indexArea].areaItems[indexItem].state.map((states, indexstate) => (
-
-                <button
-                    key={`states-${ekey}-${indexstate}`}
-                    className="button-area-item-state"
-                    id={`button-${ekey}-${indexstate}`}
-                    onClick={() => buttonState()}
-                >
-                    {`${states ? '✅' : '❌'}`}
-
-                </button>
-
-            ))}
-
-        </div>
     );
 }
 

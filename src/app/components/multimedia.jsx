@@ -4,11 +4,11 @@ import ImageUploader from "./imageUploader";
 import VideoUploader from "./videoUploader";
 
 
-export default function Multimedia({ blocksAreas, indexArea }) { 
+export default function Multimedia({ area, indexArea }) { 
 
     const [activeTab, setActiveTab] = useState(0);
-    const [nImages, setnImages] = useState(blocksAreas[indexArea].urlImages?.length);
-    const [nVideos, setnVideos] = useState(blocksAreas[indexArea].urlVideos?.length); 
+    const [nImages, setnImages] = useState(area.urlImages?.length);
+    const [nVideos, setnVideos] = useState(area.urlVideos?.length); 
  
 
     const clickTab = (e, n) => {
@@ -49,9 +49,9 @@ export default function Multimedia({ blocksAreas, indexArea }) {
 
             {activeTab !== 0 && <div className="multimedia-box">
 
-                {activeTab === 1 && <ImageUploader blocksAreas={blocksAreas} indexArea={indexArea} setnImages={setnImages}/>}
+                {activeTab === 1 && <ImageUploader area={area} indexArea={indexArea} setnImages={setnImages}/>}
 
-                {activeTab === 2 && <VideoUploader blocksAreas={blocksAreas} indexArea={indexArea} setnVideos={setnVideos}/>}
+                {activeTab === 2 && <VideoUploader area={area} indexArea={indexArea} setnVideos={setnVideos}/>}
 
             </div>}
 

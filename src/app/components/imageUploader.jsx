@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import APIReport from "../apis/apiReport";
 
 
-export default function ImageUploader({ blocksAreas, indexArea, setnImages }) {
+export default function ImageUploader({ area, indexArea, setnImages }) {
 
-  const areaName = blocksAreas[indexArea].areaName;
+  const areaName = area.areaName;
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState('🔂 Seleccionar imagen');
   const [imageIsVisible, setImageIsVisible] = useState(true);
@@ -34,30 +34,30 @@ export default function ImageUploader({ blocksAreas, indexArea, setnImages }) {
     APIReport.uploadImage(formData)
       .then(res => {
         imageURL = path + res.imageUrl;
-        blocksAreas[indexArea].urlImages.push(imageURL);
-        setnImages(blocksAreas[indexArea].urlImages?.length);
+        area.urlImages.push(imageURL);
+        setnImages(area.urlImages?.length);
         setFileName('🔂 Seleccionar imagen');
         window.alert(`✅Imagen guardada`);
       })
       .catch((e) => { window.alert(`❌ ${e.message}`); });
-      
+
   };
 
 
 
-  const deleteImage = (e, indexArea, url) => {
+  const deleteImage = (e, area, url) => {
     e.preventDefault();
     const deleteImg = window.confirm('¿BORRAR IMAGEN?');
 
     if (deleteImg && indexUrl !== -1) {
 
-      const indexUrl = blocksAreas[indexArea].urlImages.findIndex((u) => u === url);
-      const imgUrl = blocksAreas[indexArea].urlImages[indexUrl];
+      const indexUrl = area.urlImages.findIndex((u) => u === url);
+      const imgUrl = area.urlImages[indexUrl];
 
       APIReport.deleteFile(imgUrl)
         .then(res => {
-          blocksAreas[indexArea].urlImages.splice(indexUrl, 1);
-          setnImages(blocksAreas[indexArea].urlImages?.length);
+          area.urlImages.splice(indexUrl, 1);
+          setnImages(area.urlImages?.length);
           window.alert(`✅ ${res}`);
         })
         .catch((e) => { window.alert(`❌ ${e.message}`); });
@@ -91,9 +91,9 @@ export default function ImageUploader({ blocksAreas, indexArea, setnImages }) {
 
 
 
-        {blocksAreas[indexArea].urlImages.length > 0 && <div className="flex center">
+        {area.urlImages.length > 0 && <div className="flex center">
 
-          <p>{blocksAreas[indexArea].urlImages?.length} imágen(es)</p>
+          <p>{area.urlImages?.length} imágen(es)</p>
 
           <button id={`sh-${areaName}`} className="button-area-media" onClick={showImages}  >
             {`${imageIsVisible ? "👁️ Ocultar" : "🔎 Mostrar"}`}
@@ -109,13 +109,13 @@ export default function ImageUploader({ blocksAreas, indexArea, setnImages }) {
 
       {imageIsVisible && <div className="media-items-container" >
 
-        {blocksAreas[indexArea].urlImages?.map((url, index) => (
+        {area.urlImages?.map((url, index) => (
           <a href={url} target="_blank" rel="noopener noreferrer" key={`img-${indexArea}-${index}`}>
             <img
               src={url}
               alt={`img-${indexArea}-${index}`}
               className="media-item"
-              onContextMenu={(e) => deleteImage(e, indexArea, url)}
+              onContextMenu={(e) => deleteImage(e, area, url)}
             />
           </a>
         ))}

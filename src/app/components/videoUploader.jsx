@@ -2,10 +2,10 @@ import { useState } from 'react';
 
 import APIReport from "../apis/apiReport";
 
-const VideoUploader = ({ blocksAreas, indexArea, setnVideos }) => {
+const VideoUploader = ({ area, indexArea, setnVideos }) => {
 
     const videoMimes = ['video/mp4', 'video/webm', 'video/ogg']; 
-    const areaName = blocksAreas[indexArea].areaName; 
+    const areaName = area.areaName; 
     const [videoName, setVideoName] = useState('🔂 Seleccionar video');
     const [selectedVideo, setSelectedVideo] = useState(null); 
     const [videosVisible, setVideosVisible] = useState(true);  
@@ -36,8 +36,8 @@ const VideoUploader = ({ blocksAreas, indexArea, setnVideos }) => {
         APIReport.uploadVideo(formData)
             .then(res => {
                 videoURL = path + res;
-                blocksAreas[indexArea].urlVideos.push(videoURL);
-                setnVideos(blocksAreas[indexArea].urlVideos?.length);
+                area.urlVideos.push(videoURL);
+                setnVideos(area.urlVideos?.length);
                 setVideoName('🔂 Seleccionar video');
                 window.alert('✅ Vídeo subido correctamente');
             })
@@ -46,18 +46,18 @@ const VideoUploader = ({ blocksAreas, indexArea, setnVideos }) => {
 
 
 
-    const deleteVideo = (e, indexArea, url) => {
+    const deleteVideo = (e, url) => {
         e.preventDefault();
         const deleteVideo = window.confirm('¿BORRAR Video?');
-        const indexUrl = blocksAreas[indexArea].urlVideos.findIndex((u) => u === url);
+        const indexUrl = area.urlVideos.findIndex((u) => u === url);
 
         if (deleteVideo && indexUrl !== -1) {
-            const videoUrl = blocksAreas[indexArea].urlVideos[indexUrl];
+            const videoUrl = area.urlVideos[indexUrl];
 
             APIReport.deleteFile(videoUrl)
                 .then(res => {
-                    blocksAreas[indexArea].urlVideos.splice(indexUrl, 1);
-                    setnVideos(blocksAreas[indexArea].urlVideos?.length);
+                    area.urlVideos.splice(indexUrl, 1);
+                    setnVideos(area.urlVideos?.length);
                     window.alert(`✅ ${res}`);
                 })
                 .catch((e) => { window.alert(`❌ ${e.message}`); });
@@ -82,9 +82,9 @@ const VideoUploader = ({ blocksAreas, indexArea, setnVideos }) => {
                 </div>
 
 
-                {blocksAreas[indexArea].urlVideos?.length > 0 && <div className="flex center">
+                {area.urlVideos?.length > 0 && <div className="flex center">
 
-                    <p>{blocksAreas[indexArea].urlVideos?.length} vídeo(s)</p>
+                    <p>{area.urlVideos?.length} vídeo(s)</p>
 
                     <button id={`bvid-${areaName}`} className="button-area-media" onClick={showVideos}  >
                         {`${videosVisible ? "👁️ Ocultar" : "🔎 Mostrar"}`}
@@ -99,7 +99,7 @@ const VideoUploader = ({ blocksAreas, indexArea, setnVideos }) => {
 
             {videosVisible && <div className="media-items-container" >
 
-                {blocksAreas[indexArea].urlVideos?.map((url, index) => (
+                {area.urlVideos?.map((url, index) => (
                     <a href={url} target="_blank" rel="noopener noreferrer" key={`vid-${indexArea}-${index}`}>
                         <video
                             src={url}
