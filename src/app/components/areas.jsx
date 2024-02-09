@@ -146,7 +146,7 @@ function Commensts({ areaItem, ikey }) {
         }
         txtObj.style.height = 'auto';
         txtObj.style.height = txtObj.scrollHeight + 'px';
-    }, [ikey]);
+    }, [id]);
 
 
     return (
