@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Multimedia from "./multimedia";
 
 
-
 export default function Area({ area, indexArea }) {
 
     const [expandArea, setExpandArea] = useState(true);
