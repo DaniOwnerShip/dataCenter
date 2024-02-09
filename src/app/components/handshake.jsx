@@ -3,7 +3,8 @@ import { useState, useMemo } from "react";
 
 export default function Handshake({ hs }) {
 
-    const loadedFile = useMemo(() => hs.fileID.split('.')[0]);
+    // const loadedFile = useMemo(() => hs.fileID.split('.')[0]);
+    const loadedFile = hs.fileID.split('.')[0];
 
     const [forceRender, setForceRender] = useState(false); 
 
