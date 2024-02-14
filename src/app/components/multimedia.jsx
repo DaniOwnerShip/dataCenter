@@ -47,7 +47,7 @@ export default function Multimedia({ area, indexArea }) {
             </div>
 
 
-            {activeTab !== 0 && <div className="multimedia-box">
+            {activeTab !== 0 && <div className="multimedia-container">
 
                 {activeTab === 1 && <ImageUploader area={area} indexArea={indexArea} setnImages={setnImages}/>}
 

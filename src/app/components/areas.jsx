@@ -8,38 +8,20 @@ export default function Area({ area, indexArea }) {
 
     return (
         <>
-            <div className="area-tittle">
+            <AreaTittle area={area} expandArea={expandArea} setExpandArea={setExpandArea} />
 
-                <h4 >{area.areaName}</h4>
-
-                <h4 className="flex center">{area.units}</h4>
-
-                <h4>Comentarios</h4>
-
-                <button className="button-area-expand"
-                    onClick={() => setExpandArea(!expandArea)}>
-                    {`${expandArea ? "➖" : "➕"}`}
-                </button>
-
-            </div>
-
-
-            {expandArea && <>
-
+            {expandArea && <div className="area-items-container">
                 {area.areaItems.map((area, indexItem) => (
-
                     <div key={`item-${indexArea}-${indexItem}`} className="area-items" >
 
                         <AreaItem area={area} ikey={`${indexArea}-${indexItem}`} />
 
                     </div>
-
                 ))}
 
                 <Multimedia area={area} indexArea={indexArea} />
 
-            </>}
-
+            </div>}
 
         </>
 
@@ -47,27 +29,32 @@ export default function Area({ area, indexArea }) {
 }
 
 
+
+function AreaTittle({ area, expandArea, setExpandArea }) {
+    return (
+        <div className=    {` ${expandArea ? "area-tittle-expand" :  "area-tittle" } ` }   >
+            <h4 >{area.areaName}</h4>
+            <h4 className="flex center">{area.units}</h4>
+            <h4>Comentarios</h4>
+            <button className="button-area-expand"
+                onClick={() => setExpandArea(!expandArea)}>
+                {`${expandArea ? "➖" : "➕"}`}
+            </button>
+        </div>
+    );
+}
 
 
 
 function AreaItem({ area, ikey }) {
-
     return (
-
         <>
-
             <p>{area.desc}</p>
-
             <ButtonsStates areaItem={area} ikey={ikey} />
-
             <Commensts areaItem={area} ikey={ikey} />
-
         </>
     );
-
 }
-
-
 
 
 
@@ -86,7 +73,6 @@ function ButtonsStates({ areaItem, ikey }) {
         <div className="flex center">
 
             {areaItem.state.map((states, indexstate) => (
-
                 <button
                     key={`btnstate-${ikey}-${indexstate}`}
                     className="button-area-item-state"
@@ -94,17 +80,12 @@ function ButtonsStates({ areaItem, ikey }) {
                     onClick={() => buttonState(indexstate)}
                 >
                     {`${states ? '✅' : '❌'}`}
-
                 </button>
-
             ))}
-
 
         </div>
     );
 }
-
-
 
 
 

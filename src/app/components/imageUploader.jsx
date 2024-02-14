@@ -87,8 +87,7 @@ export default function ImageUploader({ area, indexArea, setnImages }) {
 
           <button id={`upi-${areaName}`} className="button-area-media" onClick={uploadImage}>⏏️ Subir imagen</button>
 
-        </div>
-
+        </div> 
 
 
         {area.urlImages.length > 0 && <div className="flex center">
@@ -99,8 +98,7 @@ export default function ImageUploader({ area, indexArea, setnImages }) {
             {`${imageIsVisible ? "👁️ Ocultar" : "🔎 Mostrar"}`}
           </button>
 
-        </div>}
-
+        </div>} 
 
 
       </div>

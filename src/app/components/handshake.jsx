@@ -1,14 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState } from "react"; 
 
 
 export default function Handshake({ hs }) {
-
-    // const loadedFile = useMemo(() => hs.fileID.split('.')[0]);
+ 
     const loadedFile = hs.fileID.split('.')[0];
 
-    const [forceRender, setForceRender] = useState(false); 
-
-
+    const [forceRender, setForceRender] = useState(false);
+  
 
     const onChangeNum = (event, indexTeam) => {
 
@@ -56,7 +54,7 @@ export default function Handshake({ hs }) {
                         id={`txt-num-${indexTeam}`}
                         onChange={(event) => onChangeNum(event, indexTeam)}
                         value={hs.party[indexTeam].number}
-                    /> 
+                    />
 
                     <p> PTL </p>
                     <input
@@ -64,13 +62,13 @@ export default function Handshake({ hs }) {
                         id={`txt-PTL-${indexTeam}`}
                         onChange={(event) => onChangeName(event, indexTeam)}
                         value={hs.party[indexTeam].leader}
-                    /> 
+                    />
 
                 </div>
 
             ))}
 
-            <p>📑 {loadedFile} </p> 
+            <p>📑 {loadedFile} </p>
 
 
         </section >

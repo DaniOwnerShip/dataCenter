@@ -4,64 +4,67 @@ import React, { useState, useEffect } from 'react';
 import APIReport from "../../apis/apiReport";
 import Handshake from "../../components/handshake";
 import Area from "../../components/areas";
-import FileIO from "../../components/fileIO";
-import Calendar from "../../components/calendar";
 import Loading from "../../components/loading";
-
+import FileTransfer from "../../components/fileTransfer";
+import ShocketInterface from "../../components/shocketinterface";
+import { ContextData } from './context';
 
 
 export default function ShiftChange() {
 
-    const [informeR, setInformeR] = useState();
+    const [report, setReport] = useState();
+
+    const [contextIsReserved, setContextIsReserved] = React.useState({ isReserved: 'disabled', docId: null, userIP: '0.0.0.0' });
 
     useEffect(() => {
 
-        if (!informeR) {
+        if (!report) {
 
-            APIReport.downloadJson("lastReport.json")
+            APIReport.downloadJson("informe-last.json")
                 .then(res => {
-                    setInformeR(res);
+                    setReport(res);
                 })
-                .catch((e) => { window.alert(`page: ❌ ${e.message}`); });
-        }
-        else {
-
+                .catch((e) => { window.alert(`❌ ${e.message}`); });
         }
 
-    }, [informeR]);
+    }, [report]);
 
 
     return (
 
         <div className="mainContainer" >
 
-            {informeR ? (
-                <>
+            {report ? (
+                <div>
 
-                    <Handshake hs={informeR[0].handshake} setInformeR={setInformeR} />
+                    <ContextData.Provider value={{ contextIsReserved, setContextIsReserved }}>
 
+                        <ShocketInterface fileID={report[0].handshake.fileID} />
 
-                    {informeR[1].blocksAreas.map((area, indexArea) => (
-
-                        <section key={`area-${indexArea}`} className="area">
-
-                            <Area area={area} indexArea={indexArea} /> 
-
-                        </section>
-
-                    ))}
+                        <div className={contextIsReserved.isReserved} >
 
 
-                    <div className="flex fileIO-bar" >
-
-                        <FileIO informeR={informeR} />
-                        <Calendar setInformeR={setInformeR} />
-
-                    </div>
+                            <Handshake hs={report[0].handshake} />
 
 
-                </>
+                            <section className="areas-container">
 
+                                {report[1].areas.map((area, indexArea) => (
+                                    <div key={`area-${indexArea}`} className="area">
+
+                                        <Area area={area} indexArea={indexArea} />
+
+                                    </div>
+                                ))}
+
+                            </section>
+
+
+                            <FileTransfer report={report} setReport={setReport} />
+
+                        </div>
+                    </ContextData.Provider>
+                </div>
             ) : (
 
                 <Loading />
@@ -69,8 +72,8 @@ export default function ShiftChange() {
             )}
 
 
-        </div>
 
+        </div >
 
     );
 

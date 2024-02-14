@@ -1,4 +1,3 @@
-
 import "../../styles/shiftChange.css"
 
 export const metadata = {

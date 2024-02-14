@@ -1,27 +1,44 @@
 
 
+
 export default class APIReport {
 
-
+    // mode: 'cors',
+    // credentials:'omit' 'include',serverExpress.use(cors({ origin: 'http://192.168.1.100:3000' }));
+    // ,
+    //                 credentials: 'include',
+    //                 headers: {
+    //                     'Accept': 'application/json'
+    //                 }
+    // ,
+    //                 mode: 'cors',  
+    //                 credentials: 'same-origin',  
+    //                 headers: {
+    //                   'Content-Type': 'application/json',   
+    //                 },
     static async downloadJson(fileName) {
 
         try {
 
-            const url = `http://localhost:3001/apiHs/downloadjson?fileName=${fileName}`;
+            // const url = `http://localhost:3001/apiHs/downloadjson?fileName=${fileName}`;
+            // const url = `http://127.0.0.1:3001/apiHs/downloadjson?fileName=${fileName}`;
+            const url = `http://192.168.1.100:3001/apiHs/downloadjson?fileName=${fileName}`;
 
             const res = await fetch(url, {
                 method: 'GET',
+                credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
                 }
             });
 
+            const resData = await res.json();
+
             if (!res.ok) {
-                throw new Error(`${res.status}, ${res.statusText}`);
+                throw new Error(`${resData} \n ${res.status} ${res.statusText}`);
             }
 
-            const data = await res.json();
-            return data;
+            return resData;
         }
 
         catch (e) {
@@ -32,15 +49,13 @@ export default class APIReport {
 
 
 
-
-
     static async saveJson(data) {
 
         try {
 
             const dateNow = new Date();
             const dateFormat = dateNow.toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' });
-            const fileName = `informe${dateFormat.replace(/\//g, '-')}.json`;
+            const fileName = `informe-${dateFormat.replace(/\//g, '-')}.json`;
 
             data[0].handshake.fileID = fileName;
 
@@ -171,17 +186,13 @@ export default class APIReport {
             }
 
             const responseData = await response.json();
-            return responseData;  
-        } 
-        
+            return responseData;
+        }
+
         catch (e) {
             throw e;
         }
     }
-
-
-
-
 
 
 

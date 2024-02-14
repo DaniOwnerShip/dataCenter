@@ -4,11 +4,11 @@ import APIReport from "../apis/apiReport";
 
 const VideoUploader = ({ area, indexArea, setnVideos }) => {
 
-    const videoMimes = ['video/mp4', 'video/webm', 'video/ogg']; 
-    const areaName = area.areaName; 
+    const videoMimes = ['video/mp4', 'video/webm', 'video/ogg'];
+    const areaName = area.areaName;
     const [videoName, setVideoName] = useState('🔂 Seleccionar video');
-    const [selectedVideo, setSelectedVideo] = useState(null); 
-    const [videosVisible, setVideosVisible] = useState(true);  
+    const [selectedVideo, setSelectedVideo] = useState(null);
+    const [videosVisible, setVideosVisible] = useState(true);
 
 
     const handleFileChange = (e) => {
@@ -20,7 +20,7 @@ const VideoUploader = ({ area, indexArea, setnVideos }) => {
 
     const showVideos = () => {
         setVideosVisible(!videosVisible);
-    }; 
+    };
 
 
     const uploadVideo = async () => {
@@ -69,7 +69,7 @@ const VideoUploader = ({ area, indexArea, setnVideos }) => {
 
     return (
 
-        <div className="area-media-container">
+        <>
 
             <div className="flex spacebtw mediaIO-bar">
 
@@ -114,7 +114,7 @@ const VideoUploader = ({ area, indexArea, setnVideos }) => {
 
 
 
-        </div>
+        </>
 
     );
 
