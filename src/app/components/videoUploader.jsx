@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import APIReport from "../apis/apiReport";
 
-const VideoUploader = ({ area, indexArea, setnVideos }) => {
+const VideoUploader = ({ area, indexArea, setnVideos, isEnableDoc }) => {
 
     const videoMimes = ['video/mp4', 'video/webm', 'video/ogg'];
     const areaName = area.areaName;
@@ -78,7 +78,12 @@ const VideoUploader = ({ area, indexArea, setnVideos }) => {
                         <p className="button-area-media">{videoName}</p>
                     </label>
                     <input id={`vi-${areaName}`} type="file" accept={videoMimes.join(',')} onChange={handleFileChange} />
-                    <button id={`upv-${areaName}`} className="button-area-media" onClick={uploadVideo}>⏏️ Subir Vídeo</button>
+                    <button
+                        id={`upv-${areaName}`} 
+                        className= {`button-area-media ${isEnableDoc}`}
+                        onClick={uploadVideo}>
+                        ⏏️ Subir Vídeo
+                    </button>
                 </div>
 
 

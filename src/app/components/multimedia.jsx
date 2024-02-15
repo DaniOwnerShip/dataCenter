@@ -4,7 +4,7 @@ import ImageUploader from "./imageUploader";
 import VideoUploader from "./videoUploader";
 
 
-export default function Multimedia({ area, indexArea }) { 
+export default function Multimedia({ area, indexArea, isEnableDoc}) { 
 
     const [activeTab, setActiveTab] = useState(0);
     const [nImages, setnImages] = useState(area.urlImages?.length);
@@ -49,9 +49,9 @@ export default function Multimedia({ area, indexArea }) {
 
             {activeTab !== 0 && <div className="multimedia-container">
 
-                {activeTab === 1 && <ImageUploader area={area} indexArea={indexArea} setnImages={setnImages}/>}
+                {activeTab === 1 && <ImageUploader area={area} indexArea={indexArea} setnImages={setnImages} isEnableDoc={isEnableDoc}/>}
 
-                {activeTab === 2 && <VideoUploader area={area} indexArea={indexArea} setnVideos={setnVideos}/>}
+                {activeTab === 2 && <VideoUploader area={area} indexArea={indexArea} setnVideos={setnVideos} isEnableDoc={isEnableDoc}/>}
 
             </div>}
 

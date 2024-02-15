@@ -1,7 +1,6 @@
 
 import { io } from "socket.io-client";
-import { useState, useContext } from "react";
-import { ContextData } from '../pages/handshake/context';
+import { useState } from "react";
 
 function reserveDocHandler() {
     console.log('reserveDocHandler:');
@@ -23,23 +22,30 @@ function checkReserveDoc() {
 // });
 // let socket;
 // const engine = newsocket.io.engine;
-// console.log(engine.transport.name);   
+// console.log(engine.transport.name);   const docReserve = { isReserved: 'disabled', docId: null, userIP: '0.0.0.0' }
 
 
 
-export default function ShocketInterface({ fileID }) {
+// Same objects used in the server. I
+const IdocStatus = {
+    required: "required",
+    reserved: "reserved",
+    released: "released"
+};
+let IdocReserve = { reqStatus: IdocStatus.required, docId: null, userIP: '' };
 
-    const { contextIsReserved, setContextIsReserved } = useContext(ContextData);
-    // console.log("useContext(ContextData)", useContext(ContextData));
+
+
+export default function ShocketInterface({ fileID, isEnabled }) {
+
+    const [docReserve, setDocReserve] = useState(IdocReserve);
+
     const [clientShocket, setClientShocket] = useState();
-
     const [messages, setMessages] = useState([]);
-
     const [users, setUsers] = useState();
-
     const [windowSocket, setWindowSocket] = useState(false);
-
     const [comment, setComment] = useState('');
+
 
     const handleTextareaChange = (e) => {
         setComment(e.target.value);
@@ -51,74 +57,107 @@ export default function ShocketInterface({ fileID }) {
         setComment('');
     };
 
+    const reserveDoc = () => {
+        if (clientShocket?.connected) {
+            IdocReserve = { reqStatus: IdocStatus.required, docId: fileID, userIP: '' }
+            setDocReserve(IdocReserve);
+            clientShocket.emit("reserveDoc", IdocReserve);
+        }
+        else {
+            console.log("conexión inactiva");
+        }
+    };
+
+    const releaseDoc = () => {
+        if (clientShocket?.connected) {
+            IdocReserve = { reqStatus: IdocStatus.released, docId: fileID, userIP: '' };
+            setDocReserve(IdocReserve); 
+            isEnabled(false);
+            clientShocket.emit("releaseDoc", IdocReserve);
+        }
+        else {
+            console.log("conexión inactiva");
+        }
+    }
 
 
-
-
-
-
-
-    function reserveDoc() {
+    function socketOn() {
 
         const newsocket = io("http://192.168.1.100:3001");
 
         newsocket.on("connect", () => {
-
             console.log("Conexión WebSocket OK");
             setClientShocket(newsocket);
             setWindowSocket(true);
+        });
 
-            newsocket.emit("reserveDoc",  { isReserved: 'required', docId: fileID, userIP: '' });
 
-            newsocket.on('broadcast__DocStatus', (data) => {
-                console.log('broadcast__DocStatus:', data);
-                setMessages(prevMessages => [...prevMessages, data.message]);
-                if (data.status) {
-                    const reserveDoc = { isReserved: 'enabled', docId: fileID, userIP: '' };
-                    setContextIsReserved(reserveDoc);
-                    console.log('reserveDoc:' ); 
-                }
-                // reserveDocHandler();
-                // Realizar acciones apropiadas en respuesta al evento recibido
-            });
+        newsocket.on('broadcast__DocStatus', (data) => {
+            console.log('broadcast__DocStatus:', data);
+            setMessages(prevMessages => [...prevMessages, data.message]);
+        });
 
-            newsocket.on('comment', (data) => {
-                console.log('comment:', data);
-                setMessages(prevMessages => [...prevMessages, data]);
-            });
 
-            newsocket.on('users', (users) => {
-                console.log('users:', users);
-                // setUsers(prevUsers => [...prevUsers, users]);
-                setUsers(users);
-            });
+
+        newsocket.on('reserveStatus', (res) => {
+
+            if (res.IdocReserve.reqStatus === 'reserved') {
+                IdocReserve = res.IdocReserve;
+                setMessages(prevMessages => [...prevMessages, res.message]);
+                isEnabled(true);
+                console.log('reserved:');
+            }
+
+            if (res.IdocReserve.reqStatus === 'released') {
+                IdocReserve = res.IdocReserve;
+                setMessages(prevMessages => [...prevMessages, res.message]);
+                isEnabled(false);
+                console.log('released');
+            }
+            console.log('reserveStatus:', res);
 
         });
+
+
+
+        newsocket.on('comment', (data) => {
+            console.log('comment:', data);
+            setMessages(prevMessages => [...prevMessages, data]);
+        });
+
+        newsocket.on('users', (users) => {
+            console.log('users:', users);
+            setUsers(users);
+        });
+
+
+        newsocket.on("disconnect", () => {
+            setUsers([]);
+            setMessages([]);
+            setWindowSocket(false);
+            console.log("disconnect");
+        });
+
+
+
+
 
 
     };
 
 
+
     const socketOff = () => {
-        // console.log("isReserved", contextDoc);
-        // Verificar si la conexión está activa
+
         if (clientShocket?.connected) {
 
-            console.log("desconectando...");
+            releaseDoc();
             clientShocket.disconnect();
 
-            setUsers([]);
-            setMessages([]);
-            setWindowSocket(false);
-            // const isReserved = useContext(contextIsReservedDoc.value); 
-            const reserveDoc = { isReserved: 'disabled', docId: '', userIP: '' };
-            setContextIsReserved(reserveDoc);
-            // socket.on("disconnect", () => {
-            //     console.log("Desconectado del servidor WebSocket");
-            // });
+        }
 
-        } else {
-            console.log("La conexión está inactiva.");
+        else {
+            console.log("conexión inactiva");
         }
     }
 
@@ -158,12 +197,14 @@ export default function ShocketInterface({ fileID }) {
 
         <div className="socket-container">
 
+            <button className="button" onClick={socketOn}>socketOn</button>
             <button className="button" onClick={reserveDoc}>ReservarDoc</button>
+            <button className="button" onClick={releaseDoc}>releaseDoc</button>
             <button className="button" onClick={socketOff}>socketOff</button>
 
 
 
-           {windowSocket && <div className="flex">
+            {windowSocket && <div className="flex">
 
                 <div className="socketmsg-users">
                     <p>users: </p>

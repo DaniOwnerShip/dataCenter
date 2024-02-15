@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import APIReport from "../apis/apiReport";
 
 
-export default function ImageUploader({ area, indexArea, setnImages }) {
+export default function ImageUploader({ area, indexArea, setnImages, isEnableDoc }) {
 
   const areaName = area.areaName;
   const [selectedFile, setSelectedFile] = useState(null);
@@ -85,9 +85,14 @@ export default function ImageUploader({ area, indexArea, setnImages }) {
             onChange={imageSelection}
           />
 
-          <button id={`upi-${areaName}`} className="button-area-media" onClick={uploadImage}>⏏️ Subir imagen</button>
+          <button
+            id={`upi-${areaName}`} 
+            className= {`button-area-media ${isEnableDoc}`}
+            onClick={uploadImage}>
+            ⏏️ Subir imagen
+          </button>
 
-        </div> 
+        </div>
 
 
         {area.urlImages.length > 0 && <div className="flex center">
@@ -98,7 +103,7 @@ export default function ImageUploader({ area, indexArea, setnImages }) {
             {`${imageIsVisible ? "👁️ Ocultar" : "🔎 Mostrar"}`}
           </button>
 
-        </div>} 
+        </div>}
 
 
       </div>

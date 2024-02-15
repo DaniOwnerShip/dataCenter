@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Multimedia from "./multimedia";
 
 
-export default function Area({ area, indexArea }) {
+export default function Area({ area, indexArea, isEnableDoc }) {
 
     const [expandArea, setExpandArea] = useState(true);
 
@@ -14,12 +14,12 @@ export default function Area({ area, indexArea }) {
                 {area.areaItems.map((area, indexItem) => (
                     <div key={`item-${indexArea}-${indexItem}`} className="area-items" >
 
-                        <AreaItem area={area} ikey={`${indexArea}-${indexItem}`} />
+                        <AreaItem area={area} ikey={`${indexArea}-${indexItem}`} isEnableDoc={isEnableDoc}/>
 
                     </div>
                 ))}
 
-                <Multimedia area={area} indexArea={indexArea} />
+                <Multimedia area={area} indexArea={indexArea} isEnableDoc={isEnableDoc}/>
 
             </div>}
 
@@ -46,19 +46,19 @@ function AreaTittle({ area, expandArea, setExpandArea }) {
 
 
 
-function AreaItem({ area, ikey }) {
+function AreaItem({ area, ikey, isEnableDoc}) {
     return (
         <>
             <p>{area.desc}</p>
-            <ButtonsStates areaItem={area} ikey={ikey} />
-            <Commensts areaItem={area} ikey={ikey} />
+            <ButtonsStates areaItem={area} ikey={ikey} isEnableDoc={isEnableDoc}/>
+            <Commensts areaItem={area} ikey={ikey} isEnableDoc={isEnableDoc}/>
         </>
     );
 }
 
 
 
-function ButtonsStates({ areaItem, ikey }) {
+function ButtonsStates({ areaItem, ikey, isEnableDoc }) {
 
     const [forceRender, setForceRender] = useState(false);
     const buttonStates = areaItem.state;
@@ -75,7 +75,7 @@ function ButtonsStates({ areaItem, ikey }) {
             {areaItem.state.map((states, indexstate) => (
                 <button
                     key={`btnstate-${ikey}-${indexstate}`}
-                    className="button-area-item-state"
+                    className= {`button-area-item-state ${isEnableDoc}`}
                     id={`btnstate-${ikey}-${indexstate}`}
                     onClick={() => buttonState(indexstate)}
                 >
@@ -90,7 +90,7 @@ function ButtonsStates({ areaItem, ikey }) {
 
 
 
-function Commensts({ areaItem, ikey }) {
+function Commensts({ areaItem, ikey, isEnableDoc }) {
 
     const id = `txtarea-${ikey}`
     const item = areaItem;
@@ -137,7 +137,7 @@ function Commensts({ areaItem, ikey }) {
                 {`${isExpanded ? '-' : '+'}`}
             </button>
 
-            <textarea
+            <textarea  className={isEnableDoc}
                 id={id}
                 placeholder="comentarios"
                 value={areaItem.comments}

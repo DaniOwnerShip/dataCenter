@@ -1,7 +1,7 @@
 import { useState } from "react"; 
 
 
-export default function Handshake({ hs }) {
+export default function Handshake({ hs , isEnableDoc}) {
  
     const loadedFile = hs.fileID.split('.')[0];
 
@@ -44,7 +44,7 @@ export default function Handshake({ hs }) {
 
             {hs.party.map((team, indexTeam) => (
 
-                <div key={`party-${indexTeam}`} className="flex">
+                <div key={`party-${indexTeam}`} className={`flex ${isEnableDoc}`} >
 
                     <p> ⚒️ {team.type + " Nº"}  </p>
 

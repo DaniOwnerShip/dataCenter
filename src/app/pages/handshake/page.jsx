@@ -7,14 +7,12 @@ import Area from "../../components/areas";
 import Loading from "../../components/loading";
 import FileTransfer from "../../components/fileTransfer";
 import ShocketInterface from "../../components/shocketinterface";
-import { ContextData } from './context';
 
 
 export default function ShiftChange() {
 
     const [report, setReport] = useState();
-
-    const [contextIsReserved, setContextIsReserved] = React.useState({ isReserved: 'disabled', docId: null, userIP: '0.0.0.0' });
+    const [isEnableDoc, setIsEnableDoc] = useState('disabled');
 
     useEffect(() => {
 
@@ -30,40 +28,39 @@ export default function ShiftChange() {
     }, [report]);
 
 
+    const isEnabled = (x) => {
+        x ? setIsEnableDoc('enabled') : setIsEnableDoc('disabled');
+    }
+    // className={isEnableDoc}
+
     return (
 
-        <div className="mainContainer" >
-
+        <>
             {report ? (
-                <div>
 
-                    <ContextData.Provider value={{ contextIsReserved, setContextIsReserved }}>
+                <div className="mainContainer"> 
 
-                        <ShocketInterface fileID={report[0].handshake.fileID} />
+                    <ShocketInterface fileID={report[0].handshake.fileID} isEnabled={isEnabled} />
 
-                        <div className={contextIsReserved.isReserved} >
-
-
-                            <Handshake hs={report[0].handshake} />
+                    <Handshake hs={report[0].handshake} isEnableDoc={isEnableDoc} />
 
 
-                            <section className="areas-container">
+                    <section className="areas-container">
 
-                                {report[1].areas.map((area, indexArea) => (
-                                    <div key={`area-${indexArea}`} className="area">
+                        {report[1].areas.map((area, indexArea) => (
+                            <div key={`area-${indexArea}`} className="area">
 
-                                        <Area area={area} indexArea={indexArea} />
+                                <Area area={area} indexArea={indexArea} isEnableDoc={isEnableDoc} />
 
-                                    </div>
-                                ))}
+                            </div>
+                        ))}
 
-                            </section>
+                    </section>
 
 
-                            <FileTransfer report={report} setReport={setReport} />
+                    <FileTransfer report={report} setReport={setReport} />
 
-                        </div>
-                    </ContextData.Provider>
+
                 </div>
             ) : (
 
@@ -73,7 +70,7 @@ export default function ShiftChange() {
 
 
 
-        </div >
+        </>
 
     );
 
