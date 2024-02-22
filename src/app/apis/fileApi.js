@@ -1,37 +1,28 @@
 
 
+export default class FileApi {
 
-export default class APIReport {
+    
+    static async downloadJsonObj(reqFileObj) {
 
-    // mode: 'cors',
-    // credentials:'omit' 'include',serverExpress.use(cors({ origin: 'http://192.168.1.100:3000' }));
-    // ,
-    //                 credentials: 'include',
-    //                 headers: {
-    //                     'Accept': 'application/json'
-    //                 }
-    // ,
-    //                 mode: 'cors',  
-    //                 credentials: 'same-origin',  
-    //                 headers: {
-    //                   'Content-Type': 'application/json',   
-    //                 },
-    static async downloadJson(fileName) {
-
+        const payload = JSON.stringify(reqFileObj);
+        console.log("payload", payload);
         try {
 
-            // const url = `http://localhost:3001/apiHs/downloadjson?fileName=${fileName}`;
+            //var jsonString = JSON.stringify(objeto); const url = `http://localhost:3001/apiHs/downloadjson?fileName=${fileName}`;
             // const url = `http://127.0.0.1:3001/apiHs/downloadjson?fileName=${fileName}`;
-            const url = `http://192.168.1.100:3001/apiHs/downloadjson?fileName=${fileName}`;
+            const url = `http://192.168.1.100:3001/apiHs/downloadjsonObj`;
 
-            const res = await fetch(url, {
-                method: 'GET',
-                credentials: 'include',
+            const options = {
+                method: 'POST',
+                body: payload,
                 headers: {
+                    'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 }
-            });
+            }
 
+            const res = await fetch(url, options);
             const resData = await res.json();
 
             if (!res.ok) {
@@ -39,8 +30,8 @@ export default class APIReport {
             }
 
             return resData;
-        }
 
+        }
         catch (e) {
             throw e;
         }
@@ -49,27 +40,65 @@ export default class APIReport {
 
 
 
-    static async saveJson(data) {
 
+
+
+
+    static async downloadJson(fileName) {
+
+        try {
+
+            // const url = `http://localhost:3001/apiHs/downloadjson?fileName=${fileName}`;
+            // const url = `http://127.0.0.1:3001/apiHs/downloadjson?fileName=${fileName}`;
+            const url = `http://192.168.1.100:3001/apiHs/downloadjson?fileName=${fileName}`;
+
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }
+
+            const res = await fetch(url, options);
+            const resData = await res.json();
+
+            if (!res.ok) {
+                throw new Error(`${resData} \n ${res.status} ${res.statusText}`);
+            }
+
+            return resData;
+
+        }
+        catch (e) {
+            throw e;
+        }
+    }
+
+
+
+
+    static async saveJson(report, place) { 
+        
         try {
 
             const dateNow = new Date();
             const dateFormat = dateNow.toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' });
-            const fileName = `informe-${dateFormat.replace(/\//g, '-')}.json`;
+            const fileName = `informe-${place}-${dateFormat.replace(/\//g, '-')}.json`; 
+            report[0].handshake.fileID = fileName;
 
-            data[0].handshake.fileID = fileName;
-
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json", });
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json", });
 
             const url = 'http://localhost:3001/apiHs/saveJson';
 
-            const res = await fetch(url, {
+            const options = {
                 method: 'POST',
                 body: blob,
                 headers: {
                     'Content-Type': 'application/json'
-                },
-            })
+                }
+            }
+
+            const res = await fetch(url, options)
 
             if (!res.ok) {
 
@@ -96,47 +125,53 @@ export default class APIReport {
 
 
 
-    static async downloadPDF() {
+    static async downloadPDF( fileId ) {
 
+        console.log("downloadPDF", fileId); 
+
+        return;
         try {
+ 
+            const url = `http://localhost:3001/apiHs/download-pdf?fileId=${fileId}`;
 
-            const url = 'http://localhost:3001/apiHs/download-pdf';
-
-            const res = await fetch(url, {
+            const options = {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/pdf',
-                },
-            })
+                }
+            }
+
+            const res = await fetch(url, options)
 
             if (!res.ok) {
                 throw new Error(`download PDF Error: ${res.status},  ${res.statusText}`);
+            } else {
+ 
+                const h = res.headers; 
+                const cd = h.get('Content-Disposition'); 
+                const cl = h.get('content-length');
+                const ct = h.get('content-type');
+                const lm = h.get('last-modified');
+                const content = cd ? cd.split(';')[0] : 'undefined'; 
+
+                if (cl > 10 * (1024 ** 2) || !ct.startsWith('application/pdf') || content != 'attachment') {
+                    throw new Error(`Error: La respuesta no cumple los requisitos`);
+                }
+
+                const blob = await res.blob();
+                const fileName = cd.split('filename=')[1].replace(/"/g, '');
+                const downloadLink = document.createElement('a');
+                const Wurl = window.URL.createObjectURL(blob);
+
+                downloadLink.href = Wurl;
+                downloadLink.download = fileName;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                window.URL.revokeObjectURL(Wurl);
+
+                return { fileName, lm };
             }
-
-            const headers = res.headers;
-            const cd = headers.get('Content-Disposition');
-            const cl = headers.get('content-length');
-            const ct = headers.get('content-type');
-            const lm = headers.get('last-modified');
-            const content = cd ? cd.split(';')[0] : 'undefined';
-
-            if (cl > 10 * (1024 ** 2) || !ct.startsWith('application/pdf') || content != 'attachment') {
-                throw new Error(`Error: La respuesta no cumple los requisitos`);
-            }
-
-            const fileName = cd.split('filename=')[1].replace(/"/g, '');
-            const blob = await res.blob();
-            const downloadLink = document.createElement('a');
-            const Wurl = window.URL.createObjectURL(blob);
-
-            downloadLink.href = Wurl;
-            downloadLink.download = fileName;
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            window.URL.revokeObjectURL(Wurl);
-
-            return { fileName, lm };
         }
 
         catch (e) {

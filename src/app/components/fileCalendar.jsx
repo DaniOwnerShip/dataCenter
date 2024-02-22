@@ -2,21 +2,28 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import React, { useState } from "react";
-import APIReport from "../apis/apiReport";
+import FileApi from "../apis/fileApi";
 
  
 
 
-export default function Calendar({ setReport }) {
+export default function FileCalendar({ setReport, place }) {
 
   const [startDate, setStartDate] = useState(new Date()); 
+
+  const reportReq = {
+    file: "informe",
+    place: place,
+    date: formatDate(startDate),
+    type: ".json"
+}
 
 
   const downloadjson = () => {
  
-    const fileName = `informe-${formatDate(startDate)}.json`;
+    const fileName = `informe-${place}-${formatDate(startDate)}.json`;
  
-    APIReport.downloadJson(fileName)
+    FileApi.downloadJsonObj(reportReq)
       .then(data => {
         setReport(data);
         window.alert(`✅ Datos descargados al formualario \n\n archivo: ${fileName}`);

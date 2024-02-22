@@ -1,27 +1,29 @@
 import { useEffect, useState } from "react";
-import Multimedia from "./multimedia";
+import { useGlobalContext } from '../GlobalContext';
+import MediaTabs from "./mediaTabs";  
 
 
-export default function Area({ area, indexArea, isEnableDoc }) {
+export default function Area({ place, area, indexArea, isMultimedia }) {
 
     const [expandArea, setExpandArea] = useState(true);
 
+
     return (
         <>
-            <AreaTittle area={area} expandArea={expandArea} setExpandArea={setExpandArea} />
+            <AreaTittle place={place} area={area} expandArea={expandArea} setExpandArea={setExpandArea} />
 
             {expandArea && <div className="area-items-container">
+
                 {area.areaItems.map((area, indexItem) => (
-                    <div key={`item-${indexArea}-${indexItem}`} className="area-items" >
-
-                        <AreaItem area={area} ikey={`${indexArea}-${indexItem}`} isEnableDoc={isEnableDoc}/>
-
+                    <div key={`item-${indexArea}-${indexItem}`} className="area-items" > 
+                        <AreaItem place={place} area={area} ikey={`${indexArea}-${indexItem}`} /> 
                     </div>
                 ))}
-
-                <Multimedia area={area} indexArea={indexArea} isEnableDoc={isEnableDoc}/>
+                
+                {isMultimedia && <MediaTabs area={area} indexArea={indexArea} />}
 
             </div>}
+
 
         </>
 
@@ -30,14 +32,15 @@ export default function Area({ area, indexArea, isEnableDoc }) {
 
 
 
-function AreaTittle({ area, expandArea, setExpandArea }) {
+function AreaTittle({ place, area, expandArea, setExpandArea }) {
     return (
-        <div className=    {` ${expandArea ? "area-tittle-expand" :  "area-tittle" } ` }   >
-            <h4 >{area.areaName}</h4>
-            <h4 className="flex center">{area.units}</h4>
-            <h4>Comentarios</h4>
-            <button className="button-area-expand"
-                onClick={() => setExpandArea(!expandArea)}>
+        <div className={` ${expandArea ? `area-tittle expandBox ${place}` : `area-tittle ${place}`} `} >
+            <h4>{area.areaName}</h4>
+            <h4 className="flex center">{area.units} </h4>
+            <h4>Comentarios </h4>
+            <button className="button expandArea"
+                onClick={() => setExpandArea(!expandArea)}
+            >
                 {`${expandArea ? "➖" : "➕"}`}
             </button>
         </div>
@@ -46,20 +49,21 @@ function AreaTittle({ area, expandArea, setExpandArea }) {
 
 
 
-function AreaItem({ area, ikey, isEnableDoc}) {
+function AreaItem({ place, area, ikey }) {
     return (
         <>
             <p>{area.desc}</p>
-            <ButtonsStates areaItem={area} ikey={ikey} isEnableDoc={isEnableDoc}/>
-            <Commensts areaItem={area} ikey={ikey} isEnableDoc={isEnableDoc}/>
+            <ButtonsStates place={place} areaItem={area} ikey={ikey} />
+            <Commensts place={place} areaItem={area} ikey={ikey} />
         </>
     );
 }
 
 
 
-function ButtonsStates({ areaItem, ikey, isEnableDoc }) {
+function ButtonsStates({ place, areaItem, ikey }) {
 
+    const { globalDocIsBlock } = useGlobalContext();
     const [forceRender, setForceRender] = useState(false);
     const buttonStates = areaItem.state;
 
@@ -75,7 +79,7 @@ function ButtonsStates({ areaItem, ikey, isEnableDoc }) {
             {areaItem.state.map((states, indexstate) => (
                 <button
                     key={`btnstate-${ikey}-${indexstate}`}
-                    className= {`button-area-item-state ${isEnableDoc}`}
+                    className={`button states ${place === 'main1' ? globalDocIsBlock : 'enabled'}`}
                     id={`btnstate-${ikey}-${indexstate}`}
                     onClick={() => buttonState(indexstate)}
                 >
@@ -90,7 +94,8 @@ function ButtonsStates({ areaItem, ikey, isEnableDoc }) {
 
 
 
-function Commensts({ areaItem, ikey, isEnableDoc }) {
+function Commensts({ place, areaItem, ikey }) {
+    const { globalDocIsBlock } = useGlobalContext();
 
     const id = `txtarea-${ikey}`
     const item = areaItem;
@@ -137,7 +142,7 @@ function Commensts({ areaItem, ikey, isEnableDoc }) {
                 {`${isExpanded ? '-' : '+'}`}
             </button>
 
-            <textarea  className={isEnableDoc}
+            <textarea className={`${place === 'main1' ? globalDocIsBlock : 'enabled'}`}
                 id={id}
                 placeholder="comentarios"
                 value={areaItem.comments}

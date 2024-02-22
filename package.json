@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dom-to-image": "^2.6.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "next": "14.0.4",
@@ -17,6 +18,8 @@
     "react": "^18.2.0",
     "react-datepicker": "^4.25.0",
     "react-dom": "^18",
+    "react-draggable": "^4.4.6",
+    "react-resizable": "^3.0.5",
     "socket.io-client": "^4.7.4"
   },
   "devDependencies": {

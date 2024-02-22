@@ -1,17 +1,31 @@
 import { useState } from 'react';
 
-import APIReport from "../apis/apiReport";
+import FileApi from "../apis/fileApi";
+import { useGlobalContext } from '../GlobalContext';
 
-const VideoUploader = ({ area, indexArea, setnVideos, isEnableDoc }) => {
+export default function MediaVideos({ area, indexArea, setnVideos }) {
 
-    const videoMimes = ['video/mp4', 'video/webm', 'video/ogg'];
-    const areaName = area.areaName;
+    const videoMimes = [
+        'video/quicktime',   // .mov
+        'video/avi',         // .avi
+        'video/x-ms-wmv',    // .wmv
+        'video/x-flv',       // .flv
+        'video/mpeg',        // .mpeg, .mpg
+        'video/x-matroska',  // .mkv
+        'video/x-msvideo',   // .avi
+        'video/x-ms-asf'     // .asf
+    ];
+
+
+    const idArea = area.areaName;
+    const videos = area.urlVideos;
     const [videoName, setVideoName] = useState('🔂 Seleccionar video');
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [videosVisible, setVideosVisible] = useState(true);
+    const { globalDocIsBlock } = useGlobalContext();
 
 
-    const handleFileChange = (e) => {
+    const videoSelection = (e) => {
         const file = e.target.files[0];
         setSelectedVideo(file);
         setVideoName(e.target.files[0].name);
@@ -33,11 +47,11 @@ const VideoUploader = ({ area, indexArea, setnVideos, isEnableDoc }) => {
         const path = 'http://localhost:3001/';
         let videoURL;
 
-        APIReport.uploadVideo(formData)
+        FileApi.uploadVideo(formData)
             .then(res => {
                 videoURL = path + res;
-                area.urlVideos.push(videoURL);
-                setnVideos(area.urlVideos?.length);
+                videos.push(videoURL);
+                setnVideos(videos?.length);
                 setVideoName('🔂 Seleccionar video');
                 window.alert('✅ Vídeo subido correctamente');
             })
@@ -49,15 +63,15 @@ const VideoUploader = ({ area, indexArea, setnVideos, isEnableDoc }) => {
     const deleteVideo = (e, url) => {
         e.preventDefault();
         const deleteVideo = window.confirm('¿BORRAR Video?');
-        const indexUrl = area.urlVideos.findIndex((u) => u === url);
+        const indexUrl = videos.findIndex((u) => u === url);
 
         if (deleteVideo && indexUrl !== -1) {
-            const videoUrl = area.urlVideos[indexUrl];
+            const videoUrl = videos[indexUrl];
 
-            APIReport.deleteFile(videoUrl)
+            FileApi.deleteFile(videoUrl)
                 .then(res => {
-                    area.urlVideos.splice(indexUrl, 1);
-                    setnVideos(area.urlVideos?.length);
+                    videos.splice(indexUrl, 1);
+                    setnVideos(videos?.length);
                     window.alert(`✅ ${res}`);
                 })
                 .catch((e) => { window.alert(`❌ ${e.message}`); });
@@ -68,30 +82,36 @@ const VideoUploader = ({ area, indexArea, setnVideos, isEnableDoc }) => {
 
 
     return (
-
         <>
-
             <div className="flex spacebtw mediaIO-bar">
 
                 <div className="flex" >
-                    <label htmlFor={`vi-${areaName}`} >
-                        <p className="button-area-media">{videoName}</p>
+
+                    <label htmlFor={`vi-${idArea}`} >
+                        <p className="button media">{videoName}</p>
                     </label>
-                    <input id={`vi-${areaName}`} type="file" accept={videoMimes.join(',')} onChange={handleFileChange} />
+
+                    <input id={`vi-${idArea}`}
+                        type="file"
+                        accept={videoMimes.join(',')}
+                        onChange={videoSelection}
+                    />
+
                     <button
-                        id={`upv-${areaName}`} 
-                        className= {`button-area-media ${isEnableDoc}`}
+                        id={`upv-${idArea}`}
+                        className={`button media ${globalDocIsBlock}`}
                         onClick={uploadVideo}>
                         ⏏️ Subir Vídeo
                     </button>
+
                 </div>
 
 
-                {area.urlVideos?.length > 0 && <div className="flex center">
+                {videos?.length > 0 && <div className="flex center">
 
-                    <p>{area.urlVideos?.length} vídeo(s)</p>
+                    <p>{videos?.length} vídeo(s)</p>
 
-                    <button id={`bvid-${areaName}`} className="button-area-media" onClick={showVideos}  >
+                    <button id={`bvid-${idArea}`} className="button media" onClick={showVideos}  >
                         {`${videosVisible ? "👁️ Ocultar" : "🔎 Mostrar"}`}
                     </button>
 
@@ -104,7 +124,7 @@ const VideoUploader = ({ area, indexArea, setnVideos, isEnableDoc }) => {
 
             {videosVisible && <div className="media-items-container" >
 
-                {area.urlVideos?.map((url, index) => (
+                {videos?.map((url, index) => (
                     <a href={url} target="_blank" rel="noopener noreferrer" key={`vid-${indexArea}-${index}`}>
                         <video
                             src={url}
@@ -126,6 +146,3 @@ const VideoUploader = ({ area, indexArea, setnVideos, isEnableDoc }) => {
 
 };
 
-
-
-export default VideoUploader;

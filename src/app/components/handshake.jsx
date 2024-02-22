@@ -1,38 +1,33 @@
 import { useState } from "react"; 
+import { useGlobalContext } from '../GlobalContext';
 
 
-export default function Handshake({ hs , isEnableDoc}) {
+export default function Handshake({ hs }) {
+    
+    const { globalDocIsBlock } = useGlobalContext();
  
-    const loadedFile = hs.fileID.split('.')[0];
+    const fileName = hs.fileID.split('.')[0];
+    const fileNameShort = fileName.replace('-main1', '');
 
     const [forceRender, setForceRender] = useState(false);
   
 
     const onChangeNum = (event, indexTeam) => {
 
-        const txtNum = document.getElementById(event.target.id);
-
-        if (!txtNum || isNaN(event.target.value) || event.target.value >= 10 || event.target.value === 0) {
+        if (isNaN(event.target.value) || event.target.value >= 10 || event.target.value === 0) {
             window.alert("Escribe un número del 1 al 9");
             event.target.value = "";
             return;
         }
 
-        hs.party[indexTeam].number = event.target.value;
-
-        setForceRender(!forceRender);
-
+        hs.party[indexTeam].number = event.target.value; 
+        setForceRender(!forceRender); 
     };
 
 
 
-    const onChangeName = (event, indexTeam) => {
-
-        const txtName = document.getElementById(event.target.id);
-        if (!txtName) { return; }
-
-        hs.party[indexTeam].leader = event.target.value;
-
+    const onChangeName = (event, indexTeam) => { 
+        hs.party[indexTeam].leader = event.target.value; 
         setForceRender(!forceRender);
     };
 
@@ -40,11 +35,11 @@ export default function Handshake({ hs , isEnableDoc}) {
 
     return (
 
-        <section className="handshake">
+        <section className={`${globalDocIsBlock !== "disabled"? "handshake unblokDoc": "handshake"}`}>
 
             {hs.party.map((team, indexTeam) => (
 
-                <div key={`party-${indexTeam}`} className={`flex ${isEnableDoc}`} >
+                <div key={`party-${indexTeam}`} className={`flex ${globalDocIsBlock}`} >
 
                     <p> ⚒️ {team.type + " Nº"}  </p>
 
@@ -68,7 +63,7 @@ export default function Handshake({ hs , isEnableDoc}) {
 
             ))}
 
-            <p>📑 {loadedFile} </p>
+            <p>📑 {fileNameShort} </p>
 
 
         </section >

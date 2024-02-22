@@ -1,5 +1,6 @@
-import "./styles/main.css" 
- 
+import "./styles/main.css"
+import { GlobalProvider } from './GlobalContext';
+
 export const metadata = {
 
   title: 'data center',
@@ -14,13 +15,16 @@ export default function RootLayout({ children }) {
 
   return (
 
-    <html lang="es"> 
- 
-      <body >{children}</body>
+    <html lang="es">
 
+      <GlobalProvider>
+        <body >
+          {children}
+        </body>
+
+      </GlobalProvider>
     </html>
   );
-  
+
 }
- 
- 
+

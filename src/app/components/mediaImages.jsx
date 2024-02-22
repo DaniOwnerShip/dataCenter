@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
+import FileApi from "../apis/fileApi";
+import { useGlobalContext } from '../GlobalContext';
 
-import APIReport from "../apis/apiReport";
 
 
-export default function ImageUploader({ area, indexArea, setnImages, isEnableDoc }) {
+export default function MediaImages({ area, indexArea, setnImages }) {
+  
+  const imageMimes = [
+    'image/jpeg',  // .jpg, .jpeg
+    'image/png',   // .png
+    'image/gif',   // .gif
+    'image/bmp',   // .bmp
+    'image/webp',  // .webp
+    'image/svg+xml' // .svg
+];
 
-  const areaName = area.areaName;
+
+  const idArea = area.areaName;
+  const imgs = area.urlImages;
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState('🔂 Seleccionar imagen');
   const [imageIsVisible, setImageIsVisible] = useState(true);
+  const { globalDocIsBlock } = useGlobalContext();
 
 
   const imageSelection = (e) => {
@@ -31,11 +44,11 @@ export default function ImageUploader({ area, indexArea, setnImages, isEnableDoc
     const path = 'http://localhost:3001/';
     let imageURL;
 
-    APIReport.uploadImage(formData)
+    FileApi.uploadImage(formData)
       .then(res => {
         imageURL = path + res.imageUrl;
-        area.urlImages.push(imageURL);
-        setnImages(area.urlImages?.length);
+        imgs.push(imageURL);
+        setnImages(imgs?.length);
         setFileName('🔂 Seleccionar imagen');
         window.alert(`✅Imagen guardada`);
       })
@@ -45,19 +58,20 @@ export default function ImageUploader({ area, indexArea, setnImages, isEnableDoc
 
 
 
-  const deleteImage = (e, area, url) => {
+  const deleteImage = (e, url) => {
     e.preventDefault();
+
     const deleteImg = window.confirm('¿BORRAR IMAGEN?');
+    const indexUrl = imgs?.findIndex((u) => u === url);
 
     if (deleteImg && indexUrl !== -1) {
 
-      const indexUrl = area.urlImages.findIndex((u) => u === url);
-      const imgUrl = area.urlImages[indexUrl];
+      const imgUrl = imgs[indexUrl];
 
-      APIReport.deleteFile(imgUrl)
+      FileApi.deleteFile(imgUrl)
         .then(res => {
-          area.urlImages.splice(indexUrl, 1);
-          setnImages(area.urlImages?.length);
+          imgs.splice(indexUrl, 1);
+          setnImages(imgs?.length);
           window.alert(`✅ ${res}`);
         })
         .catch((e) => { window.alert(`❌ ${e.message}`); });
@@ -67,27 +81,28 @@ export default function ImageUploader({ area, indexArea, setnImages, isEnableDoc
 
 
 
-  return (
-
+  return ( 
     <>
-      <div className="flex spacebtw mediaIO-bar" >
 
+      <div className="flex spacebtw mediaIO-bar" > 
+      
 
         <div className="flex" >
 
-          <label htmlFor={`fi-${areaName}`}>
-            <p className="button-area-media">{fileName}</p>
+          <label htmlFor={`fi-${idArea}`}>
+            <p className="button media">{fileName}</p>
           </label>
 
           <input
-            id={`fi-${areaName}`}
+            id={`fi-${idArea}`}
             type="file"
+            accept={imageMimes.join(',')}
             onChange={imageSelection}
           />
 
           <button
-            id={`upi-${areaName}`} 
-            className= {`button-area-media ${isEnableDoc}`}
+            id={`upi-${idArea}`}
+            className={`button media ${globalDocIsBlock}`}
             onClick={uploadImage}>
             ⏏️ Subir imagen
           </button>
@@ -95,15 +110,16 @@ export default function ImageUploader({ area, indexArea, setnImages, isEnableDoc
         </div>
 
 
-        {area.urlImages.length > 0 && <div className="flex center">
+        {imgs.length > 0 && <div className="flex center">
 
-          <p>{area.urlImages?.length} imágen(es)</p>
+          <p>{imgs?.length} imágen(es)</p>
 
-          <button id={`sh-${areaName}`} className="button-area-media" onClick={showImages}  >
+          <button id={`sh-${idArea}`} className="button media" onClick={showImages}  >
             {`${imageIsVisible ? "👁️ Ocultar" : "🔎 Mostrar"}`}
           </button>
 
         </div>}
+
 
 
       </div>
@@ -112,13 +128,13 @@ export default function ImageUploader({ area, indexArea, setnImages, isEnableDoc
 
       {imageIsVisible && <div className="media-items-container" >
 
-        {area.urlImages?.map((url, index) => (
+        {imgs?.map((url, index) => (
           <a href={url} target="_blank" rel="noopener noreferrer" key={`img-${indexArea}-${index}`}>
             <img
               src={url}
               alt={`img-${indexArea}-${index}`}
               className="media-item"
-              onContextMenu={(e) => deleteImage(e, area, url)}
+              onContextMenu={(e) => deleteImage(e, url)}
             />
           </a>
         ))}
