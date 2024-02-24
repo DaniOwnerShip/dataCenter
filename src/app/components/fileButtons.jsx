@@ -8,8 +8,7 @@ export default function FileButtons({ report, place, refToPDF }) {
 
     const { globalDocIsBlock, setGlobalDocIsBlock } = useGlobalContext();
     const fileId = report[0].handshake.fileID;
-    const pdfName = fileId.split('.')[0];
-    console.log("FileButtons", fileId);
+    const pdfName = fileId.split('.')[0]; 
 
     // async function  downloadPDF () {
 

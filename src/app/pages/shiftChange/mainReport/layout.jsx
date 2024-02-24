@@ -10,8 +10,7 @@ import { useGlobalContext } from '../../../GlobalContext';
  
 export default function ShiftChangeLayout({ children }) {
     
-    const { globalDocIsBlock, setGlobalDocIsBlock } = useGlobalContext();
-      console.log('globalDocIsBlock:', globalDocIsBlock ); 
+    const { globalDocIsBlock } = useGlobalContext(); 
     //    const { globalDocIsBlock, setGlobalDocIsBlock } = useGlobalContext  ;
     // console.log('useGlobalContextx:' ); 
     // console.log('useGlobalContext:', typeof(useGlobalContext)); 

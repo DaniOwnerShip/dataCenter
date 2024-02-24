@@ -2,21 +2,14 @@
 import { io } from "socket.io-client";
 import { useState, useRef, useEffect  } from "react";
 import { useGlobalContext } from '../GlobalContext';
+import {docReserve, docState } from '../pages/shiftChange/mainReport/docReserve.js';
 
- 
- 
-const IdocState = {
-    required: "required",
-    reserved: "reserved",
-    released: "released"
-};
+const newDocReserve = {...docReserve};
+console.log('newDocReserve: ', newDocReserve);
 
-// let docReserve = { reqState: IdocState.required, docId: '', socketId: '', userAlias: '' };
-// let IdocReserve = { docId: "", Iuser: {}, reqState: IdocState.released };
-
-export default function ShocketInterface({ fileID }) { 
+export default function ShocketInterface({ fileID }) {  
  
-    const docID = fileID;
+    const docName = fileID;
     const {setGlobalDocIsBlock } = useGlobalContext();  
     const [clientShocket, setClientShocket] = useState();
     const [messages, setMessages] = useState([]);
@@ -24,7 +17,7 @@ export default function ShocketInterface({ fileID }) {
     const [myUser, setMyUser] = useState('');
     const [isSocketOn, setIsSocketOn] = useState(false);
     const [comment, setComment] = useState('');
-    const [docReserve, setDocReserve] = useState({ reqState: IdocState.required, docId: '', socketId: '', userAlias: '' });
+    const [myDocReserve, setMyDocReserve] = useState(newDocReserve);
     const lastMsgRef = useRef(null);
 
 
@@ -42,15 +35,12 @@ export default function ShocketInterface({ fileID }) {
 
 
     const reserveDoc = () => {
-        if (clientShocket?.connected) { 
-            const tdocReserve = { 
-                reqState: IdocState.required, 
-                docId: docID,
-                socketId: docReserve.socketId,
-                userAlias: myUser, 
-            } 
-            setDocReserve(tdocReserve); 
-            clientShocket.emit("reserveReq", tdocReserve);
+        if (clientShocket?.connected) {  
+            newDocReserve.reqState = docState.reserved;
+            newDocReserve.name = docName; 
+            console.log('docReserve: ', newDocReserve);
+            setMyDocReserve(newDocReserve); 
+            clientShocket.emit("reserveReq", newDocReserve);
         }
         else {
             console.log("conexión inactiva");
@@ -60,15 +50,9 @@ export default function ShocketInterface({ fileID }) {
 
     const releaseDoc = () => {
         if (clientShocket?.connected) { 
-            clientShocket.emit("releaseDoc1", docReserve);
-            const tdocReserve = { 
-                reqState: IdocState.released, 
-                docId: docReserve.docId,
-                socketId: docReserve.socketId,
-                userAlias: docReserve.userAlias, 
-            } 
-            setDocReserve(tdocReserve);
-            clientShocket.emit("releaseDoc", docReserve);
+            newDocReserve.doc.reqState.released;
+            clientShocket.emit("releaseDoc", newDocReserve); 
+            setMyDocReserve(newDocReserve); 
         }
         else {
             console.log("conexión inactiva");
@@ -84,6 +68,7 @@ export default function ShocketInterface({ fileID }) {
             return;
         }
 
+
         const newSocket = io("http://192.168.1.100:3001", {
             query: {
                 userAlias: myUser
@@ -93,22 +78,17 @@ export default function ShocketInterface({ fileID }) {
         newSocket.on("connect", () => { 
             setClientShocket(newSocket);
             setIsSocketOn(true); 
-            // setMessages(prevMessages => [...prevMessages, `Conexión establecida como: ${myUser}`]);
+            newDocReserve.user.alias = myUser;  
         }); 
 
         newSocket.on('connectRes', (res) => {
             console.log('connectRes',res);
-            console.log('connectResxxxs',res.user.socketID);
-            const tdocReserve = { 
-                reqState: IdocState.released, 
-                docId: docReserve.docId,
-                socketId: res.user.socketID,
-                userAlias: docReserve.userAlias, 
-            } 
-            setDocReserve(tdocReserve);
-            // docReserve.socketId = res.user.socketID;
-            console.log('docReserve.socketId',tdocReserve.socketId);
-            setMessages(prevMessages => [...prevMessages, res.message]);
+            const msg = res.message;
+            const user = res.user; 
+            newDocReserve.user.socketID = user.socketID;   
+            setMyDocReserve(newDocReserve); 
+            console.log('connectRes.docReserve',newDocReserve);
+            setMessages(prevMessages => [...prevMessages, msg]);
         });
 
 
@@ -143,7 +123,7 @@ export default function ShocketInterface({ fileID }) {
                         socketId: '',
                         userAlias: '' 
                     } 
-                    setDocReserve(tdocReserve); 
+                    setMyDocReserve(tdocReserve); 
                     setGlobalDocIsBlock('disabled');
                     console.log('released');
                 }
@@ -229,7 +209,7 @@ export default function ShocketInterface({ fileID }) {
                         <p>Usuarios conectados: </p>
                         {users?.map((user, index) => (
                             <p key={`user-${index}`} className="socketListmsg">
-                                {`🧑‍💻${user.alias}\n${user.IP}`}
+                                {`🧑‍💻${user.userAlias}\n${user.userIP}`}
                             </p>
                         ))}
                     </div>

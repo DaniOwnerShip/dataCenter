@@ -1,0 +1,20 @@
+{
+    "reqStates": {
+        "required": "required",
+        "reserved": "reserved",
+        "released": "released"
+    },
+    "doc": {
+        "name": "", 
+        "reqState": {
+            "required": "required",
+            "reserved": "reserved",
+            "released": "released"
+        }
+    },
+    "user": {
+        "IP": "",
+        "alias": "",
+        "socketID": ""
+    }
+}

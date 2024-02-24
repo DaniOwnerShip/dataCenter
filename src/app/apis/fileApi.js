@@ -5,8 +5,7 @@ export default class FileApi {
     
     static async downloadJsonObj(reqFileObj) {
 
-        const payload = JSON.stringify(reqFileObj);
-        console.log("payload", payload);
+        const payload = JSON.stringify(reqFileObj); 
         try {
 
             //var jsonString = JSON.stringify(objeto); const url = `http://localhost:3001/apiHs/downloadjson?fileName=${fileName}`;
