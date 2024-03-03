@@ -230,8 +230,7 @@ export default function ShocketInterface({ fileID }) {
 
 
                     <ResizableBox width={stylePanel.Wsize} height={stylePanel.Hsize} minConstraints={[150, 50]}>
-                        <>
-
+                       
 
                             <button type="button" className="button" onClick={toggleDragg}>
                                 {isDisableDragg ? "📍" : "📌"}
@@ -245,7 +244,7 @@ export default function ShocketInterface({ fileID }) {
 
                                 <input
                                     type="text"
-                                    className="textarea-socket"
+                                    className="input-socket"
                                     placeholder="nombre"
                                     id={`txt-num-${'indexTeam'}`}
                                     onChange={(e) => onChangeName(e)}
@@ -259,9 +258,9 @@ export default function ShocketInterface({ fileID }) {
                                 <div className="lineAnim-background"></div>
                                 <div className="lineAnim"></div>
 
+                                <button type="button" className="button sidebar" onClick={socketOff}>Desconectar</button>
                                 {DocReserve.state === DocReserve.states.disabled && <button className="button sidebar" onClick={reserveDoc}>Reservar Doc.</button>}
                                 {DocReserve.state === DocReserve.states.enabled && <button className="button sidebar" onClick={releaseDoc}>Liberar Doc.</button>}
-                                <button className="button sidebar" onClick={socketOff}>Desconectar</button>
 
                                 <div className="flex column">
 
@@ -289,12 +288,12 @@ export default function ShocketInterface({ fileID }) {
                                         </ul>
 
                                         <textarea className="textarea-socket"
-                                            placeholder="enviar comentario"
+                                            placeholder="comentario"
                                             value={comment}
                                             onChange={onChangeComment}
                                         ></textarea>
 
-                                        <button className="button sidebar" onClick={sendComment}>enviar</button>
+                                        <button type="button" className="button sidebar" onClick={sendComment}>enviar</button>
 
                                     </div> 
 
@@ -302,7 +301,8 @@ export default function ShocketInterface({ fileID }) {
 
                             </>}
 
-                        </>
+                         
+
                     </ResizableBox>
 
                 </div>

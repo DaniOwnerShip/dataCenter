@@ -47,7 +47,7 @@ export default function UnitPlantWindow({ place, report, setIsShow }) {
 
             <div ref={nodeRef} className={`UnitPlantWindow ${Object.values(windowStyle).join(' ')}`}>
 
-                <ResizableBox width={580} height={250} minConstraints={[100, 100]} style={{ overflow: 'auto' }}>
+                <ResizableBox width={750} height={250} minConstraints={[100, 100]} style={{ overflow: 'auto' }}>
 
                     <div className='resizableWindow'>
                     
@@ -81,8 +81,11 @@ export default function UnitPlantWindow({ place, report, setIsShow }) {
                             <Loading />
 
                         )}
+                        
                     </div>
+
                 </ResizableBox>
+
             </div>
 
         </Draggable>

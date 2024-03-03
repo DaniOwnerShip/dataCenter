@@ -17,18 +17,12 @@ export default function MediaImages({ area, indexArea, setnImages }) {
   const idArea = area.areaName;
   const imgs = area.urlImages;
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState('🔂 Seleccionar');
-  // const [imageIsVisible, setImageIsVisible] = useState(true); 
-
+  const [fileName, setFileName] = useState('🔂 Seleccionar');  
 
   const imageSelection = (e) => {
     setSelectedFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
-  };
-
-  // const showImages = () => {
-  //   setImageIsVisible(!imageIsVisible);
-  // };
+  }; 
 
 
   const uploadImage = () => {
@@ -98,6 +92,7 @@ export default function MediaImages({ area, indexArea, setnImages }) {
           />
 
           <button
+            type="button"
             id={`upi-${idArea}`}
             className="button media"
             onClick={uploadImage}>
@@ -109,9 +104,7 @@ export default function MediaImages({ area, indexArea, setnImages }) {
 
       </div>
 
-
-
-      {/* {imageIsVisible && } */}
+ 
       <div className="media-items-container" >
         {imgs?.map((url, index) => (
           <a href={url} target="_blank" rel="noopener noreferrer" key={`img-${indexArea}-${index}`}>

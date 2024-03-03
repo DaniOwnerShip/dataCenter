@@ -81,33 +81,33 @@ base:#A8BA2D
 }
 
 .app {
-    background-color: var(--background-color);
-    width: -webkit-fill-available;
-    height: -webkit-fill-available;
+    display: flex;
+    flex-direction: row;
+    margin-left: 250px;
 }
  
 
 .header { 
-    padding: 35px; 
-    margin: 0; 
-    background-color: var(--background-color);
+    padding: 35px;  
+    margin-left: 250px;
 }  
-
+ 
 /* 
 SIDE BAR
 */
-.sideBar { 
-    position: fixed; 
-    left: 0; 
+.sideBarLeft { 
+    position: fixed;
+    left: 0;
     top: 0;
-    padding-top: 42px; 
+    height: 100%;
+    width: 250px;
+    padding-top: 42px;
     z-index: 1;
+    background-color: var(--triada-base-color);
 }
 
-.unitsButtonsPanel {
-    padding: 10px;
-    display: flex;
-    top: 23px;
+.sidebarBox {
+    padding: 10px; 
 }
 
 
@@ -115,9 +115,8 @@ SIDE BAR
 mainContainer
 */
 
-.mainContainer {
-    grid-column: 2 / 2;
-    max-width: 1000px;
+.mainContainer { 
+    min-width: 900px;
     padding: 0.5rem;
     border-radius: 15px;
     box-shadow: -4px -4px 3px -5px white;
@@ -142,7 +141,8 @@ mainContainer
     left: 255px;
     position: fixed;
     padding: 7px;
-    border-radius: 15px; 
+    border-radius: 15px;     
+    z-index: 2;
 }
 
 .isDraggable {
@@ -209,7 +209,7 @@ AREAS
     align-items: center;
     font-size: medium;
     font-weight: 700;
-    grid-template-columns: 45% 10% auto 10%;
+    grid-template-columns: 45% 11% auto 10%;
     padding: 3px;
     border-radius: 7px;
     /* border: 1px solid whitesmoke; */
@@ -279,6 +279,8 @@ MULTIMEDIA
 .media {
     margin-top: 5px;
     padding: 10px;
+    pointer-events: all;
+    opacity: 1;
 }
 
 .media.closed {
@@ -400,8 +402,9 @@ BUTTONS
 }
 
 .button.sidebar:hover { 
-    background-color: var(--body-color);
-    color: var(--body-txt-color);
+    /* background-color: var(--body-color);
+    color: var(--body-txt-color); */
+    border: 1px solid #e7ff44;
 }
 .button.states:hover,
 .button.expandArea:hover {
@@ -412,45 +415,51 @@ BUTTONS
 /* 
 TEXT INPUNTS
 */
-
-textarea,
+ 
 input {
     margin: 0 5px;
     padding: 1px 2px 2px 7px;
-    font-family: system-ui;
-    outline: none;
-    overflow: auto;
     border-radius: 5px; 
-    background-color: transparent;
+    font-family: system-ui; 
     border: 1px solid rgb(0, 0, 0);
-    color: var(--body-txt-color);
+    font-size: .7rem;
+    height: 15px;
+    outline: none; 
 }
 
 .input-num {
     width: 1rem;
 }
 
+  .input-socket {   
+    margin-top: 5px;
+}   
 textarea {
     resize: vertical;
     height: 1.2rem;
-    width: 98%;
-    margin: 0; 
+    width: 95%; 
+    margin: 0 5px;
+    padding: 1px 2px 2px 7px;
+    font-family: system-ui;
+    outline: none; 
+    background-color: transparent;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 5px; 
+    color: var(--body-txt-color);
     overflow: hidden;
 }
+
+.textarea-socket {   
+    margin: 5px 0;
+    color: black;
+    resize: both;
+} 
+
 
 textarea:focus,
 input:focus {
     background-color: rgb(10 10 10);
     color: limegreen;
-}
-
-.textarea-socket {
-    font-size: .7rem;
-    height: 15px;
-    background-color: whitesmoke;
-    /* border: 1px solid rgb(0, 0, 0); */
-    color: black;
-    margin-top: 5px;
 }
 
 
@@ -501,11 +510,11 @@ SOCKET ITERFACE
     left: 5px;
 }
 
-.socket-box {
-    padding: 0px 10px;
-    font-size: .7rem;
-    width: auto;
+.socket-box { 
+    font-size: .7rem; 
     margin-top: 4px;
+    display: flex;
+    flex-direction: column;
 }
  
 
@@ -516,8 +525,8 @@ SOCKET ITERFACE
     background-color: black; 
     padding-inline-start: 25px;
     padding-right: 10px;
-    border-radius: 5px;
-    margin: 3px 3px;
+    border-radius: 5px; 
+    margin: 3px 0px;
 }
 
 

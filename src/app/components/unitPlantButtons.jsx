@@ -49,19 +49,19 @@ export default function UnitPlantButtons() {
 
   return (
 
-    <div className="unitsButtonsPanel" >
+    <>
 
       {units.map((unit, iunit) => (
 
-        <div className="flex column" key={`unit-${iunit}`}>
+        <div className="flex" key={`unit-${iunit}`}>
 
-          <button key={`btnup-${iunit}`}
+          <button type="button" key={`btnup-${iunit}`}
             className="button sidebar"
             onClick={() => clickToUnit(unit)}>
             {`Ir a Unidad ${iunit + 1}`}
           </button>
 
-          <button key={`btnuw-${iunit}`}
+          <button type="button" key={`btnuw-${iunit}`}
             className="button sidebar"
             onClick={() => clickOpenWindow(unit)}>
             {`Abrir Unidad ${iunit + 1}`}
@@ -75,7 +75,7 @@ export default function UnitPlantButtons() {
       {report && isShow && <UnitPlantWindow place={activeUnit} report={report} setIsShow={setIsShow} />}
 
 
-    </div >
+    </>
 
   )
 }

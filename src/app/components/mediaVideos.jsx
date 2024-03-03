@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import FileApi from "../apis/fileApi"; 
 
-export default function MediaVideos({ area, indexArea, setnVideos }) {
+export default function MediaVideo({ area, indexArea, setnVideos }) {
 
     const videoMimes = [
         'video/quicktime',   // .mov
@@ -96,6 +96,7 @@ export default function MediaVideos({ area, indexArea, setnVideos }) {
                     />
 
                     <button
+                        type="button"
                         id={`upv-${idArea}`}
                         className={`button media`}
                         onClick={uploadVideo}>
@@ -107,9 +108,7 @@ export default function MediaVideos({ area, indexArea, setnVideos }) {
 
             </div>
 
-
-
-            {/* {videosVisible &&} */}
+ 
             <div className="media-items-container" >
                 {videos?.map((url, index) => (
                     <a href={url} target="_blank" rel="noopener noreferrer" key={`vid-${indexArea}-${index}`}>

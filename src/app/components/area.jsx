@@ -33,7 +33,7 @@ function AreaTittle({ place, area, expandArea, setExpandArea }) {
              {area.areaName} 
             <div className="flex center">{area.units} </div>
              Comentarios 
-            <button className="button expandArea"
+            <button type="button" className="button expandArea"
                 onClick={() => setExpandArea(!expandArea)}
             >
                 {`${expandArea ? "➖" : "➕"}`}
@@ -71,7 +71,8 @@ function ButtonsStates({ areaItem, ikey }) {
         <div className="flex center">
 
             {areaItem.state.map((states, indexstate) => (
-                <button
+                <button 
+                    type="button"
                     key={`btnstate-${ikey}-${indexstate}`} 
                     className="button states"
                     id={`btnstate-${ikey}-${indexstate}`}
@@ -131,7 +132,7 @@ function Commensts({ areaItem, ikey }) {
 
         <div className="textarea-container">
 
-            <button id={`tbt-${ikey}`} className="textarea-button" onClick={() => toggletxtareaButton()}>
+            <button type="button" id={`tbt-${ikey}`} className="textarea-button" onClick={() => toggletxtareaButton()}>
                 {`${isExpanded ? '-' : '+'}`}
             </button>
  

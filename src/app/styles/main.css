@@ -1,11 +1,11 @@
-body {
-  background-color: var(--triada-base-color);
-  margin: 0;
-  margin-left: 250px;
+body { 
+  background-color: var(--background-color);
   color: var(--body-txt-color);
   font-family: ui-sans-serif, system-ui, sans-serif;
+  margin: 0;
 }
 
+ 
 a {
   color: rgb(66, 148, 255);
   text-decoration: none;
@@ -19,22 +19,7 @@ a:hover {
   color: rgb(0, 200, 255);
   /* Color cuando el ratón está sobre el enlace */
 }
-
-/* h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  margin: 1px;
-}
-
-h1 {
-  text-align: center;
-  padding: 10px;
-}
- */
+ 
 input[type="file"] {
   display: none;
 }

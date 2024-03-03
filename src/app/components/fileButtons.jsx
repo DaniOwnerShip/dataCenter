@@ -84,8 +84,8 @@ export default function FileButtons({ report, place, refToPDF }) {
     return (
 
         <div className="flex" >
-            <button className="button" onClick={downloadPDF}>🔽 Descargar PDF</button>
-            <button className="button" onClick={saveJson}>⏏️ Guardar Informe</button>
+            <button type="button" className="button" onClick={downloadPDF}>🔽 Descargar PDF</button>
+            <button type="button" className="button" onClick={saveJson}>⏏️ Guardar Informe</button>
         </div>
 
     );

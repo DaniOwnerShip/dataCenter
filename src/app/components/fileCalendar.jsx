@@ -37,7 +37,7 @@ export default function FileCalendar({ setReport, place }) {
 
     <div className="flex center datepicker">
 
-      <button className="button" onClick={downloadjson}>
+      <button type="button" className="button" onClick={downloadjson}>
         ▶️ Descargar informe
       </button>
 

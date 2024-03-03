@@ -5,9 +5,9 @@ import FileApi from "@/apis/fileApi";
 import Handshake from "@/components/handshake";
 import Area from "@/components/area";
 import Loading from "@/components/loading";
-import FileBar from "@/components/fileBar";
-import SideBarLeft from "@/components/sideBarLeft";
+import FileBar from "@/components/fileBar"; 
 import DocReserve from '../docReserve';
+import UnitPlantButtons from "@/components/unitPlantButtons";
 import ShocketInterface from "@/components/shocketInterface";
 
 export default function ShiftChange() {
@@ -35,17 +35,18 @@ export default function ShiftChange() {
     return (
 
         <>
-
             <h1 className="flex center header"> Cambio de Turno{docState === DocReserve.states.enabled ? '🔓' : '🔒'} </h1>
-
 
             {report ? (
 
                 <div className="app" >
 
-                    <SideBarLeft fileID={report[0].handshake.fileID} />
-
-                    <ShocketInterface fileID={report[0].handshake.fileID} />
+                    <div className="sideBarLeft">
+                        <div className="sidebarBox flex column" > 
+                            <UnitPlantButtons />
+                        </div>
+                        <ShocketInterface fileID={report[0].handshake.fileID} />
+                    </div>
 
 
                     <div className="mainContainer" ref={refToPDF}>
