@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import FileApi from "../apis/fileApi";
-import { useGlobalContext } from '../GlobalContext';
-
 
 
 export default function MediaImages({ area, indexArea, setnImages }) {
-  
+
   const imageMimes = [
     'image/jpeg',  // .jpg, .jpeg
     'image/png',   // .png
@@ -13,15 +11,14 @@ export default function MediaImages({ area, indexArea, setnImages }) {
     'image/bmp',   // .bmp
     'image/webp',  // .webp
     'image/svg+xml' // .svg
-];
+  ];
 
 
   const idArea = area.areaName;
   const imgs = area.urlImages;
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState('🔂 Seleccionar imagen');
-  const [imageIsVisible, setImageIsVisible] = useState(true);
-  const { globalDocIsBlock } = useGlobalContext();
+  const [fileName, setFileName] = useState('🔂 Seleccionar');
+  // const [imageIsVisible, setImageIsVisible] = useState(true); 
 
 
   const imageSelection = (e) => {
@@ -29,9 +26,9 @@ export default function MediaImages({ area, indexArea, setnImages }) {
     setFileName(e.target.files[0].name);
   };
 
-  const showImages = () => {
-    setImageIsVisible(!imageIsVisible);
-  };
+  // const showImages = () => {
+  //   setImageIsVisible(!imageIsVisible);
+  // };
 
 
   const uploadImage = () => {
@@ -81,16 +78,16 @@ export default function MediaImages({ area, indexArea, setnImages }) {
 
 
 
-  return ( 
+  return (
     <>
 
-      <div className="flex spacebtw mediaIO-bar" > 
-      
+      <div className="flex spacebtw mediaIO-bar" >
+
 
         <div className="flex" >
 
           <label htmlFor={`fi-${idArea}`}>
-            <p className="button media">{fileName}</p>
+            <div className="button media">{fileName}</div>
           </label>
 
           <input
@@ -102,32 +99,20 @@ export default function MediaImages({ area, indexArea, setnImages }) {
 
           <button
             id={`upi-${idArea}`}
-            className={`button media ${globalDocIsBlock}`}
+            className="button media"
             onClick={uploadImage}>
-            ⏏️ Subir imagen
+            ⏏️ Subir
           </button>
 
-        </div>
-
-
-        {imgs.length > 0 && <div className="flex center">
-
-          <p>{imgs?.length} imágen(es)</p>
-
-          <button id={`sh-${idArea}`} className="button media" onClick={showImages}  >
-            {`${imageIsVisible ? "👁️ Ocultar" : "🔎 Mostrar"}`}
-          </button>
-
-        </div>}
-
+        </div> 
 
 
       </div>
 
 
 
-      {imageIsVisible && <div className="media-items-container" >
-
+      {/* {imageIsVisible && } */}
+      <div className="media-items-container" >
         {imgs?.map((url, index) => (
           <a href={url} target="_blank" rel="noopener noreferrer" key={`img-${indexArea}-${index}`}>
             <img
@@ -139,7 +124,7 @@ export default function MediaImages({ area, indexArea, setnImages }) {
           </a>
         ))}
 
-      </div>}
+      </div>
 
 
 

@@ -2,47 +2,67 @@
 
 import UnitPlantWindow from "./unitPlantWindow";
 import { useRouter } from 'next/navigation'
-import { createRoot } from 'react-dom/client';
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
+import { socketState } from "./shocketInterface";
 import FileApi from "../apis/fileApi";
 
 
-export default function UnitPlantButtons({IreportReq}) {
+export default function UnitPlantButtons() {
 
   const router = useRouter();
   const units = ['unit1', 'unit2'];
   const [report, setReport] = useState(null);
   const [isShow, setIsShow] = useState(false);
+  const [activeUnit, setActiveUnit] = useState('');
 
+  
+  const clickOpenWindow = (unit) => {
 
-  const clickOpenWindow = (unit) => { 
-    IreportReq.place = unit; 
-    FileApi.downloadJsonObj(IreportReq)
+    const fileName = `informe-${unit}-last.json`
+
+    FileApi.downloadjson(fileName)
       .then(res => {
         setReport(res);
         setIsShow(true);
+        setActiveUnit(unit);
       })
-      .catch((e) => { window.alert(`❌ ${e.message}`); });  
+      .catch((e) => { window.alert(`❌ ${e.message}`); });
+
   };
- 
+
+
+  const clickToUnit = (unit) => {
+
+    const isSocket = socketState.isOn;
+    console.log('clickToUnit', isSocket);
+
+    if (isSocket) {
+      window.alert('necesita desconectar la interfaz');
+      return;
+    }
+
+    router.push(`/pages/shiftChange/plantUnits/${unit}`);
+
+  }
+
+
 
   return (
 
-    <div className="UnitPlantNav" >
+    <div className="unitsButtonsPanel" >
 
       {units.map((unit, iunit) => (
 
         <div className="flex column" key={`unit-${iunit}`}>
 
           <button key={`btnup-${iunit}`}
-            className="button units"
-            onClick={() => router.push(`/pages/shiftChange/plantUnits/${unit}`)}>
+            className="button sidebar"
+            onClick={() => clickToUnit(unit)}>
             {`Ir a Unidad ${iunit + 1}`}
           </button>
 
           <button key={`btnuw-${iunit}`}
-            className="button units"
+            className="button sidebar"
             onClick={() => clickOpenWindow(unit)}>
             {`Abrir Unidad ${iunit + 1}`}
           </button>
@@ -50,10 +70,10 @@ export default function UnitPlantButtons({IreportReq}) {
         </div>
 
       ))}
- 
 
-      {report && isShow && <UnitPlantWindow place={IreportReq.place} report={report} setIsShow={setIsShow} />}  
-      
+
+      {report && isShow && <UnitPlantWindow place={activeUnit} report={report} setIsShow={setIsShow} />}
+
 
     </div >
 

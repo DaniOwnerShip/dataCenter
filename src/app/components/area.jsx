@@ -1,17 +1,15 @@
-import { useEffect, useState } from "react";
-import { useGlobalContext } from '../GlobalContext';
+import { useEffect, useState } from "react"; 
 import MediaTabs from "./mediaTabs";  
 
 
-export default function Area({ place, area, indexArea, isMultimedia }) {
+export default function Area({ place, area, indexArea, isMultimedia }) { 
 
-    const [expandArea, setExpandArea] = useState(true);
-
+    const [expandArea, setExpandArea] = useState(true);   
 
     return (
         <>
             <AreaTittle place={place} area={area} expandArea={expandArea} setExpandArea={setExpandArea} />
-
+           
             {expandArea && <div className="area-items-container">
 
                 {area.areaItems.map((area, indexItem) => (
@@ -22,11 +20,8 @@ export default function Area({ place, area, indexArea, isMultimedia }) {
                 
                 {isMultimedia && <MediaTabs area={area} indexArea={indexArea} />}
 
-            </div>}
-
-
-        </>
-
+            </div>}  
+        </> 
     );
 }
 
@@ -34,10 +29,10 @@ export default function Area({ place, area, indexArea, isMultimedia }) {
 
 function AreaTittle({ place, area, expandArea, setExpandArea }) {
     return (
-        <div className={` ${expandArea ? `area-tittle expandBox ${place}` : `area-tittle ${place}`} `} >
-            <h4>{area.areaName}</h4>
-            <h4 className="flex center">{area.units} </h4>
-            <h4>Comentarios </h4>
+        <div className={` ${expandArea ? `area-tittle expand ${place}` : `area-tittle ${place}`} `} >
+             {area.areaName} 
+            <div className="flex center">{area.units} </div>
+             Comentarios 
             <button className="button expandArea"
                 onClick={() => setExpandArea(!expandArea)}
             >
@@ -49,21 +44,20 @@ function AreaTittle({ place, area, expandArea, setExpandArea }) {
 
 
 
-function AreaItem({ place, area, ikey }) {
+function AreaItem({ area, ikey }) {
     return (
         <>
-            <p>{area.desc}</p>
-            <ButtonsStates place={place} areaItem={area} ikey={ikey} />
-            <Commensts place={place} areaItem={area} ikey={ikey} />
+            {area.desc} 
+            <ButtonsStates areaItem={area} ikey={ikey} />
+            <Commensts areaItem={area} ikey={ikey} />
         </>
     );
 }
 
 
 
-function ButtonsStates({ place, areaItem, ikey }) {
-
-    const { globalDocIsBlock } = useGlobalContext();
+function ButtonsStates({ areaItem, ikey }) {
+  
     const [forceRender, setForceRender] = useState(false);
     const buttonStates = areaItem.state;
 
@@ -78,8 +72,8 @@ function ButtonsStates({ place, areaItem, ikey }) {
 
             {areaItem.state.map((states, indexstate) => (
                 <button
-                    key={`btnstate-${ikey}-${indexstate}`}
-                    className={`button states ${place === 'main1' ? globalDocIsBlock : 'enabled'}`}
+                    key={`btnstate-${ikey}-${indexstate}`} 
+                    className="button states"
                     id={`btnstate-${ikey}-${indexstate}`}
                     onClick={() => buttonState(indexstate)}
                 >
@@ -94,8 +88,7 @@ function ButtonsStates({ place, areaItem, ikey }) {
 
 
 
-function Commensts({ place, areaItem, ikey }) {
-    const { globalDocIsBlock } = useGlobalContext();
+function Commensts({ areaItem, ikey }) { 
 
     const id = `txtarea-${ikey}`
     const item = areaItem;
@@ -141,8 +134,8 @@ function Commensts({ place, areaItem, ikey }) {
             <button id={`tbt-${ikey}`} className="textarea-button" onClick={() => toggletxtareaButton()}>
                 {`${isExpanded ? '-' : '+'}`}
             </button>
-
-            <textarea className={`${place === 'main1' ? globalDocIsBlock : 'enabled'}`}
+ 
+            <textarea className="textarea window"
                 id={id}
                 placeholder="comentarios"
                 value={areaItem.comments}

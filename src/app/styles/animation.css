@@ -1,0 +1,97 @@
+.lineAnim {
+    position: absolute;
+    border-radius: 20px;
+    animation: lineAnimation 7s linear infinite; 
+}
+
+.lineAnim.pause {
+    animation-play-state: paused;
+    background: rgb(255, 255, 255, 0);
+}
+
+.lineAnim-background{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 7px;
+    background-color: black;
+}
+
+@keyframes lineAnimation {
+    
+    0% {
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--line-anim-size);
+        background: linear-gradient(to right, #00000000, var(--line-anim-color));
+        transform: translateX(-100%);
+    }
+
+    50% {
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--line-anim-size);
+        background: linear-gradient(to right, #00000000, var(--line-anim-color));
+        transform: translateX(100%);
+    }
+ 
+
+    50.01% {
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--line-anim-size);
+        background: linear-gradient(to left, #00000000, var(--line-anim-color));
+        transform: translateX(100%);
+    }
+
+    100% {
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--line-anim-size);
+        background: linear-gradient(to left, #00000000, var(--line-anim-color));
+        transform: translateX(-100%);
+    }
+ 
+/* 
+    0% {
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--line-anim-size);
+        background: linear-gradient(to right, #00000000, var(--line-anim-color));
+        transform: translateX(-100%);
+    }
+
+    50% {
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--line-anim-size);
+        background: linear-gradient(to right, #00000000, var(--line-anim-color));
+        transform: translateX(100%);
+    }
+
+    50.01% {
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--line-anim-size);
+        background: linear-gradient(to left, #00000000, var(--line-anim-color));
+        transform: translateX(100%);
+    }
+
+    100% {
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: var(--line-anim-size);
+        background: linear-gradient(to left, #00000000, var(--line-anim-color));
+        transform: translateX(-100%);
+    } */
+ 
+}

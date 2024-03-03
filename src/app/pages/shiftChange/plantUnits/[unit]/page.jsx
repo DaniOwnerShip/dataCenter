@@ -1,31 +1,28 @@
 "use client"
 
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { useRouter } from 'next/navigation';
-import FileApi from "../../../../apis/fileApi";
-import Area from "../../../../components/area";
-import Loading from "../../../../components/loading"; 
+import FileApi from "@/apis/fileApi";
+import Area from "@/components/area";
+import Loading from "@/components/loading"; 
+import FileBar from "@/components/fileBar";
 
 export default function PlantUnit({params}) {
-
-  console.log('router:', params.unit); 
+ 
   const unit = params.unit;  
   const [report, setReport] = useState();   
   const router = useRouter();
+  const refToPDF = useRef(null);
 
-  const reportReq = {
-    file: "informe",
-    place: unit,
-    date: "last",
-    type: ".json"
-} 
  
+  const fileName = `informe-${unit}-last.json`
+
 
   useEffect(() => {
 
     if (!report) {
 
-      FileApi.downloadJsonObj(reportReq)
+      FileApi.downloadjson(fileName)
         .then(res => {
           setReport(res); 
         })
@@ -42,7 +39,7 @@ export default function PlantUnit({params}) {
     <>
       {report ? (
 
-        <div className="mainContainer">
+        <div className="mainContainer unit" ref={refToPDF}>
 
           {report[0].handshake.fileID.replace(/\.json$/, '')}
 
@@ -68,6 +65,7 @@ export default function PlantUnit({params}) {
           </section>
 
 
+          <FileBar report={report} setReport={setReport} place={unit} refToPDF={refToPDF} />
 
         </div>
       ) : (

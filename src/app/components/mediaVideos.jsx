@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
-import FileApi from "../apis/fileApi";
-import { useGlobalContext } from '../GlobalContext';
+import FileApi from "../apis/fileApi"; 
 
 export default function MediaVideos({ area, indexArea, setnVideos }) {
 
@@ -19,10 +18,9 @@ export default function MediaVideos({ area, indexArea, setnVideos }) {
 
     const idArea = area.areaName;
     const videos = area.urlVideos;
-    const [videoName, setVideoName] = useState('🔂 Seleccionar video');
+    const [videoName, setVideoName] = useState('🔂 Seleccionar');
     const [selectedVideo, setSelectedVideo] = useState(null);
-    const [videosVisible, setVideosVisible] = useState(true);
-    const { globalDocIsBlock } = useGlobalContext();
+    // const [videosVisible, setVideosVisible] = useState(true); 
 
 
     const videoSelection = (e) => {
@@ -32,9 +30,9 @@ export default function MediaVideos({ area, indexArea, setnVideos }) {
     };
 
 
-    const showVideos = () => {
-        setVideosVisible(!videosVisible);
-    };
+    // const showVideos = () => {
+    //     setVideosVisible(!videosVisible);
+    // };
 
 
     const uploadVideo = async () => {
@@ -88,7 +86,7 @@ export default function MediaVideos({ area, indexArea, setnVideos }) {
                 <div className="flex" >
 
                     <label htmlFor={`vi-${idArea}`} >
-                        <p className="button media">{videoName}</p>
+                        <div className="button media">{videoName}</div>
                     </label>
 
                     <input id={`vi-${idArea}`}
@@ -99,31 +97,20 @@ export default function MediaVideos({ area, indexArea, setnVideos }) {
 
                     <button
                         id={`upv-${idArea}`}
-                        className={`button media ${globalDocIsBlock}`}
+                        className={`button media`}
                         onClick={uploadVideo}>
-                        ⏏️ Subir Vídeo
+                        ⏏️ Subir
                     </button>
 
-                </div>
-
-
-                {videos?.length > 0 && <div className="flex center">
-
-                    <p>{videos?.length} vídeo(s)</p>
-
-                    <button id={`bvid-${idArea}`} className="button media" onClick={showVideos}  >
-                        {`${videosVisible ? "👁️ Ocultar" : "🔎 Mostrar"}`}
-                    </button>
-
-                </div>}
+                </div> 
 
 
             </div>
 
 
 
-            {videosVisible && <div className="media-items-container" >
-
+            {/* {videosVisible &&} */}
+            <div className="media-items-container" >
                 {videos?.map((url, index) => (
                     <a href={url} target="_blank" rel="noopener noreferrer" key={`vid-${indexArea}-${index}`}>
                         <video
@@ -135,7 +122,7 @@ export default function MediaVideos({ area, indexArea, setnVideos }) {
                     </a>
                 ))}
 
-            </div>}
+            </div>
 
 
 

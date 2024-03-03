@@ -1,250 +1,315 @@
-
 import { io } from "socket.io-client";
+
 import { useState, useRef, useEffect  } from "react";
-import { useGlobalContext } from '../GlobalContext';
-import {docReserve, docState } from '../pages/shiftChange/mainReport/docReserve.js';
+// import { useGlobalContext} from '../GlobalContext'; 
+import _docReserve from '../pages/shiftChange/mainReport/docReserveOLD.json';
+// import { ResizableBox } from 'react-resizable'; 
+import Draggable from 'react-draggable';
+import { ResizableBox } from 'react-resizable';
+import DocReserve from '../pages/shiftChange/docReserve'; 
 
-const newDocReserve = {...docReserve};
-console.log('newDocReserve: ', newDocReserve);
-
-export default function ShocketInterface({ fileID }) {  
+import "../styles/animation.css"
  
-    const docName = fileID;
-    const {setGlobalDocIsBlock } = useGlobalContext();  
-    const [clientShocket, setClientShocket] = useState();
+ 
+export const socketState = {
+    isOn: false,
+    usersOn: 0,
+    _socket: null,
+    broadcastFn:  null 
+}; 
+
+  
+export default function ShocketInterface({ fileID }) {   
+ 
+    const docName =  fileID.split('.')[0]; 
+   
+    const [mySocket, setMySocket] = useState();
     const [messages, setMessages] = useState([]);
     const [users, setUsers] = useState([]);
-    const [myUser, setMyUser] = useState('');
-    const [isSocketOn, setIsSocketOn] = useState(false);
-    const [comment, setComment] = useState('');
-    const [myDocReserve, setMyDocReserve] = useState(newDocReserve);
-    const lastMsgRef = useRef(null);
+    const [myUser, setMyUser] = useState({ "alias": "", "socketID": "" }); 
+    const [comment, setComment] = useState('');   
+
+    const socketRef = useRef(null);
+    const lastMsgRef = useRef(null);  
+    const [isDisableDragg, setIsDisableDragg] = useState(true);
+    const [windowStyle, setWindowStyle] = useState({ isDraggable: '', isDragging: '' });
+    const [stylePanel, setStylePanel] = useState({Wsize : 200, Hsize: 80});    
 
 
- 
-    
-    const handleTextareaChange = (e) => {
+    useEffect(() => {
+        scrollToBottom();   
+    }, [messages ]);
+
+
+    const onChangeName = (e) => { 
+        setMyUser({ ...myUser, alias: e.target.value }); 
+    };
+     
+    const onChangeComment = (e) => {
         setComment(e.target.value);
-    };
-
-    const sendText = () => {
-        console.log('sendText: ', comment);
-        clientShocket.emit("comment", comment);
-        setComment('');
-    }; 
-
-
-    const reserveDoc = () => {
-        if (clientShocket?.connected) {  
-            newDocReserve.reqState = docState.reserved;
-            newDocReserve.name = docName; 
-            console.log('docReserve: ', newDocReserve);
-            setMyDocReserve(newDocReserve); 
-            clientShocket.emit("reserveReq", newDocReserve);
-        }
-        else {
-            console.log("conexión inactiva");
-        } 
-    };
-
-
-    const releaseDoc = () => {
-        if (clientShocket?.connected) { 
-            newDocReserve.doc.reqState.released;
-            clientShocket.emit("releaseDoc", newDocReserve); 
-            setMyDocReserve(newDocReserve); 
-        }
-        else {
-            console.log("conexión inactiva");
-        }
-    };
-
-
-
-    function socketInit() {
- 
-        if (myUser === '') {
-            window.alert('introduce un nombre');
-            return;
-        }
-
-
-        const newSocket = io("http://192.168.1.100:3001", {
-            query: {
-                userAlias: myUser
-            }
-        });
-
-        newSocket.on("connect", () => { 
-            setClientShocket(newSocket);
-            setIsSocketOn(true); 
-            newDocReserve.user.alias = myUser;  
-        }); 
-
-        newSocket.on('connectRes', (res) => {
-            console.log('connectRes',res);
-            const msg = res.message;
-            const user = res.user; 
-            newDocReserve.user.socketID = user.socketID;   
-            setMyDocReserve(newDocReserve); 
-            console.log('connectRes.docReserve',newDocReserve);
-            setMessages(prevMessages => [...prevMessages, msg]);
-        });
-
-
-
-        newSocket.on('reserveRes', (res) => {
-
-            const state = res.IdocReserve.reqState;
-
-            console.log('reserveRes',res);
-            console.log('reserveReszzzzz',res.IdocReserve.userOwner.socketID);
-            console.log('docReserve.socketIdxxxx',docReserve.socketId);
-            console.log('docReserve',docReserve );
-            if (res.IdocReserve.userOwner.socketID === docReserve.socketId) {
-                console.log('socketID');
-
-                if (state === IdocState.reserved) {
-                    docReserve.reqState = state;
-                    const tdocReserve = { 
-                        reqState: IdocState.reserved, 
-                        docId: docReserve.docId,
-                        socketId: res.IdocReserve.userOwner.socketID,
-                        userAlias: docReserve.userAlias, 
-                    } 
-                    setDocReserve(tdocReserve);
-                    setGlobalDocIsBlock('enabled');
-                    console.log('reserved');
-                }
-                if (state === IdocState.released) {
-                    const tdocReserve = { 
-                        reqState: IdocState.released, 
-                        docId: '',
-                        socketId: '',
-                        userAlias: '' 
-                    } 
-                    setMyDocReserve(tdocReserve); 
-                    setGlobalDocIsBlock('disabled');
-                    console.log('released');
-                }
-            }
-            setMessages(prevMessages => [...prevMessages, res.message]);
-            console.log('reserveStatus:', res);
-
-        });
-
-        newSocket.on('comment', (data) => {
-            console.log('comment:', data);
-            setMessages(prevMessages => [...prevMessages, data]);
-        });
-
-        newSocket.on('users', (users) => {
-            console.log('users:', users);
-            setUsers(users);
-        });
-
-        newSocket.on("disconnect", () => {
-            setUsers([]);
-            setMessages([]);
-            setIsSocketOn(false);
-            setGlobalDocIsBlock('disabled');
-            console.log("disconnect");
-        });
-    }; 
-
-
-    const socketOff = () => {
-        if (clientShocket?.connected) { 
-            releaseDoc();
-            clientShocket.disconnect(); 
-        }else {
-            console.log("conexión inactiva");
-        }
-    };
-
-    const onChangeName = (event) => {  
-        setMyUser(event.target.value);
-    };
-
+    };  
     const scrollToBottom = () => {
         if (lastMsgRef.current) {
             lastMsgRef.current.scrollTop = lastMsgRef.current.scrollHeight;
         }
-      };
-    
-      useEffect(() => {
-        scrollToBottom();
-      }, [messages]);
-    
+    }; 
 
+    const toggleDragg = () => {
+        setIsDisableDragg(!isDisableDragg); 
+        const isDrg = isDisableDragg ? 'isDraggable' : '';
+        setWindowStyle(style => ({ ...style, isDraggable: isDrg }));
+    }  
+    const startDrag = () => {
+         setWindowStyle(style => ({ ...style, isDragging: 'isDragging' }));
+    }; 
+    const stopDrag = () => {
+          setWindowStyle(style => ({ ...style, isDragging: '' }));
+    };
+
+ 
+
+    function socketInit() {
+
+        if (myUser.alias === '') {
+            window.alert('introduce un nombre');
+            return;
+        }
+        const newSocket = io("http://192.168.1.100:3001", {
+            query: {
+                userAlias: myUser.alias
+            }
+        });
+
+        newSocket.on("connect", () => {  
+            socketMethodsSubscribe(newSocket);   
+        });  
+    };
+
+
+
+    function socketMethodsSubscribe(socket) {
+
+        if (!socket) { return window.alert(`❌ socket error`); }
+
+        setMySocket(socket);
+        setMyUser({ ...myUser, socketID: socket.id });
+        setMessages(msgs => [...msgs, 'Conectado como: ' + myUser.alias]); 
+        setStylePanel({Wsize : 200, Hsize: 300}) 
+        socketState.isOn = true;
+        socketState._socket = socket;
+        socketState.broadcastFn = fileSavedBroadcast; 
+
+
+        socket.on('docReserveRes', (res) => { 
+            const succes = res.succes;
+            const msg = res.message; 
+            if (succes) {
+                DocReserve.state = DocReserve.states.enabled;
+                document.documentElement.style.setProperty('--line-anim-color', '#BA372D');
+                return;
+            } 
+            setMessages(prevMsg => [...prevMsg, msg]);
+        });  
+
+
+        socket.on('releaseDocRes', (res) => {    
+            const succes = res.succes;
+            const msg = res.message; 
+            if (succes) {
+                DocReserve.state = DocReserve.states.disabled;
+                document.documentElement.style.setProperty('--line-anim-color', 'lime');
+                return;
+            }  
+            setMessages(prevMsg => [...prevMsg, msg]);
+        });
+
+
+        socket.on('comment', (comment) => { 
+            setMessages(prevMsg => [...prevMsg, `${comment.user}-> ${comment.msg}`]);
+        });
+
+
+        socket.on('usersOn', (users) => {
+            console.log('usersOn:', users);
+            setUsers(users);
+        });
+
+
+        socket.on("disconnect", () => {
+            console.log("socketState", socketState); 
+            socketState.isOn = false;
+            socketState.usersOn = users.length;
+            DocReserve.state = DocReserve.states.disabled;
+            setUsers([]);
+            setMessages([]);
+            setMySocket(null);     
+            setStylePanel({Wsize : 200, Hsize: 80}) 
+            document.documentElement.style.setProperty('--line-anim-color', 'lime');
+            console.log("disconnect");
+        });
+    }
+
+
+
+    const reserveDoc = () => {
+        if (mySocket?.connected) {
+            mySocket.emit("docReserveReq", docName);
+        }
+        else {
+            console.log("conexión inactiva");
+        }
+    };
+
+    const releaseDoc = () => {
+
+        if (mySocket?.connected) {
+
+            if (DocReserve.state === DocReserve.states.disabled) {
+                window.alert('No tienes ninguna reserva');
+                return;
+            }
+            mySocket.emit("releaseDocReq", docName);
+        }
+        else {
+            console.log("releaseDoc conexión inactiva");
+        }
+    };
+
+
+    const sendComment = () => { 
+        mySocket.emit("comment", {msg: comment});
+        setComment('');
+    }; 
+
+
+    const socketOff = () => {
+        if (mySocket?.connected) {
+
+            if (DocReserve.state === DocReserve.states.enabled) {
+                const confirm = window.confirm('Su reserva será retirada ¿Quiere continuar?');
+                if (confirm) {
+                    releaseDoc();
+                    mySocket.disconnect();
+                    return;
+                }
+            }
+            else { 
+                mySocket.disconnect();
+            }
+
+        }
+        else {
+            console.log("conexión inactiva");
+        }
+    }; 
+
+
+    const fileSavedBroadcast = () => {
+        console.log("fileSavedBroadcast");
+        console.log("fileSavedBroadcast", socketState._socket);
+ 
+        if (socketState._socket?.connected) { 
+            console.log("emit");
+            socketState._socket.emit("comment", {type: "msg", msg: "ARCHIVO ACTUALIZADO"});
+        }
+        else {
+            console.log("fileSavedBroadcast conexión inactiva");
+        }
+    }
 
     return (
+        <>
+            <Draggable
+                nodeRef={socketRef}
+                disabled={isDisableDragg}
+                onStart={startDrag}
+                onStop={stopDrag}
+            >
 
-        <div className="socket-container">
-
-            {!isSocketOn && <>
-                <button className="button" onClick={socketInit}>
-                    Conectar como:
-                </button>
-                <input
-                    type="text"
-                    className="textarea-socket"
-                    placeholder="nombre"
-                    id={`txt-num-${'indexTeam'}`}
-                    onChange={(event) => onChangeName(event)}
-                    value={myUser}
-                /></>}
-
-            {isSocketOn && <>
-
-                <button className="button" onClick={reserveDoc}>Reservar Doc.</button>
-                <button className="button" onClick={releaseDoc}>Liberar Doc.</button>
-                <button className="button" onClick={socketOff}>Desconectar</button>
+                <div ref={socketRef} className={`socket-interface ${Object.values(windowStyle).join(' ')}`}>
 
 
-                <div className="flex">
+                    <ResizableBox width={stylePanel.Wsize} height={stylePanel.Hsize} minConstraints={[150, 50]}>
+                        <>
 
 
-                    <div className="socketmsg users">
-                        <p>Usuarios conectados: </p>
-                        {users?.map((user, index) => (
-                            <p key={`user-${index}`} className="socketListmsg">
-                                {`🧑‍💻${user.userAlias}\n${user.userIP}`}
-                            </p>
-                        ))}
-                    </div>
+                            <button type="button" className="button" onClick={toggleDragg}>
+                                {isDisableDragg ? "📍" : "📌"}
+                            </button>
+
+                            {!mySocket && <>
+
+                                <button className="button sidebar" onClick={socketInit}>
+                                    Conectar como:
+                                </button>
+
+                                <input
+                                    type="text"
+                                    className="textarea-socket"
+                                    placeholder="nombre"
+                                    id={`txt-num-${'indexTeam'}`}
+                                    onChange={(e) => onChangeName(e)}
+                                    value={myUser.alias}
+                                />
+
+                            </>}
+
+                            {mySocket && <>
+
+                                <div className="lineAnim-background"></div>
+                                <div className="lineAnim"></div>
+
+                                {DocReserve.state === DocReserve.states.disabled && <button className="button sidebar" onClick={reserveDoc}>Reservar Doc.</button>}
+                                {DocReserve.state === DocReserve.states.enabled && <button className="button sidebar" onClick={releaseDoc}>Liberar Doc.</button>}
+                                <button className="button sidebar" onClick={socketOff}>Desconectar</button>
+
+                                <div className="flex column">
+
+                                    <div className="socket-box">
+
+                                        {`Usuarios conectados (${users.length}) :`}  
+
+                                        <ul className="socket-list" ref={lastMsgRef} >
+                                        {users?.map((user, index) => (
+                                                <li key={`user-${index}`}>{`🧑‍💻${user.userAlias}`}</li>
+                                            ))}
+                                        </ul>    
+
+                                    </div> 
 
 
-                    <div className="socketmsg">
+                                    <div className="socket-box"> 
 
-                        <p>Mensajes Recibidos:</p>
+                                        Mensajes Recibidos: 
 
-                        <ul className="socketListmsg" ref={lastMsgRef} >
-                            {messages.map((message, index) => (
-                                <li key={`li-${index}`}>{message}</li>
-                            ))}
-                        </ul>
+                                        <ul className="socket-list" ref={lastMsgRef} >
+                                            {messages.map((msg, index) => (
+                                                <li key={`msg-${index}`}>{msg}</li>
+                                            ))}
+                                        </ul>
 
-                        <textarea className="textarea-socket"
-                            placeholder="enviar comentario"
-                            value={comment}
-                            onChange={handleTextareaChange}
-                        ></textarea>
+                                        <textarea className="textarea-socket"
+                                            placeholder="enviar comentario"
+                                            value={comment}
+                                            onChange={onChangeComment}
+                                        ></textarea>
 
-                        <button className="button" onClick={sendText}>sendText</button>
+                                        <button className="button sidebar" onClick={sendComment}>enviar</button>
 
-                    </div>
+                                    </div> 
 
+                                </div>  
+
+                            </>}
+
+                        </>
+                    </ResizableBox>
 
                 </div>
 
+            </Draggable>
 
-
-            </>}
-
-
-
-        </div>
+        </>
     );
 }
 

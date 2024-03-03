@@ -1,68 +1,81 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import APIReport from "../../../apis/fileApi";
-import Handshake from "../../../components/handshake";
-import Area from "../../../components/area";
-import Loading from "../../../components/loading";
-import FileBar from "../../../components/fileBar";
-import ShocketInterface from "../../../components/shocketInterface";
-import UnitPlantButtons from "../../../components/unitPlantButtons"; 
-
+import FileApi from "@/apis/fileApi";
+import Handshake from "@/components/handshake";
+import Area from "@/components/area";
+import Loading from "@/components/loading";
+import FileBar from "@/components/fileBar";
+import SideBarLeft from "@/components/sideBarLeft";
+import DocReserve from '../docReserve';
+import ShocketInterface from "@/components/shocketInterface";
 
 export default function ShiftChange() {
 
     const [report, setReport] = useState();
+    const [docState, setDocState] = useState(DocReserve.state);
     const refToPDF = useRef(null);
-    const IreportReq = {
-        file: "informe",
-        place: "main1",
-        date: "last",
-        type: ".json"
-    }
- 
-    useEffect(() => { 
 
-        if (!report) { 
-            APIReport.downloadJsonObj(IreportReq)
-                .then(res => {  setReport(res);  })
+    const initFileName = 'informe-main1-last.json'
+
+    useEffect(() => {
+
+        if (!report) {
+            FileApi.downloadjson(initFileName)
+                .then(res => {
+                    setReport(res);
+                    DocReserve.engage(setDocState);
+                })
                 .catch((e) => { window.alert(`❌ ${e.message}`); });
-        } 
+        }
 
     }, [report]);
 
 
     return (
 
-        <div className="allUnitsContainer">
+        <>
 
-            <UnitPlantButtons IreportReq={IreportReq}/>
+            <h1 className="flex center header"> Cambio de Turno{docState === DocReserve.states.enabled ? '🔓' : '🔒'} </h1>
+
 
             {report ? (
 
-                <div className="mainContainer" ref={refToPDF}>
+                <div className="app" >
+
+                    <SideBarLeft fileID={report[0].handshake.fileID} />
 
                     <ShocketInterface fileID={report[0].handshake.fileID} />
 
-                    <Handshake hs={report[0].handshake} />
 
-                    <section className="areas-container">
+                    <div className="mainContainer" ref={refToPDF}>
 
-                        {report[1].areas.map((area, indexArea) => (
-                            <div key={`area-${indexArea}`} className="area">
+                        <h4>📑 {report[0].handshake.fileID.split('.')[0].replace('-main1', '')}</h4>
 
-                                <Area place={'main1'} area={area} indexArea={indexArea} isMultimedia={true}/>
+                        <Handshake hs={report[0].handshake} />
 
-                            </div>
-                        ))}
+                        <section className={`areas-container ${docState}`}>
 
-                    </section>
+                            {report[1].areas.map((area, indexArea) => (
+                                <div key={`area-${indexArea}`} className="area">
+
+                                    <Area place={'main1'} area={area} indexArea={indexArea} isMultimedia={true} />
+
+                                </div>
+                            ))}
+
+                        </section>
 
 
-                    <FileBar report={report} setReport={setReport} place={'main1'} refToPDF={refToPDF} />
+                        <FileBar report={report} setReport={setReport} place={'main1'} refToPDF={refToPDF} />
 
+
+                    </div>
 
                 </div>
+
+
+
             ) : (
 
                 <Loading />
@@ -70,7 +83,7 @@ export default function ShiftChange() {
             )}
 
 
-        </div>
+        </ >
 
     );
 

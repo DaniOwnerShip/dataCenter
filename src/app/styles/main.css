@@ -1,11 +1,9 @@
 body {
-  /* background-color: var(--background-color); #343541
-  background-color: #2b2a2a;#d1d5db
-  background-color: #343541;*/
-  background-color: var(--background-color);
-  color: var(--body-txt-color);  
-  font-family: ui-sans-serif, system-ui, sans-serif; 
-  padding-top: 3rem;
+  background-color: var(--triada-base-color);
+  margin: 0;
+  margin-left: 250px;
+  color: var(--body-txt-color);
+  font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
 a {
@@ -21,8 +19,8 @@ a:hover {
   color: rgb(0, 200, 255);
   /* Color cuando el ratón está sobre el enlace */
 }
- 
-h1,
+
+/* h1,
 h2,
 h3,
 h4,
@@ -36,7 +34,7 @@ h1 {
   text-align: center;
   padding: 10px;
 }
-
+ */
 input[type="file"] {
   display: none;
 }

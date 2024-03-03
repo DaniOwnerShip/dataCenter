@@ -1,16 +1,10 @@
-import { useState } from "react"; 
-import { useGlobalContext } from '../GlobalContext';
+import { useState } from "react";  
+import DocReserve from '../pages/shiftChange/docReserve'; 
 
 
-export default function Handshake({ hs }) {
-    
-    const { globalDocIsBlock } = useGlobalContext();
- 
-    const fileName = hs.fileID.split('.')[0];
-    const fileNameShort = fileName.replace('-main1', '');
+export default function Handshake({ hs }) { 
 
-    const [forceRender, setForceRender] = useState(false);
-  
+    const [forceRender, setForceRender] = useState(false);  
 
     const onChangeNum = (event, indexTeam) => {
 
@@ -21,7 +15,7 @@ export default function Handshake({ hs }) {
         }
 
         hs.party[indexTeam].number = event.target.value; 
-        setForceRender(!forceRender); 
+        setForceRender(!forceRender);  
     };
 
 
@@ -35,13 +29,13 @@ export default function Handshake({ hs }) {
 
     return (
 
-        <section className={`${globalDocIsBlock !== "disabled"? "handshake unblokDoc": "handshake"}`}>
+        <section className="flex">
 
             {hs.party.map((team, indexTeam) => (
 
-                <div key={`party-${indexTeam}`} className={`flex ${globalDocIsBlock}`} >
+                <div key={`party-${indexTeam}`} className={`flex ${DocReserve.state} paddingL`} >
 
-                    <p> ⚒️ {team.type + " Nº"}  </p>
+                    <p> ⚒️ {team.type + " Nº "}  </p>
 
                     <input
                         type="text"
@@ -59,11 +53,8 @@ export default function Handshake({ hs }) {
                         value={hs.party[indexTeam].leader}
                     />
 
-                </div>
-
-            ))}
-
-            <p>📑 {fileNameShort} </p>
+                </div> 
+            ))} 
 
 
         </section >

@@ -1,4 +1,4 @@
-import "../../../../styles/shiftChange.css"
+import "@/styles/shiftChange.css"
 
 export const metadata = {
     title: 'ShiftChange',
@@ -8,12 +8,13 @@ export default function PlantUnitLayout({ children, params }) {
 
 
     return (
-        <>
-            <h1>{params.unit}</h1>
+        <div className="app">
+            
+            <h1 className="flex center header">{params.unit}</h1>
 
             {children}
 
-        </>
+        </div>
 
 
     );

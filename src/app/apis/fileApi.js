@@ -1,20 +1,16 @@
+import  {socketState} from '../components/shocketInterface'
 
 
-export default class FileApi {
+export default class FileApi { 
 
-    
-    static async downloadJsonObj(reqFileObj) {
+    static async downloadjson(fileName) {
 
-        const payload = JSON.stringify(reqFileObj); 
-        try {
+        try { 
 
-            //var jsonString = JSON.stringify(objeto); const url = `http://localhost:3001/apiHs/downloadjson?fileName=${fileName}`;
-            // const url = `http://127.0.0.1:3001/apiHs/downloadjson?fileName=${fileName}`;
-            const url = `http://192.168.1.100:3001/apiHs/downloadjsonObj`;
+            const url = `http://192.168.1.100:3001/apiHs/downloadjson?fileName=${fileName}`;
 
             const options = {
-                method: 'POST',
-                body: payload,
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
@@ -22,43 +18,7 @@ export default class FileApi {
             }
 
             const res = await fetch(url, options);
-            const resData = await res.json();
 
-            if (!res.ok) {
-                throw new Error(`${resData} \n ${res.status} ${res.statusText}`);
-            }
-
-            return resData;
-
-        }
-        catch (e) {
-            throw e;
-        }
-    }
-
-
-
-
-
-
-
-
-    static async downloadJson(fileName) {
-
-        try {
-
-            // const url = `http://localhost:3001/apiHs/downloadjson?fileName=${fileName}`;
-            // const url = `http://127.0.0.1:3001/apiHs/downloadjson?fileName=${fileName}`;
-            const url = `http://192.168.1.100:3001/apiHs/downloadjson?fileName=${fileName}`;
-
-            const options = {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }
-
-            const res = await fetch(url, options);
             const resData = await res.json();
 
             if (!res.ok) {
@@ -87,7 +47,8 @@ export default class FileApi {
 
             const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json", });
 
-            const url = 'http://localhost:3001/apiHs/saveJson';
+            // const url = 'http://localhost:3001/apiHs/saveJson';
+            const url = 'http://192.168.1.100:3001/apiHs/saveJson'; 
 
             const options = {
                 method: 'POST',
@@ -113,6 +74,10 @@ export default class FileApi {
             }
 
             const resData = await res.json();
+
+            // isSaveJson.upload = true;
+            socketState.broadcastFn();
+
             return resData;
 
         }
