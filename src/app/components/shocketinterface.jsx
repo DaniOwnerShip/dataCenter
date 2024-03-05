@@ -262,7 +262,7 @@ export default function ShocketInterface({ fileID }) {
                                 {DocReserve.state === DocReserve.states.disabled && <button className="button sidebar" onClick={reserveDoc}>Reservar Doc.</button>}
                                 {DocReserve.state === DocReserve.states.enabled && <button className="button sidebar" onClick={releaseDoc}>Liberar Doc.</button>}
 
-                                <div className="flex column">
+                                <div className="flex column socket-container">
 
                                     <div className="socket-box">
 

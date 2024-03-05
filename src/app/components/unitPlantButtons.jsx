@@ -18,6 +18,10 @@ export default function UnitPlantButtons() {
   
   const clickOpenWindow = (unit) => {
 
+    if (isShow) {
+      return setIsShow(false);
+    }
+
     const fileName = `informe-${unit}-last.json`
 
     FileApi.downloadjson(fileName)

@@ -136,7 +136,7 @@ function Commensts({ areaItem, ikey }) {
                 {`${isExpanded ? '-' : '+'}`}
             </button>
  
-            <textarea className="textarea window"
+            <textarea className="textarea"
                 id={id}
                 placeholder="comentarios"
                 value={areaItem.comments}
