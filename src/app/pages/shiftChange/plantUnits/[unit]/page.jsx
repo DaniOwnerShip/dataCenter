@@ -25,7 +25,7 @@ export default function PlantUnit({ params }) {
 
       FileApi.downloadjson(fileName)
         .then(res => {
-          setReport(res);
+          setReport(res.resData);
         })
         .catch((e) => { window.alert(`❌ ${e.message}`); });
     }

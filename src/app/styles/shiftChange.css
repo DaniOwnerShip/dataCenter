@@ -51,7 +51,7 @@ base:#A8BA2D
 
 .flex {
     display: flex;
-    align-items: baseline;
+    align-items: center;
 }
 
 .center {
@@ -69,7 +69,13 @@ base:#A8BA2D
 .paddingL {
     padding-left: 20px;
 }
-
+.noMargin {
+    margin: 0;
+}
+.rightpos{
+    position: absolute;
+    right: 20px;
+}
 
 .handshake {
     display: grid;
@@ -88,10 +94,30 @@ base:#A8BA2D
  
 
 .header { 
-    padding: 35px;  
+    padding: 10px;  
     margin-left: 230px;
 }  
- 
+.fileMetadata { 
+    padding: 10px;
+}  
+.fileContent { 
+    border-radius: 13px;
+    border: 1px solid #000000;
+    background-color: #383945;
+    margin: 10px;
+    padding: 5px;
+    /* background-color: var(--triada-base-color);
+    padding: 7px;
+    color: black; */
+}  
+.fileBody {  
+    border: 2px solid #04040400;
+    border-radius: 10px;  
+    /* margin: 3px;
+    padding: 3px;  
+    background-color: var(--background-color);
+    color: var(--body-txt-color); */
+}  
 /* 
 SIDE BAR
 */
@@ -110,7 +136,7 @@ SIDE BAR
 .sidebarBox {
     padding: 10px; 
 }
-
+ 
 
 /* 
 mainContainer
@@ -118,11 +144,11 @@ mainContainer
 
 .mainContainer { 
     min-width: 900px;
-    padding: 0.5rem;
+     /*padding: 0.5rem;
     border-radius: 15px;
-    box-shadow: -4px -4px 3px -5px white;
+    box-shadow: -4px -4px 3px -5px white; */
     position: relative;
-    margin: auto;    
+    margin: auto;     
 }
 
 .mainContainer.window {

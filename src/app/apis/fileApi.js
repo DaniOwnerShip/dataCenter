@@ -1,4 +1,4 @@
-import  {socketState} from '../components/shocketInterface'
+import  {Isocket} from '../components/shocketInterface'
 
 
 export default class FileApi { 
@@ -17,15 +17,17 @@ export default class FileApi {
                 }
             }
 
-            const res = await fetch(url, options);
-
+            const res = await fetch(url, options);  
             const resData = await res.json();
 
             if (!res.ok) {
                 throw new Error(`${resData} \n ${res.status} ${res.statusText}`);
-            }
+            }    
+ 
+            const modDate = res.headers.get('last-modified'); 
+            console.log('lm:', modDate); 
 
-            return resData;
+            return {resData, modDate};
 
         }
         catch (e) {
@@ -76,7 +78,7 @@ export default class FileApi {
             const resData = await res.json();
 
             // isSaveJson.upload = true;
-            socketState.broadcastFn();
+            Isocket.broadcastFn();
 
             return resData;
 

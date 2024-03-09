@@ -10,35 +10,69 @@ import DocReserve from '../pages/shiftChange/docReserve';
 
 import "../styles/animation.css"
  
- 
-export const socketState = {
+export const Isocket = {
     isOn: false,
-    usersOn: 0,
-    _socket: null,
-    broadcastFn:  null 
-}; 
-
+    broadcastFn: null,
+    fastReserveDoc:{
+        isReq: false,
+        isActive: false,
+        initFn: null,
+        endFn: null
+    }
+}
   
-export default function ShocketInterface({ fileID }) {   
  
+  
+export default function ShocketInterface({ fileID, setIsDocReserved }) {   
+ 
+    console.log('{ShocketInterface}:' );
     const docName =  fileID.split('.')[0]; 
    
     const [mySocket, setMySocket] = useState();
     const [messages, setMessages] = useState([]);
     const [users, setUsers] = useState([]);
-    const [myUser, setMyUser] = useState({ "alias": "", "socketID": "" }); 
+    const [myUser, setMyUser] = useState({ "alias": 'usuario', "socketID": "" }); 
     const [comment, setComment] = useState('');   
 
     const socketRef = useRef(null);
     const lastMsgRef = useRef(null);  
     const [isDisableDragg, setIsDisableDragg] = useState(true);
     const [windowStyle, setWindowStyle] = useState({ isDraggable: '', isDragging: '' });
-    const [stylePanel, setStylePanel] = useState({Wsize : 200, Hsize: 80});    
+    const [stylePanel, setStylePanel] = useState({Wsize : 200, Hsize: 80});     
+ 
+ 
+    function initFastReserve() { 
+        socketInit();
+        Isocket.fastReserveDoc.isReq = true;
+        console.log('initFastReserve socketInit<>2');
+    }
+
+    function endFastReserve() {
+        console.log('function newClose');
+        releaseDoc(); 
+    } 
 
 
     useEffect(() => {
-        scrollToBottom();   
-    }, [messages ]);
+
+        scrollToBottom();
+
+        if (!Isocket.fastReserveDoc.initFn) {
+            Isocket.fastReserveDoc.initFn = initFastReserve;
+            console.log('initFastReserve<>1');
+        }
+ 
+        if (mySocket && !Isocket.fastReserveDoc.isActive && Isocket.fastReserveDoc.isReq) { 
+ 
+                reserveDoc();  
+            
+            console.log('endFastReserve<>1');
+            Isocket.fastReserveDoc.endFn = endFastReserve;
+        } 
+
+    }, [messages, mySocket]);
+
+
 
 
     const onChangeName = (e) => { 
@@ -70,10 +104,13 @@ export default function ShocketInterface({ fileID }) {
 
     function socketInit() {
 
-        if (myUser.alias === '') {
-            window.alert('introduce un nombre');
-            return;
-        }
+        console.log('socketInit');
+        // if (myUser.alias === '') {
+            
+        // setMyUser({ ...myUser, alias: 'anonimous'}); 
+        //     // window.alert('introduce un nombre');
+        //     // return;
+        // }
         const newSocket = io("http://192.168.1.100:3001", {
             query: {
                 userAlias: myUser.alias
@@ -81,30 +118,35 @@ export default function ShocketInterface({ fileID }) {
         });
 
         newSocket.on("connect", () => {  
-            socketMethodsSubscribe(newSocket);   
+            addMethods(newSocket);   
         });  
     };
 
 
 
-    function socketMethodsSubscribe(socket) {
+    function addMethods(socket) {
 
-        if (!socket) { return window.alert(`❌ socket error`); }
-
+        if (!socket) { return window.alert(`❌ socket error`); } 
         setMySocket(socket);
         setMyUser({ ...myUser, socketID: socket.id });
         setMessages(msgs => [...msgs, 'Conectado como: ' + myUser.alias]); 
         setStylePanel({Wsize : 200, Hsize: 300}) 
-        socketState.isOn = true;
-        socketState._socket = socket;
-        socketState.broadcastFn = fileSavedBroadcast; 
+        Isocket.isOn = true;
+        Isocket.broadcastFn = fileSavedBroadcast; 
+        // if (Isocket.fastReserveDoc.isReq) {
+            
+        // }   
 
 
         socket.on('docReserveRes', (res) => { 
             const succes = res.succes;
             const msg = res.message; 
-            if (succes) {
-                DocReserve.state = DocReserve.states.enabled;
+            if (succes) { 
+                setIsDocReserved(true);
+                if (Isocket.fastReserveDoc.isReq) {
+                    Isocket.fastReserveDoc.isActive = true;
+                    console.log('isActive' );
+                }  
                 document.documentElement.style.setProperty('--line-anim-color', '#BA372D');
                 return;
             } 
@@ -113,11 +155,18 @@ export default function ShocketInterface({ fileID }) {
 
 
         socket.on('releaseDocRes', (res) => {    
+            console.log('releaseDocRes' );
             const succes = res.succes;
             const msg = res.message; 
-            if (succes) {
-                DocReserve.state = DocReserve.states.disabled;
-                document.documentElement.style.setProperty('--line-anim-color', 'lime');
+            if (succes) { 
+                setIsDocReserved(false);   
+                if (Isocket.fastReserveDoc.isActive) {
+                    Isocket.fastReserveDoc.isActive = false;  
+                    Isocket.fastReserveDoc.isReq = false;  
+                console.log('setIsDocReserved>>>>>>>>>>>>>>>>>>><<<<<<<x' );
+                    socketOff();
+                }
+                document.documentElement.style.setProperty('--line-anim-color', 'lime');   
                 return;
             }  
             setMessages(prevMsg => [...prevMsg, msg]);
@@ -136,17 +185,26 @@ export default function ShocketInterface({ fileID }) {
 
 
         socket.on("disconnect", () => {
-            console.log("socketState", socketState); 
-            socketState.isOn = false;
-            socketState.usersOn = users.length;
-            DocReserve.state = DocReserve.states.disabled;
+            console.log("disconnect Isocket", Isocket); 
+            Isocket.isOn = false;
+            Isocket.broadcastFn = null;
+            // if (Isocket.fastReserveDoc.isReq) {
+            //     Isocket.fastReserveDoc.isReq = false;
+            //     Isocket.fastReserveDoc.isActive = false;
+            //     Isocket.fastReserveDoc.initFn = null;
+            //     Isocket.fastReserveDoc.endFn = null;
+            //     console.log("isReq false" );  
+            // }  
             setUsers([]);
             setMessages([]);
             setMySocket(null);     
             setStylePanel({Wsize : 200, Hsize: 80}) 
-            document.documentElement.style.setProperty('--line-anim-color', 'lime');
-            console.log("disconnect");
+            document.documentElement.style.setProperty('--line-anim-color', 'lime');   
+
+            setIsDocReserved(false); 
+            console.log("disconnect$$");
         });
+ 
     }
 
 
@@ -162,12 +220,7 @@ export default function ShocketInterface({ fileID }) {
 
     const releaseDoc = () => {
 
-        if (mySocket?.connected) {
-
-            if (DocReserve.state === DocReserve.states.disabled) {
-                window.alert('No tienes ninguna reserva');
-                return;
-            }
+        if (mySocket?.connected) { 
             mySocket.emit("releaseDocReq", docName);
         }
         else {
@@ -185,17 +238,20 @@ export default function ShocketInterface({ fileID }) {
     const socketOff = () => {
         if (mySocket?.connected) {
 
-            if (DocReserve.state === DocReserve.states.enabled) {
-                const confirm = window.confirm('Su reserva será retirada ¿Quiere continuar?');
-                if (confirm) {
-                    releaseDoc();
-                    mySocket.disconnect();
-                    return;
-                }
-            }
-            else { 
-                mySocket.disconnect();
-            }
+            mySocket.disconnect();
+            console.log("disconnected>><<<");
+            
+            // if (DocReserve.state === DocReserve.states.enabled) {
+            //     const confirm = window.confirm('Su reserva será retirada ¿Quiere continuar?');
+            //     if (confirm) {
+            //         releaseDoc();
+            //         mySocket.disconnect();
+            //         return;
+            //     }
+            // }
+            // else { 
+            //     mySocket.disconnect();
+            // }
 
         }
         else {
@@ -210,7 +266,7 @@ export default function ShocketInterface({ fileID }) {
  
         if (socketState._socket?.connected) { 
             console.log("emit");
-            socketState._socket.emit("comment", {type: "msg", msg: "ARCHIVO ACTUALIZADO"});
+            socketState._socket.emit("comment", {msg: "ARCHIVO ACTUALIZADO"});
         }
         else {
             console.log("fileSavedBroadcast conexión inactiva");
@@ -229,19 +285,15 @@ export default function ShocketInterface({ fileID }) {
                 <div ref={socketRef} className={`socket-interface ${Object.values(windowStyle).join(' ')}`}>
 
 
-                    <ResizableBox width={stylePanel.Wsize} height={stylePanel.Hsize} minConstraints={[150, 50]}>
-                       
+                      <ResizableBox width={stylePanel.Wsize} height={stylePanel.Hsize} minConstraints={[150, 50]}>
+                     <div>
 
                             <button type="button" className="button" onClick={toggleDragg}>
                                 {isDisableDragg ? "📍" : "📌"}
                             </button>
 
-                            {!mySocket && <>
-
-                                <button className="button sidebar" onClick={socketInit}>
-                                    Conectar como:
-                                </button>
-
+                            {!mySocket && <> 
+                                <button className="button sidebar" onClick={socketInit}>Conectar como:</button> 
                                 <input
                                     type="text"
                                     className="input-socket"
@@ -249,12 +301,10 @@ export default function ShocketInterface({ fileID }) {
                                     id={`txt-num-${'indexTeam'}`}
                                     onChange={(e) => onChangeName(e)}
                                     value={myUser.alias}
-                                />
-
+                                /> 
                             </>}
 
-                            {mySocket && <>
-
+                            {mySocket && <> 
                                 <div className="lineAnim-background"></div>
                                 <div className="lineAnim"></div>
 
@@ -301,9 +351,9 @@ export default function ShocketInterface({ fileID }) {
 
                             </>}
 
-                         
+                         </div>
 
-                    </ResizableBox>
+                          </ResizableBox>   
 
                 </div>
 

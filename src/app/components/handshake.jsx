@@ -1,10 +1,13 @@
-import { useState } from "react";  
-import DocReserve from '../pages/shiftChange/docReserve'; 
+import { useState } from "react";   
 
 
 export default function Handshake({ hs }) { 
 
-    const [forceRender, setForceRender] = useState(false);  
+    const [forceRender, setForceRender] = useState(false);      
+    const [isChecked, setIsChecked] = useState(false);
+    const handleCheckboxChange = () => {
+        setIsChecked(!isChecked);
+    };
 
     const onChangeNum = (event, indexTeam) => {
 
@@ -33,7 +36,7 @@ export default function Handshake({ hs }) {
 
             {hs.party.map((team, indexTeam) => (
 
-                <div key={`party-${indexTeam}`} className={`flex ${DocReserve.state} paddingL`} >
+                <div key={`party-${indexTeam}`} className="flex paddingL" >
 
                     <p> ⚒️ {team.type + " Nº "}  </p>
 
@@ -55,7 +58,14 @@ export default function Handshake({ hs }) {
 
                 </div> 
             ))} 
-
+                                <div className="flex paddingL">
+                                    <label>Completado: </label>
+                                    <input
+                                        type="checkbox"
+                                        checked={isChecked}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                </div>
 
         </section >
 

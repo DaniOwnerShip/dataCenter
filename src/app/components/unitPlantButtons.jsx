@@ -3,7 +3,7 @@
 import UnitPlantWindow from "./unitPlantWindow";
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react';
-import { socketState } from "./shocketInterface";
+import { Isocket } from "./shocketInterface";
 import FileApi from "../apis/fileApi";
 
 
@@ -26,7 +26,7 @@ export default function UnitPlantButtons() {
 
     FileApi.downloadjson(fileName)
       .then(res => {
-        setReport(res);
+        setReport(res.resData);
         setIsShow(true);
         setActiveUnit(unit);
       })
@@ -35,12 +35,9 @@ export default function UnitPlantButtons() {
   };
 
 
-  const clickToUnit = (unit) => {
+  const clickToUnit = (unit) => { 
 
-    const isSocket = socketState.isOn;
-    console.log('clickToUnit', isSocket);
-
-    if (isSocket) {
+    if (Isocket.isOn) {
       window.alert('necesita desconectar la interfaz');
       return;
     }
