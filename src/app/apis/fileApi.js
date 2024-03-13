@@ -1,4 +1,4 @@
-import  {Isocket} from '../components/shocketInterface'
+import  {Isocket} from '../components/socketInterface'
 
 
 export default class FileApi { 
@@ -78,7 +78,6 @@ export default class FileApi {
             const resData = await res.json();
 
             // isSaveJson.upload = true;
-            Isocket.broadcastFn();
 
             return resData;
 

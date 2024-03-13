@@ -8,7 +8,7 @@ import Loading from "@/components/loading";
 import FileBar from "@/components/fileBar";
 import DocReserve from '../docReserve';
 import UnitPlantButtons from "@/components/unitPlantButtons";
-import ShocketInterface, { fastReserve, Isocket } from "@/components/shocketInterface";
+import SocketInterface, { fastReserve, Isocket } from "@/components/socketInterface";
 
 const reserveStates = { disabled: 'disabled', enabled: 'enabled', enablePdf: 'enablePdf' }; //se usa para css..
 
@@ -19,7 +19,7 @@ export default function ShiftChange() {
     const [fileMetadata, setFileMetadata] = useState({ name: "", lastMod: "" }); 
     const refToPDF = useRef(null);
     const [isExpanded, setIsExpanded] = useState(true);
-    const [isDocReserved, setIsDocReserved] = useState(false);
+    const [, setIsDocReserved] = useState(false);
     const initFileName = 'informe-main1-last.json'
 
 
@@ -33,13 +33,14 @@ export default function ShiftChange() {
     const newfastReserve = () => {
         console.log('newfastReserve:', Isocket);
         if (!Isocket.isOn) {
-            Isocket.fastReserveDoc.initFn();  
+            Isocket.fastdocreserve.isReq = true;
+            Isocket.fastdocreserve.initFn();  
             console.log('isOn:' );
             return;
         }
-        if (Isocket.fastReserveDoc.isActive) {
+        if (Isocket.fastdocreserve.isActive) {
             console.log('isActive:' );
-            Isocket.fastReserveDoc.endFn();
+            Isocket.fastdocreserve.endFn();
         } 
     };
 
@@ -76,7 +77,7 @@ export default function ShiftChange() {
                         <div className="sidebarBox flex column" >
                             <UnitPlantButtons />
                         </div>
-                        <ShocketInterface fileID={report[0].handshake.fileID} setIsDocReserved={setIsDocReserved}/>
+                        <SocketInterface fileID={report[0].handshake.fileID} setIsDocReserved={setIsDocReserved} ={}/>
                     </div>
 
 
@@ -93,13 +94,13 @@ export default function ShiftChange() {
                                 <h4 className="noMargin">{report[0].handshake.isComplete ? "sí" : "no"}</h4>
                                 <div className="flex rightpos">
                                     {/* {connectionsState.socket ? '⚡' : '📡'} &nbsp; */}
-                                    <button type="button" className="button" onClick={newfastReserve}>  {`${isDocReserved ? '⚡' : '📡'}`}</button>
-                                    {isDocReserved ? '🔓' : '🔒'} &nbsp;&nbsp;
+                                    <button type="button" className="button" onClick={newfastReserve}>  {`${ ? '⚡' : '📡'}`}</button>
+                                    { ? '🔓' : '🔒'} &nbsp;&nbsp;
                                     <button type="button" className="button" onClick={() => toggleExpandApp()}>  {`${isExpanded ? "➖" : "➕"}`}</button>
 
                                 </div>
                             </div>
-                            {isExpanded && <div className={`areas-container ${isDocReserved ? 'enabled' : 'disabled'}`}>
+                            {isExpanded && <div className={`areas-container ${ ? 'enabled' : 'disabled'}`}>
 
                                 <Handshake hs={report[0].handshake} />
 

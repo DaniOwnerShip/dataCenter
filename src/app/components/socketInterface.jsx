@@ -12,8 +12,9 @@ import "../styles/animation.css"
  
 export const Isocket = {
     isOn: false,
+    socket: null,
     broadcastFn: null,
-    fastReserveDoc:{
+    fastdocreserve:{
         isReq: false,
         isActive: false,
         initFn: null,
@@ -23,9 +24,9 @@ export const Isocket = {
   
  
   
-export default function ShocketInterface({ fileID, setIsDocReserved }) {   
+export default function SocketInterface({ fileID, setIsDocReserved, isDocReserved  }) {   
  
-    console.log('{ShocketInterface}:' );
+    console.log('{SocketInterface}:' );
     const docName =  fileID.split('.')[0]; 
    
     const [mySocket, setMySocket] = useState();
@@ -41,35 +42,25 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
     const [stylePanel, setStylePanel] = useState({Wsize : 200, Hsize: 80});     
  
  
-    function initFastReserve() { 
-        socketInit();
-        Isocket.fastReserveDoc.isReq = true;
-        console.log('initFastReserve socketInit<>2');
-    }
-
-    function endFastReserve() {
-        console.log('function newClose');
-        releaseDoc(); 
-    } 
-
 
     useEffect(() => {
 
+        console.log('useEffect');
         scrollToBottom();
 
-        if (!Isocket.fastReserveDoc.initFn) {
-            Isocket.fastReserveDoc.initFn = initFastReserve;
-            console.log('initFastReserve<>1');
+        if (!Isocket.fastdocreserve.initFn) {
+            console.log('initFn1');
+            Isocket.fastdocreserve.initFn = socketInit;
         }
  
-        if (mySocket && !Isocket.fastReserveDoc.isActive && Isocket.fastReserveDoc.isReq) { 
- 
-                reserveDoc();  
-            
-            console.log('endFastReserve<>1');
-            Isocket.fastReserveDoc.endFn = endFastReserve;
-        } 
-
+        if (!Isocket.socket && mySocket && Isocket.fastdocreserve.isReq) {
+            console.log('Isocket.socket<>1');
+            // Isocket.fastdocreserve.isReq = false;
+            Isocket.socket = mySocket; 
+            reserveDoc();  
+            Isocket.fastdocreserve.endFn = releaseDoc;
+        }
+  
     }, [messages, mySocket]);
 
 
@@ -130,12 +121,12 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
         setMySocket(socket);
         setMyUser({ ...myUser, socketID: socket.id });
         setMessages(msgs => [...msgs, 'Conectado como: ' + myUser.alias]); 
-        setStylePanel({Wsize : 200, Hsize: 300}) 
-        Isocket.isOn = true;
+        Isocket.isOn = true; 
         Isocket.broadcastFn = fileSavedBroadcast; 
-        // if (Isocket.fastReserveDoc.isReq) {
+        if (!Isocket.fastdocreserve.isReq) { 
+        setStylePanel({Wsize : 200, Hsize: 300}) 
             
-        // }   
+         }   
 
 
         socket.on('docReserveRes', (res) => { 
@@ -143,8 +134,8 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
             const msg = res.message; 
             if (succes) { 
                 setIsDocReserved(true);
-                if (Isocket.fastReserveDoc.isReq) {
-                    Isocket.fastReserveDoc.isActive = true;
+                if (Isocket.fastdocreserve.isReq) {
+                    Isocket.fastdocreserve.isActive = true;
                     console.log('isActive' );
                 }  
                 document.documentElement.style.setProperty('--line-anim-color', '#BA372D');
@@ -160,11 +151,9 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
             const msg = res.message; 
             if (succes) { 
                 setIsDocReserved(false);   
-                if (Isocket.fastReserveDoc.isActive) {
-                    Isocket.fastReserveDoc.isActive = false;  
-                    Isocket.fastReserveDoc.isReq = false;  
-                console.log('setIsDocReserved>>>>>>>>>>>>>>>>>>><<<<<<<x' );
-                    socketOff();
+                if (Isocket.fastdocreserve.isActive) {
+                    socketOff(Isocket.socket); 
+                    console.log('setIsDocReserved>>>>>>>>>>>>>>>>>>><<<<<<<x' );
                 }
                 document.documentElement.style.setProperty('--line-anim-color', 'lime');   
                 return;
@@ -185,32 +174,30 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
 
 
         socket.on("disconnect", () => {
-            console.log("disconnect Isocket", Isocket); 
-            Isocket.isOn = false;
-            Isocket.broadcastFn = null;
-            // if (Isocket.fastReserveDoc.isReq) {
-            //     Isocket.fastReserveDoc.isReq = false;
-            //     Isocket.fastReserveDoc.isActive = false;
-            //     Isocket.fastReserveDoc.initFn = null;
-            //     Isocket.fastReserveDoc.endFn = null;
-            //     console.log("isReq false" );  
-            // }  
+            if (Isocket.fastdocreserve.isReq) {
+                Isocket.fastdocreserve.isReq = false;
+                Isocket.fastdocreserve.isActive = false;
+                Isocket.isOn = false;
+                Isocket.socket = null;
+                console.log("IsocketIsocket false");
+            } else {
+                setStylePanel({ Wsize: 200, Hsize: 80 })
+                document.documentElement.style.setProperty('--line-anim-color', 'lime');
+            }
             setUsers([]);
             setMessages([]);
-            setMySocket(null);     
-            setStylePanel({Wsize : 200, Hsize: 80}) 
-            document.documentElement.style.setProperty('--line-anim-color', 'lime');   
-
-            setIsDocReserved(false); 
-            console.log("disconnect$$");
+            setMySocket(null);
+            setIsDocReserved(false);
+            console.log("disconnect$$", Isocket);
         });
- 
+
     }
 
 
 
-    const reserveDoc = () => {
+    const reserveDoc = (socket = mySocket) => {
         if (mySocket?.connected) {
+            console.log("reserveDoc");
             mySocket.emit("docReserveReq", docName);
         }
         else {
@@ -218,7 +205,7 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
         }
     };
 
-    const releaseDoc = () => {
+    const releaseDoc = (socket = mySocket) => {
 
         if (mySocket?.connected) { 
             mySocket.emit("releaseDocReq", docName);
@@ -235,14 +222,13 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
     }; 
 
 
-    const socketOff = () => {
+    const socketOff = (_socket = mySocket) => {
         if (mySocket?.connected) {
 
             mySocket.disconnect();
             console.log("disconnected>><<<");
+
             
-            // if (DocReserve.state === DocReserve.states.enabled) {
-            //     const confirm = window.confirm('Su reserva será retirada ¿Quiere continuar?');
             //     if (confirm) {
             //         releaseDoc();
             //         mySocket.disconnect();
@@ -260,13 +246,12 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
     }; 
 
 
-    const fileSavedBroadcast = () => {
-        console.log("fileSavedBroadcast");
-        console.log("fileSavedBroadcast", socketState._socket);
+    const fileSavedBroadcast = (socket) => {
+        console.log("fileSavedBroadcast"); 
  
-        if (socketState._socket?.connected) { 
+        if (socket?.connected) { 
             console.log("emit");
-            socketState._socket.emit("comment", {msg: "ARCHIVO ACTUALIZADO"});
+            socket.emit("comment", {msg: "ARCHIVO ACTUALIZADO"});
         }
         else {
             console.log("fileSavedBroadcast conexión inactiva");
@@ -274,7 +259,7 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
     }
 
     return (
-        <>
+        <>{!Isocket.fastdocreserve.isReq &&
             <Draggable
                 nodeRef={socketRef}
                 disabled={isDisableDragg}
@@ -285,15 +270,15 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
                 <div ref={socketRef} className={`socket-interface ${Object.values(windowStyle).join(' ')}`}>
 
 
-                      <ResizableBox width={stylePanel.Wsize} height={stylePanel.Hsize} minConstraints={[150, 50]}>
-                     <div>
+                    <ResizableBox width={stylePanel.Wsize} height={stylePanel.Hsize} minConstraints={[150, 50]}>
+                        <div>
 
                             <button type="button" className="button" onClick={toggleDragg}>
                                 {isDisableDragg ? "📍" : "📌"}
                             </button>
 
-                            {!mySocket && <> 
-                                <button className="button sidebar" onClick={socketInit}>Conectar como:</button> 
+                            {!mySocket && <>
+                                <button className="button sidebar" onClick={socketInit}>Conectar como:</button>
                                 <input
                                     type="text"
                                     className="input-socket"
@@ -301,35 +286,35 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
                                     id={`txt-num-${'indexTeam'}`}
                                     onChange={(e) => onChangeName(e)}
                                     value={myUser.alias}
-                                /> 
+                                />
                             </>}
 
-                            {mySocket && <> 
+                            {mySocket && <>
                                 <div className="lineAnim-background"></div>
                                 <div className="lineAnim"></div>
 
                                 <button type="button" className="button sidebar" onClick={socketOff}>Desconectar</button>
-                                {DocReserve.state === DocReserve.states.disabled && <button className="button sidebar" onClick={reserveDoc}>Reservar Doc.</button>}
-                                {DocReserve.state === DocReserve.states.enabled && <button className="button sidebar" onClick={releaseDoc}>Liberar Doc.</button>}
+                                {!isDocReserved && <button className="button sidebar" onClick={reserveDoc}>Reservar Doc.</button>}
+                                {isDocReserved && <button className="button sidebar" onClick={releaseDoc}>Liberar Doc.</button>}
 
                                 <div className="flex column socket-container">
 
                                     <div className="socket-box">
 
-                                        {`Usuarios conectados (${users.length}) :`}  
+                                        {`Usuarios conectados (${users.length}) :`}
 
                                         <ul className="socket-list" ref={lastMsgRef} >
-                                        {users?.map((user, index) => (
+                                            {users?.map((user, index) => (
                                                 <li key={`user-${index}`}>{`🧑‍💻${user.userAlias}`}</li>
                                             ))}
-                                        </ul>    
+                                        </ul>
 
-                                    </div> 
+                                    </div>
 
 
-                                    <div className="socket-box"> 
+                                    <div className="socket-box">
 
-                                        Mensajes Recibidos: 
+                                        Mensajes Recibidos:
 
                                         <ul className="socket-list" ref={lastMsgRef} >
                                             {messages.map((msg, index) => (
@@ -345,21 +330,21 @@ export default function ShocketInterface({ fileID, setIsDocReserved }) {
 
                                         <button type="button" className="button sidebar" onClick={sendComment}>enviar</button>
 
-                                    </div> 
+                                    </div>
 
-                                </div>  
+                                </div>
 
                             </>}
 
-                         </div>
+                        </div>
 
-                          </ResizableBox>   
+                    </ResizableBox>
 
                 </div>
 
             </Draggable>
 
-        </>
+        } </>
     );
 }
 

@@ -6,7 +6,7 @@ import FileApi from "@/apis/fileApi";
 import Area from "@/components/area";
 import Loading from "@/components/loading";
 import FileBar from "@/components/fileBar";
-import ShocketInterface from "@/components/shocketInterface";
+import SocketInterface from "@/components/socketInterface";
 
 export default function PlantUnit({ params }) {
 
@@ -48,7 +48,7 @@ export default function PlantUnit({ params }) {
                 Ir a Cambio de turno
               </button>
             </div>
-            <ShocketInterface fileID={report[0].handshake.fileID} />
+            <SocketInterface fileID={report[0].handshake.fileID} />
           </div> 
 
           <div className="mainContainer unit" ref={refToPDF}>
