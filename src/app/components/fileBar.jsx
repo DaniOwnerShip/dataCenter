@@ -7,7 +7,7 @@ export default function FileBar({ report, setReport, place, refToPDF }) {
 
     return (
 
-        <div className="flex fileTransfer" >
+        <div className="flex fileTransfer enabled" >
 
             <FileButtons report={report} place={place} refToPDF={refToPDF} />
             <FileCalendar setReport={setReport} place={place} />

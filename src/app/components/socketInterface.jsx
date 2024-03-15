@@ -1,12 +1,8 @@
 import { io } from "socket.io-client";
 
-import { useState, useRef, useEffect  } from "react";
-// import { useGlobalContext} from '../GlobalContext'; 
-import _docReserve from '../pages/shiftChange/mainReport/docReserveOLD.json';
-// import { ResizableBox } from 'react-resizable'; 
+import { useState, useRef, useEffect  } from "react";  
 import Draggable from 'react-draggable';
-import { ResizableBox } from 'react-resizable';
-import DocReserve from '../pages/shiftChange/docReserve'; 
+import { ResizableBox } from 'react-resizable'; 
 
 import "../styles/animation.css"
  
@@ -17,7 +13,7 @@ export const Isocket = {
     fastdocreserve:{
         isReq: false,
         isActive: false,
-        initFn: null,
+        initFn: null, 
         endFn: null
     }
 }
@@ -48,17 +44,22 @@ export default function SocketInterface({ fileID, setIsDocReserved, isDocReserve
         console.log('useEffect');
         scrollToBottom();
 
-        if (!Isocket.fastdocreserve.initFn) {
+        if (!Isocket.fastdocreserve.initFn ) {
             console.log('initFn1');
-            Isocket.fastdocreserve.initFn = socketInit;
+            Isocket.fastdocreserve.initFn = socketInit; 
+            // if (Isocket.fastdocreserve.isReq) {
+                
+            // }
         }
  
-        if (!Isocket.socket && mySocket && Isocket.fastdocreserve.isReq) {
+        if (!Isocket.socket && Isocket.fastdocreserve.isReq) {
             console.log('Isocket.socket<>1');
-            // Isocket.fastdocreserve.isReq = false;
+            Isocket.fastdocreserve.endFn = releaseDoc; 
             Isocket.socket = mySocket; 
             reserveDoc();  
-            Isocket.fastdocreserve.endFn = releaseDoc;
+            // console.log('initFn1');
+            // Isocket.fastdocreserve.initFn = socketInit;
+            // Isocket.fastdocreserve.isReq = false;
         }
   
     }, [messages, mySocket]);
@@ -129,20 +130,24 @@ export default function SocketInterface({ fileID, setIsDocReserved, isDocReserve
          }   
 
 
-        socket.on('docReserveRes', (res) => { 
+        socket.on('docReserveRes', (res) => {
             const succes = res.succes;
-            const msg = res.message; 
-            if (succes) { 
+            const msg = res.message;
+            if (succes) {
                 setIsDocReserved(true);
                 if (Isocket.fastdocreserve.isReq) {
                     Isocket.fastdocreserve.isActive = true;
-                    console.log('isActive' );
-                }  
+                    console.log('isActive');
+                }
                 document.documentElement.style.setProperty('--line-anim-color', '#BA372D');
                 return;
-            } 
+            } else if (Isocket.fastdocreserve.isReq) {
+                window.alert(msg);
+                socketOff(Isocket.socket);
+                return;
+            }
             setMessages(prevMsg => [...prevMsg, msg]);
-        });  
+        });
 
 
         socket.on('releaseDocRes', (res) => {    
@@ -174,16 +179,17 @@ export default function SocketInterface({ fileID, setIsDocReserved, isDocReserve
 
 
         socket.on("disconnect", () => {
+            console.log("disconnect");
             if (Isocket.fastdocreserve.isReq) {
                 Isocket.fastdocreserve.isReq = false;
                 Isocket.fastdocreserve.isActive = false;
-                Isocket.isOn = false;
-                Isocket.socket = null;
                 console.log("IsocketIsocket false");
             } else {
                 setStylePanel({ Wsize: 200, Hsize: 80 })
                 document.documentElement.style.setProperty('--line-anim-color', 'lime');
             }
+                Isocket.isOn = false;
+                Isocket.socket = null;
             setUsers([]);
             setMessages([]);
             setMySocket(null);
@@ -195,20 +201,20 @@ export default function SocketInterface({ fileID, setIsDocReserved, isDocReserve
 
 
 
-    const reserveDoc = (socket = mySocket) => {
-        if (mySocket?.connected) {
+    const reserveDoc = (_socket = mySocket) => {
+        if (_socket?.connected) {
             console.log("reserveDoc");
-            mySocket.emit("docReserveReq", docName);
+            _socket.emit("docReserveReq", docName);
         }
         else {
             console.log("conexión inactiva");
         }
     };
 
-    const releaseDoc = (socket = mySocket) => {
+    const releaseDoc = (_socket = mySocket) => {
 
-        if (mySocket?.connected) { 
-            mySocket.emit("releaseDocReq", docName);
+        if (_socket?.connected) { 
+            _socket.emit("releaseDocReq", docName);
         }
         else {
             console.log("releaseDoc conexión inactiva");
@@ -223,9 +229,9 @@ export default function SocketInterface({ fileID, setIsDocReserved, isDocReserve
 
 
     const socketOff = (_socket = mySocket) => {
-        if (mySocket?.connected) {
+        if (_socket?.connected) {
 
-            mySocket.disconnect();
+            _socket.disconnect();
             console.log("disconnected>><<<");
 
             
@@ -293,9 +299,9 @@ export default function SocketInterface({ fileID, setIsDocReserved, isDocReserve
                                 <div className="lineAnim-background"></div>
                                 <div className="lineAnim"></div>
 
-                                <button type="button" className="button sidebar" onClick={socketOff}>Desconectar</button>
-                                {!isDocReserved && <button className="button sidebar" onClick={reserveDoc}>Reservar Doc.</button>}
-                                {isDocReserved && <button className="button sidebar" onClick={releaseDoc}>Liberar Doc.</button>}
+                                <button type="button" className="button sidebar" onClick={()=>socketOff(mySocket)}>Desconectar</button>
+                                {!isDocReserved && <button className="button sidebar" onClick={()=>reserveDoc(mySocket)}>Reservar Doc.</button>}
+                                {isDocReserved && <button className="button sidebar" onClick={()=>releaseDoc(mySocket)}>Liberar Doc.</button>}
 
                                 <div className="flex column socket-container">
 

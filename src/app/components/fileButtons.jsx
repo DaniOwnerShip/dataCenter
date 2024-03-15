@@ -1,8 +1,6 @@
-// import { useEffect, useState } from "react"; 
 import FileApi from "../apis/fileApi";
 import domtoimage from 'dom-to-image';
-import jsPDF from 'jspdf'; 
-import DocReserve from '../pages/shiftChange/docReserve';   
+import jsPDF from 'jspdf';   
 
 
 export default function FileButtons({ report, place, refToPDF }) {
@@ -14,22 +12,21 @@ export default function FileButtons({ report, place, refToPDF }) {
 
     const downloadPDF = () => {
 
-        const scaleFactor = 0.58;
+        const scaleFactor = 0.65;
         const pageWidthA4 = 595;
         const pageHeightA4 = 842;
-        const backgroundColor = 'rgb(163, 163, 163)';
-        const margin = 7;
-        const mainContainer = refToPDF.current;
-        const prevGlobalDoc = DocReserve.state;
+        const backgroundColor = 'black';
+        const margin = 1;
+        const mainContainer = refToPDF.current; 
 
-        DocReserve.state = DocReserve.states.enablePdf;
 
-        mainContainer.style.margin = '1px';
+        mainContainer.style.margin = '2px';
+        mainContainer.style.backgroundColor = 'black';
 
         setTimeout(() => {
 
             if (mainContainer) {
-                
+
                 domtoimage.toPng(mainContainer)
                     .then(function (blob) {
                         const containerWidth = mainContainer.offsetWidth * scaleFactor;
@@ -49,7 +46,6 @@ export default function FileButtons({ report, place, refToPDF }) {
                                 x: 0,
                                 y: Math.max(i * pageHeightA4, 0)
                             };
-
                             pdf.addImage(blob, 'PNG', margin, startY + margin, containerWidth - 2 * margin, containerHeight - 2 * margin, null, 'NONE', 0, 0, cropOptions);
 
                             if (i < totalPages - 1) {
@@ -61,8 +57,8 @@ export default function FileButtons({ report, place, refToPDF }) {
 
                         pdf.save(`${pdfName}.pdf`);
 
-                        prevGlobalDoc === 'enabled' ? DocReserve.state = DocReserve.states.enabled : DocReserve.state = DocReserve.states.disabled;
                         mainContainer.style.margin = 'auto';
+                        mainContainer.style.backgroundColor = '#383945';
                     });
 
             }
@@ -76,8 +72,7 @@ export default function FileButtons({ report, place, refToPDF }) {
             .then(res => {
                 window.alert(`✅ ${res}`);
             })
-            .catch((e) => { window.alert(`❌ ${e.message}`); });
-
+            .catch((e) => { window.alert(`❌ ${e.message}`); }); 
     };
 
 

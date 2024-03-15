@@ -3,7 +3,7 @@
 import UnitPlantWindow from "./unitPlantWindow";
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react';
-import { Isocket } from "./shocketInterface";
+import { Isocket } from "./socketInterface";
 import FileApi from "../apis/fileApi";
 
 
