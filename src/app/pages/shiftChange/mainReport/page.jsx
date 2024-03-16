@@ -96,6 +96,7 @@ export default function ShiftChange() {
 
                                 </div>
                             </div>
+                            <hr/>
                             {isExpanded && <div className={`areas-container ${isDocReserved ? 'enabled' : 'disabled'}`}>
 
                                 <Handshake hs={report[0].handshake} /> 

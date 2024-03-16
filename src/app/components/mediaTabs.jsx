@@ -10,7 +10,7 @@ export default function MediaTabs({ area, indexArea }) {
     const [activeTab, setActiveTab] = useState(0);
     const [nImages, setnImages] = useState(area.urlImages?.length);
     const [nVideos, setnVideos] = useState(area.urlVideos?.length);
-    const [nAudios, setnAudios] = useState(0);
+    const [nAudios, setnAudios] = useState(area.urlAudios?.length);
 
 
     const clickTab = (e, n) => {

@@ -90,59 +90,59 @@ export default class FileApi {
 
 
 
-    static async downloadPDF( fileId ) {
+    // static async downloadPDF( fileId ) {
 
-        console.log("downloadPDF", fileId); 
+    //     console.log("downloadPDF", fileId); 
 
-        return;
-        try {
+    //     return;
+    //     try {
  
-            const url = `http://localhost:3001/apiHs/download-pdf?fileId=${fileId}`;
+    //         const url = `http://localhost:3001/apiHs/download-pdf?fileId=${fileId}`;
 
-            const options = {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/pdf',
-                }
-            }
+    //         const options = {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Accept': 'application/pdf',
+    //             }
+    //         }
 
-            const res = await fetch(url, options)
+    //         const res = await fetch(url, options)
 
-            if (!res.ok) {
-                throw new Error(`download PDF Error: ${res.status},  ${res.statusText}`);
-            } else {
+    //         if (!res.ok) {
+    //             throw new Error(`download PDF Error: ${res.status},  ${res.statusText}`);
+    //         } else {
  
-                const h = res.headers; 
-                const cd = h.get('Content-Disposition'); 
-                const cl = h.get('content-length');
-                const ct = h.get('content-type');
-                const lm = h.get('last-modified');
-                const content = cd ? cd.split(';')[0] : 'undefined'; 
+    //             const h = res.headers; 
+    //             const cd = h.get('Content-Disposition'); 
+    //             const cl = h.get('content-length');
+    //             const ct = h.get('content-type');
+    //             const lm = h.get('last-modified');
+    //             const content = cd ? cd.split(';')[0] : 'undefined'; 
 
-                if (cl > 10 * (1024 ** 2) || !ct.startsWith('application/pdf') || content != 'attachment') {
-                    throw new Error(`Error: La respuesta no cumple los requisitos`);
-                }
+    //             if (cl > 10 * (1024 ** 2) || !ct.startsWith('application/pdf') || content != 'attachment') {
+    //                 throw new Error(`Error: La respuesta no cumple los requisitos`);
+    //             }
 
-                const blob = await res.blob();
-                const fileName = cd.split('filename=')[1].replace(/"/g, '');
-                const downloadLink = document.createElement('a');
-                const Wurl = window.URL.createObjectURL(blob);
+    //             const blob = await res.blob();
+    //             const fileName = cd.split('filename=')[1].replace(/"/g, '');
+    //             const downloadLink = document.createElement('a');
+    //             const Wurl = window.URL.createObjectURL(blob);
 
-                downloadLink.href = Wurl;
-                downloadLink.download = fileName;
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-                window.URL.revokeObjectURL(Wurl);
+    //             downloadLink.href = Wurl;
+    //             downloadLink.download = fileName;
+    //             document.body.appendChild(downloadLink);
+    //             downloadLink.click();
+    //             document.body.removeChild(downloadLink);
+    //             window.URL.revokeObjectURL(Wurl);
 
-                return { fileName, lm };
-            }
-        }
+    //             return { fileName, lm };
+    //         }
+    //     }
 
-        catch (e) {
-            throw e;
-        }
-    }
+    //     catch (e) {
+    //         throw e;
+    //     }
+    // }
 
 
 
@@ -194,6 +194,27 @@ export default class FileApi {
         }
     }
 
+
+    static async uploadAudio(formData) {
+
+        try {
+            const response = await fetch('http://localhost:3001/apiHs/uploadaudio', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}, ${response.statusText}`);
+            }
+
+            const responseData = await response.json();
+            return responseData;
+        }
+
+        catch (e) {
+            throw e;
+        }
+    }
 
 
 
