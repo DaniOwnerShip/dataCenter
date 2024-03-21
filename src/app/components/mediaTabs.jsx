@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import MediaImages from "./mediaImages";
 import MediaVideo from "./mediaVideos"; 
 import MediaAudio from "./mediaAudios"; 
+ 
 
-
-export default function MediaTabs({ area, indexArea }) {
+export default function MediaTabs({report, area, indexArea }) {
 
     const [activeTab, setActiveTab] = useState(0);
     const [nImages, setnImages] = useState(area.urlImages?.length);
@@ -53,15 +53,15 @@ export default function MediaTabs({ area, indexArea }) {
                 </div>
 
             </div>
-
+            
 
             {activeTab !== 0 && <div className="media-container">
 
-                {activeTab === 1 && <MediaImages area={area} indexArea={indexArea} setnImages={setnImages} />}
+                {activeTab === 1 && <MediaImages report={report} area={area} indexArea={indexArea} setnImages={setnImages} />}
 
-                {activeTab === 2 && <MediaVideo area={area} indexArea={indexArea} setnVideos={setnVideos} />}
+                {activeTab === 2 && <MediaVideo report={report} area={area} indexArea={indexArea} setnVideos={setnVideos} />}
                 
-                {activeTab === 3 && <MediaAudio area={area} indexArea={indexArea} setnAudios={setnAudios} />}
+                {activeTab === 3 && <MediaAudio report={report} area={area} indexArea={indexArea} setnAudios={setnAudios} />}
 
             </div>}
 

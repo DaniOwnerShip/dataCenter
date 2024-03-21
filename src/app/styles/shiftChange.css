@@ -74,7 +74,8 @@ base:#A8BA2D
 }
 .rightpos{
     position: absolute;
-    right: 20px;
+    right: 20px;  
+    top: 20px;
 }
 
 .handshake {
@@ -118,6 +119,7 @@ base:#A8BA2D
     background-color: var(--background-color);
     color: var(--body-txt-color); */
 }  
+ 
 /* 
 SIDE BAR
 */
@@ -143,25 +145,17 @@ mainContainer
 */
 
 .mainContainer { 
-    min-width: 900px;
-     /*padding: 0.5rem;
-    border-radius: 15px;
-    box-shadow: -4px -4px 3px -5px white; */
+    width: 1000px; 
     position: relative;
     margin: auto;     
 }
 
-.mainContainer.window {
-    position: relative;
-    margin: 0;
-    width: 42rem;
-    background-color: var(--mainContainer-color)
+.mainContainer.window { 
+    padding: 10px; 
+    background-color: var(--mainContainer-color);
+    border-radius: 15px;
 }
-
-.mainContainer.unit {
-    margin: 5px auto;
-}
-
+  
 
 .UnitPlantWindow {
     top: 10px;
@@ -184,6 +178,16 @@ mainContainer
 .isDragging:hover {
     cursor: grabbing;
 }
+
+.UnitPlantWindow.main1 {
+    background-color: rgb(200 200 200);
+    border: 2px solid rgba(100, 100, 100, 0.5);
+}
+
+.UnitPlantWindow.main1.isDragging {
+    background-color: rgba(200, 200, 200, 0.5);
+}
+
 
 .UnitPlantWindow.unit1 {
     background-color: rgb(15, 134, 12);
@@ -223,7 +227,7 @@ AREAS
     margin: 7px 0;
     border-radius: 10px;
     background-color: rgb(0, 0, 0);
-    border: 1px solid #696f42;
+    border: 2px solid black;
     /*padding: 3px;
     border: 2px solid #000000; 
     border: 1px solid #595959;
@@ -295,11 +299,19 @@ RESIZABLE
 .react-resizable-handle {
     position: fixed !important;
     bottom: 2px !important;
-    right: 2px;
+      right: 2px;
+   /* width: 10px;
+    height: 10px;
+   z-index: 12; */
+    /* color: red; 
+    border-radius: 8px 0px;
+    background-color: #343541;*/
+}
+/* .react-resizable-handle:hover {
+    cursor: move;
 }
 
 
-/* 
 MULTIMEDIA   
 */
 
@@ -331,15 +343,17 @@ MULTIMEDIA
 
 .media-items-container {
     border-radius: 5px;
-    background-color: #343541;
+    background-color: #343541;    
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .media-item {
-    width: 10rem;
-    height: 7rem;
+    height: 120px;
+    /* width: 10rem;
     margin: 7px 0px 3px 7px;
-    border: 1px solid #686868;
-    border-radius: 7px;
+    border: 1px solid #686868;*/
+    border-radius: 7px; 
 }
 
 .media-item:hover {
@@ -373,8 +387,27 @@ MULTIMEDIA
     cursor: pointer;
 }
 
+.media-audio{ 
+    height: 30px;
+    width: 285px;
+    /* margin: 10px; 
+    margin-bottom: 0;  */
+}
 
-/* 
+.media-caption{     
+    font-size: 10px;
+    padding-left: 20px; 
+}
+.media-figure{     
+    margin: 5px;
+    border-radius: 10px;
+    /* width: min-content; */
+    border: 1px solid #757575;
+    padding: 3px;
+    background-color: black;
+}
+/* margin: 0;
+    width: min-content;
 FILE IO
 */
 .fileTransfer {
@@ -539,7 +572,7 @@ SOCKET ITERFACE
     color: #000;
     position: fixed;
     z-index: 1;
-    top: 110px;
+    top: 130px;
     left: 5px;
 }
 

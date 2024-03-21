@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import FileApi from "../apis/fileApi"; 
+import FileApi from "../apis/fileApi";
+import MediaAPI from '../apis/multimediaAPI.mjs';
 
-export default function MediaAudio({ area, indexArea, setnAudios }) {
+export default function MediaAudio({ report, area, indexArea, setnAudios }) {
 
     const audioMimes = [
         'audio/mpeg',        // .mp3
@@ -19,53 +20,54 @@ export default function MediaAudio({ area, indexArea, setnAudios }) {
     ];
 
 
-    const idArea = area.areaName;
+    const areaId = area.areaName;
     const audios = area.urlAudios;
-    const [audioName, setAudioName] = useState('🔂 Seleccionar');
-    const [selectedAudio, setSelectedAudio] = useState(null); 
+    const docFileName = report[0].metaData.fileID;
+    const areaIndex = indexArea;
+
+    const [mediaFile, setMediaFile] = useState(null);
+    const [mediaName, setMediaName] = useState('🔂 Seleccionar');
 
 
     const audioSelection = (e) => {
         const file = e.target.files[0];
-        setSelectedAudio(file);
-        setAudioName(e.target.files[0].name);
+        setMediaFile(file);
+        setMediaName(e.target.files[0].name);
     };
 
- 
 
-    const uploadAudio = async () => {
 
-        if (!selectedAudio) { window.alert('SELECCIONA UN ARCHIVO'); return; }
+    const uploadAudio = async (mediaType) => {
 
-        const formData = new FormData();
-        formData.append('audio', selectedAudio);
+        if (!mediaFile) { return window.alert('Selecciona un archivo'); } 
 
-        const path = 'http://localhost:3001/';
-        let audioURL;
-
-        FileApi.uploadAudio(formData)
+        MediaAPI.mediaupload(mediaFile, mediaType, docFileName, areaIndex)
             .then(res => {
-                audioURL = path + res;
-                audios.push(audioURL);
-                setnVideos(audios?.length);
-                setAudioName('🔂 Seleccionar audio');
-                window.alert('✅ Audio subido correctamente');
+                console.log('res:', res);
+                audios.push(res.mediaURL);
+                setnAudios(audios.length);
+                setMediaName('🔂 Seleccionar audio');
+                window.alert('✅ Audio subido');
             })
             .catch((e) => { window.alert(`❌ ${e.message}`); });
+
     };
 
 
 
-    const deleteAudio = (e, url) => {
+    const deleteAudio = (e, url, mediaType) => {
         e.preventDefault();
+
         const deleteAudio = window.confirm('¿BORRAR AUDIO?');
         const indexUrl = audios.findIndex((u) => u === url);
 
         if (deleteAudio && indexUrl !== -1) {
-            const audioUrl = audios[indexUrl];
 
-            FileApi.deleteFile(audioUrl)
+            const mediaURL = audios[indexUrl];
+
+            MediaAPI.mediaDeleteFile(docFileName, areaIndex, mediaType, mediaURL)
                 .then(res => {
+                    console.log('res:', res);
                     audios.splice(indexUrl, 1);
                     setnAudios(audios?.length);
                     window.alert(`✅ ${res}`);
@@ -75,31 +77,33 @@ export default function MediaAudio({ area, indexArea, setnAudios }) {
 
     };
 
+  
+
 
 
     return (
         <>
-            <div className="flex spacebtw mediaIO-bar"> 
+            <div className="flex spacebtw mediaIO-bar">
                 <div className="flex" >
 
-                    <label htmlFor={`vi-${idArea}`} >
-                        <div className="button media">{audioName}</div>
+                    <label htmlFor={`vi-${areaId}`} >
+                        <div className="button media">{mediaName}</div>
                     </label>
 
-                    <input id={`vi-${idArea}`}
+                    <input id={`vi-${areaId}`}
                         type="file"
                         accept={audioMimes.join(',')}
                         onChange={audioSelection}
                     />
 
                     <button type="button"
-                        id={`upv-${idArea}`}
-                        className={`button media`}
-                        onClick={uploadAudio}>
+                        id={`upv-${areaId}`}
+                        className="button media"
+                        onClick={() => uploadAudio('audio')}>
                         ⏏️ Subir
                     </button>
 
-                </div> 
+                </div>
 
 
             </div>
@@ -107,10 +111,19 @@ export default function MediaAudio({ area, indexArea, setnAudios }) {
 
 
             <div className="media-items-container" >
-                {audios?.map((url, index) => ( 
-                        <audio controls src={url} key={`aud-${indexArea}-${index}`}
-                        onContextMenu={(e) => deleteAudio(e, url)}></audio>  
+
+                {audios?.map((url, index) => (
+
+                    <figure className="media-figure" key={`aud-${indexArea}-${index}`}>
+                        <audio controls
+                            src={url}
+                            onContextMenu={(e) => deleteAudio(e, url, 'audio')}
+                            className="media-audio">
+                        </audio>
+                        <figcaption className="media-caption">{url.split('/')[5].split('_')[1]}</figcaption>
+                    </figure>
                 ))}
+
             </div>
 
 

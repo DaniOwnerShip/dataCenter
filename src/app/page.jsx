@@ -11,7 +11,8 @@ export default function Home() {
 
       <p>
         <Link href="/pages/shiftChange/mainReport">handshake</Link>
-        <Link href="/plantUnit/abc">plantUnit</Link>
+        <Link href="/pages/shiftChange/plantUnits/main1">main1</Link>
+        <Link href="/pages/shiftChange/plantUnits/unit1">unit1</Link>
       </p>
 
       <Link href="/pages/shiftChange/plantUnit/[unit]" as="/pages/shiftChange/plantUnit/abc">

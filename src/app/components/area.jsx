@@ -2,23 +2,23 @@ import { useEffect, useState } from "react";
 import MediaTabs from "./mediaTabs";  
 
 
-export default function Area({ place, area, indexArea, isMultimedia }) { 
+export default function Area({report, unit, area, indexArea, windowKey }) { 
 
     const [expandArea, setExpandArea] = useState(true);   
 
     return (
         <>
-            <AreaTittle place={place} area={area} expandArea={expandArea} setExpandArea={setExpandArea} />
+            <AreaTittle unit={unit} area={area} expandArea={expandArea} setExpandArea={setExpandArea} />
            
             {expandArea && <div className="area-items-container">
 
                 {area.areaItems.map((area, indexItem) => (
                     <div key={`item-${indexArea}-${indexItem}`} className="area-items" > 
-                        <AreaItem place={place} area={area} ikey={`${indexArea}-${indexItem}`} /> 
+                        <AreaItem area={area} uKey={`${windowKey}-${unit}-${indexArea}-${indexItem}`} /> 
                     </div>
                 ))}
                 
-                {isMultimedia && <MediaTabs area={area} indexArea={indexArea} />}
+                {unit === 'main1' && <MediaTabs report={report} area={area} indexArea={indexArea} />}
 
             </div>}  
         </> 
@@ -27,9 +27,9 @@ export default function Area({ place, area, indexArea, isMultimedia }) {
 
 
 
-function AreaTittle({ place, area, expandArea, setExpandArea }) {
+function AreaTittle({ unit, area, expandArea, setExpandArea }) {
     return (
-        <div className={` ${expandArea ? `area-tittle expand ${place}` : `area-tittle ${place}`} `} >
+        <div className={` ${expandArea ? `area-tittle expand ${unit}` : `area-tittle ${unit}`} `} >
              {area.areaName} 
             <div className="flex center">{area.units} </div>
              Comentarios 
@@ -44,19 +44,19 @@ function AreaTittle({ place, area, expandArea, setExpandArea }) {
 
 
 
-function AreaItem({ area, ikey }) {
+function AreaItem({ area, uKey }) {
     return (
         <>
             {area.desc} 
-            <ButtonsStates areaItem={area} ikey={ikey} />
-            <Commensts areaItem={area} ikey={ikey} />
+            <ButtonsStates areaItem={area} uKey={uKey} />
+            <Commensts areaItem={area} uKey={uKey} />
         </>
     );
 }
 
 
 
-function ButtonsStates({ areaItem, ikey }) {
+function ButtonsStates({ areaItem, uKey }) {
   
     const [forceRender, setForceRender] = useState(false);
     const buttonStates = areaItem.state;
@@ -73,9 +73,9 @@ function ButtonsStates({ areaItem, ikey }) {
             {areaItem.state.map((states, indexstate) => (
                 <button 
                     type="button"
-                    key={`btnstate-${ikey}-${indexstate}`} 
+                    key={`btnstate-${uKey}-${indexstate}`} 
                     className="button states"
-                    id={`btnstate-${ikey}-${indexstate}`}
+                    id={`btnstate-${uKey}-${indexstate}`}
                     onClick={() => buttonState(indexstate)}
                 >
                     {`${states ? '✅' : '❌'}`}
@@ -89,9 +89,9 @@ function ButtonsStates({ areaItem, ikey }) {
 
 
 
-function Commensts({ areaItem, ikey }) { 
+function Commensts({ areaItem, uKey }) { 
 
-    const id = `txtarea-${ikey}`
+    const id = `txtarea-${uKey}`
     const item = areaItem;
     const [isExpanded, setIsExpanded] = useState(true);
     const [forceRender, setForceRender] = useState(false);
@@ -132,7 +132,7 @@ function Commensts({ areaItem, ikey }) {
 
         <div className="textarea-container">
 
-            <button type="button" id={`tbt-${ikey}`} className="textarea-button" onClick={() => toggletxtareaButton()}>
+            <button type="button" id={`tbt-${uKey}`} className="textarea-button" onClick={() => toggletxtareaButton()}>
                 {`${isExpanded ? '-' : '+'}`}
             </button>
  

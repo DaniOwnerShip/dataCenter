@@ -1,9 +1,9 @@
-import { useState } from "react";   
+import { useState } from "react";
 
 
-export default function Handshake({ hs }) { 
+export default function Handshake({ hs }) {
 
-    const [forceRender, setForceRender] = useState(false);      
+    const [forceRender, setForceRender] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
@@ -17,57 +17,58 @@ export default function Handshake({ hs }) {
             return;
         }
 
-        hs.party[indexTeam].number = event.target.value; 
-        setForceRender(!forceRender);  
+        hs.party[indexTeam].number = event.target.value;
+        setForceRender(!forceRender);
     };
 
 
 
-    const onChangeName = (event, indexTeam) => { 
-        hs.party[indexTeam].leader = event.target.value; 
+    const onChangeName = (event, indexTeam) => {
+        hs.party[indexTeam].leader = event.target.value;
         setForceRender(!forceRender);
     };
 
 
 
     return (
+        <>
+            <hr />
+            <section className="flex">
 
-        <section className="flex">
+                {hs.party.map((team, indexTeam) => (
 
-            {hs.party.map((team, indexTeam) => (
+                    <div key={`party-${indexTeam}`} className="flex paddingL" >
 
-                <div key={`party-${indexTeam}`} className="flex paddingL" >
+                        <p> ⚒️ {team.type + " Nº "}  </p>
 
-                    <p> ⚒️ {team.type + " Nº "}  </p>
+                        <input
+                            type="text"
+                            className="input-num"
+                            id={`txt-num-${indexTeam}`}
+                            onChange={(event) => onChangeNum(event, indexTeam)}
+                            value={hs.party[indexTeam].number}
+                        />
 
+                        <p> PTL </p>
+                        <input
+                            type="text"
+                            id={`txt-PTL-${indexTeam}`}
+                            onChange={(event) => onChangeName(event, indexTeam)}
+                            value={hs.party[indexTeam].leader}
+                        />
+
+                    </div>
+                ))}
+                <div className="flex paddingL">
+                    <label>Completado: </label>
                     <input
-                        type="text"
-                        className="input-num"
-                        id={`txt-num-${indexTeam}`}
-                        onChange={(event) => onChangeNum(event, indexTeam)}
-                        value={hs.party[indexTeam].number}
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
                     />
+                </div>
 
-                    <p> PTL </p>
-                    <input
-                        type="text"
-                        id={`txt-PTL-${indexTeam}`}
-                        onChange={(event) => onChangeName(event, indexTeam)}
-                        value={hs.party[indexTeam].leader}
-                    />
-
-                </div> 
-            ))} 
-                                <div className="flex paddingL">
-                                    <label>Completado: </label>
-                                    <input
-                                        type="checkbox"
-                                        checked={isChecked}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                </div>
-
-        </section >
-
+            </section >
+        </>
     );
 }

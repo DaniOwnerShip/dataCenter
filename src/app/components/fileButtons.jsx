@@ -3,12 +3,23 @@ import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';   
 
 
-export default function FileButtons({ report, place, refToPDF }) {
+export default function FileButtons({ report, setReport, place, refToPDF }) {
 
-    const fileId = report[0].handshake.fileID;
-    const pdfName = fileId.split('.')[0];
-    // const [docState, setDocState] = useState(DocReserve.state); 
-    // useEffect(() => { DocReserve.engage(setDocState); });
+    const fileId = report[0].metaData.fileID;
+    const pdfName = fileId.split('.')[0]; 
+
+
+    const saveJson = () => {
+
+        FileApi.saveJson(report, place)
+            .then(res => { 
+                window.alert(`✅ ${res}`); 
+                setReport(null);
+            })
+            .catch((e) => { window.alert(`❌ ${e.message}`); }); 
+    };
+
+
 
     const downloadPDF = () => {
 
@@ -64,15 +75,6 @@ export default function FileButtons({ report, place, refToPDF }) {
             }
         }, 500);
 
-    };
-
-    const saveJson = () => {
-
-        FileApi.saveJson(report, place)
-            .then(res => {
-                window.alert(`✅ ${res}`);
-            })
-            .catch((e) => { window.alert(`❌ ${e.message}`); }); 
     };
 
 

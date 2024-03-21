@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import FileApi from "../apis/fileApi";
+import MediaAPI from '../apis/multimediaAPI.mjs';
 
 
-export default function MediaImages({ area, indexArea, setnImages }) {
+export default function MediaImages({ report, area, indexArea, setnImages }) {
 
   const imageMimes = [
     'image/jpeg',  // .jpg, .jpeg
@@ -11,37 +12,35 @@ export default function MediaImages({ area, indexArea, setnImages }) {
     'image/bmp',   // .bmp
     'image/webp',  // .webp
     'image/svg+xml' // .svg
-  ];
-
+  ]; 
 
   const idArea = area.areaName;
   const imgs = area.urlImages;
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState('🔂 Seleccionar');  
+  const docFileName = report[0].metaData.fileID;
+  const areaIndex = indexArea; 
+
+  const [mediaFile, setMediaFile] = useState(null);
+  const [mediaName, setMediaName] = useState('🔂 Seleccionar');
+
 
   const imageSelection = (e) => {
-    setSelectedFile(e.target.files[0]);
-    setFileName(e.target.files[0].name);
-  }; 
+    setMediaFile(e.target.files[0]);
+    setMediaName(e.target.files[0].name);
+  };
 
 
-  const uploadImage = () => {
+  
+  const uploadImage = (mediaType) => {
 
-    if (!selectedFile) { window.alert('SELECCIONA UN ARCHIVO'); return; }
+    if (!mediaFile) { return window.alert('Selecciona un archivo'); } 
 
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-
-    const path = 'http://localhost:3001/';
-    let imageURL;
-
-    FileApi.uploadImage(formData)
+    MediaAPI.mediaupload(mediaFile, mediaType, docFileName, areaIndex)
       .then(res => {
-        imageURL = path + res.imageUrl;
-        imgs.push(imageURL);
-        setnImages(imgs?.length);
-        setFileName('🔂 Seleccionar imagen');
-        window.alert(`✅Imagen guardada`);
+        console.log('res:', res);
+        imgs.push(res.mediaURL);
+        setnImages(imgs.length);
+        setMediaName('🔂 Seleccionar imagen');
+        window.alert('✅ Imagen subida');
       })
       .catch((e) => { window.alert(`❌ ${e.message}`); });
 
@@ -49,7 +48,7 @@ export default function MediaImages({ area, indexArea, setnImages }) {
 
 
 
-  const deleteImage = (e, url) => {
+  const deleteImage = (e, url, mediaType) => {
     e.preventDefault();
 
     const deleteImg = window.confirm('¿BORRAR IMAGEN?');
@@ -57,10 +56,11 @@ export default function MediaImages({ area, indexArea, setnImages }) {
 
     if (deleteImg && indexUrl !== -1) {
 
-      const imgUrl = imgs[indexUrl];
+      const mediaURL = imgs[indexUrl];
 
-      FileApi.deleteFile(imgUrl)
+      MediaAPI.mediaDeleteFile(docFileName, areaIndex, mediaType, mediaURL)
         .then(res => {
+          console.log('res:', res);
           imgs.splice(indexUrl, 1);
           setnImages(imgs?.length);
           window.alert(`✅ ${res}`);
@@ -69,6 +69,7 @@ export default function MediaImages({ area, indexArea, setnImages }) {
     }
 
   };
+
 
 
 
@@ -81,7 +82,7 @@ export default function MediaImages({ area, indexArea, setnImages }) {
         <div className="flex" >
 
           <label htmlFor={`fi-${idArea}`}>
-            <div className="button media">{fileName}</div>
+            <div className="button media">{mediaName}</div>
           </label>
 
           <input
@@ -95,26 +96,34 @@ export default function MediaImages({ area, indexArea, setnImages }) {
             type="button"
             id={`upi-${idArea}`}
             className="button media"
-            onClick={uploadImage}>
+            onClick={() => uploadImage('image')}>
             ⏏️ Subir
           </button>
 
-        </div> 
+        </div>
 
 
       </div>
 
- 
+
       <div className="media-items-container" >
+
         {imgs?.map((url, index) => (
-          <a href={url} target="_blank" rel="noopener noreferrer" key={`img-${indexArea}-${index}`}>
-            <img
-              src={url}
-              alt={`img-${indexArea}-${index}`}
-              className="media-item"
-              onContextMenu={(e) => deleteImage(e, url)}
-            />
-          </a>
+
+          <figure key={`img-${indexArea}-${index}`} className="media-figure" >
+
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              <img
+                src={url}
+                alt={`img-${indexArea}-${index}`}
+                className="media-item"
+                onContextMenu={(e) => deleteImage(e, url, 'image')}
+              />
+            </a>
+
+            <figcaption className="media-caption">{url.split('/')[5].split('_')[1]}</figcaption>
+            
+          </figure>
         ))}
 
       </div>

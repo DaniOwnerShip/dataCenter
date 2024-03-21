@@ -1,76 +1,71 @@
 import { useState } from 'react';
 
-import FileApi from "../apis/fileApi"; 
+// import FileApi from "../apis/fileApi"; 
+import MediaAPI from '../apis/multimediaAPI.mjs';
 
-export default function MediaVideo({ area, indexArea, setnVideos }) {
+export default function MediaVideo({ report, area, indexArea, setnVideos }) {
 
     const videoMimes = [
-        'video/quicktime',   // .mov
+        'video/mp4',         // .mp4
         'video/avi',         // .avi
+        'video/mpeg',        // .mpeg, .mpg
+        'video/quicktime',   // .mov
         'video/x-ms-wmv',    // .wmv
         'video/x-flv',       // .flv
-        'video/mpeg',        // .mpeg, .mpg
         'video/x-matroska',  // .mkv
         'video/x-msvideo',   // .avi
         'video/x-ms-asf'     // .asf
-    ];
-
+    ]; 
 
     const idArea = area.areaName;
-    const videos = area.urlVideos;
-    const [videoName, setVideoName] = useState('🔂 Seleccionar');
-    const [selectedVideo, setSelectedVideo] = useState(null);
-    // const [videosVisible, setVideosVisible] = useState(true); 
+    const urlVideos = area.urlVideos;
+    const docFileName = report[0].metaData.fileID;
+    const areaIndex = indexArea;
+
+    const [mediaFile, setMediaFile] = useState(null);
+    const [mediaName, setMediaName] = useState('🔂 Seleccionar');
 
 
     const videoSelection = (e) => {
         const file = e.target.files[0];
-        setSelectedVideo(file);
-        setVideoName(e.target.files[0].name);
+        setMediaFile(file);
+        setMediaName(e.target.files[0].name);
     };
 
 
-    // const showVideos = () => {
-    //     setVideosVisible(!videosVisible);
-    // };
 
+    const uploadVideo = (mediaType) => { 
 
-    const uploadVideo = async () => {
+        if (!mediaFile) { return window.alert('Selecciona un archivo'); } 
 
-        if (!selectedVideo) { window.alert('SELECCIONA UN ARCHIVO'); return; }
-
-        const formData = new FormData();
-        formData.append('video', selectedVideo);
-
-        const path = 'http://localhost:3001/';
-        let videoURL;
-
-        FileApi.uploadVideo(formData)
+        MediaAPI.mediaupload(mediaFile, mediaType, docFileName, areaIndex)
             .then(res => {
-                videoURL = path + res;
-                videos.push(videoURL);
-                setnVideos(videos?.length);
-                setVideoName('🔂 Seleccionar video');
-                window.alert('✅ Vídeo subido correctamente');
+                console.log('res:', res);
+                urlVideos.push(res.mediaURL);
+                setnVideos(urlVideos.length);
+                setMediaName('🔂 Seleccionar video');
+                window.alert('✅ video subido');
             })
             .catch((e) => { window.alert(`❌ ${e.message}`); });
     };
+  
 
 
-
-    const deleteVideo = (e, url) => {
+    const deleteVideo = (e, url, mediaType) => {
         e.preventDefault();
+        
         const deleteVideo = window.confirm('¿BORRAR Video?');
-        const indexUrl = videos.findIndex((u) => u === url);
+        const indexUrl = urlVideos.findIndex((u) => u === url);
 
         if (deleteVideo && indexUrl !== -1) {
-            const videoUrl = videos[indexUrl];
+            const mediaURL = urlVideos[indexUrl]; 
 
-            FileApi.deleteFile(videoUrl)
+            MediaAPI.mediaDeleteFile(docFileName, areaIndex, mediaType, mediaURL)
                 .then(res => {
-                    videos.splice(indexUrl, 1);
-                    setnVideos(videos?.length);
-                    window.alert(`✅ ${res}`);
+                    console.log('res:', res);
+                    urlVideos.splice(indexUrl, 1);
+                    setnVideos(urlVideos.length); 
+                    window.alert(`✅ ${res}`);  
                 })
                 .catch((e) => { window.alert(`❌ ${e.message}`); });
         }
@@ -86,7 +81,7 @@ export default function MediaVideo({ area, indexArea, setnVideos }) {
                 <div className="flex" >
 
                     <label htmlFor={`vi-${idArea}`} >
-                        <div className="button media">{videoName}</div>
+                        <div className="button media">{mediaName}</div>
                     </label>
 
                     <input id={`vi-${idArea}`}
@@ -99,24 +94,24 @@ export default function MediaVideo({ area, indexArea, setnVideos }) {
                         type="button"
                         id={`upv-${idArea}`}
                         className={`button media`}
-                        onClick={uploadVideo}>
+                        onClick={() => uploadVideo('video')}>
                         ⏏️ Subir
                     </button>
 
-                </div> 
+                </div>
 
 
             </div>
 
- 
+
             <div className="media-items-container" >
-                {videos?.map((url, index) => (
+                {urlVideos?.map((url, index) => (
                     <a href={url} target="_blank" rel="noopener noreferrer" key={`vid-${indexArea}-${index}`}>
                         <video
                             src={url}
                             alt={`vid-${indexArea}-${index}`}
                             className="media-item"
-                            onContextMenu={(e) => deleteVideo(e, indexArea, url)}
+                            onContextMenu={(e) => deleteVideo(e, url, 'video')}
                         />
                     </a>
                 ))}

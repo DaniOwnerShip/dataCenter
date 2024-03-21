@@ -10,7 +10,7 @@ import FileApi from "../apis/fileApi";
 export default function UnitPlantButtons() {
 
   const router = useRouter();
-  const units = ['unit1', 'unit2'];
+  const units = ['main1','unit1', 'unit2'];
   const [report, setReport] = useState(null);
   const [isShow, setIsShow] = useState(false);
   const [activeUnit, setActiveUnit] = useState('');
@@ -18,9 +18,9 @@ export default function UnitPlantButtons() {
   
   const clickOpenWindow = (unit) => {
 
-    if (isShow) {
-      return setIsShow(false);
-    }
+    // if (isShow) {
+    //   return setIsShow(false);
+    // }
 
     const fileName = `informe-${unit}-last.json`
 
@@ -33,6 +33,8 @@ export default function UnitPlantButtons() {
       .catch((e) => { window.alert(`❌ ${e.message}`); });
 
   };
+
+
 
 
   const clickToUnit = (unit) => { 
@@ -59,13 +61,14 @@ export default function UnitPlantButtons() {
           <button type="button" key={`btnup-${iunit}`}
             className="button sidebar"
             onClick={() => clickToUnit(unit)}>
-            {`Ir a Unidad ${iunit + 1}`}
+            {`Ir a ${unit}`}
+            {/* {`Ir a Unidad ${iunit + 1}`} */}
           </button>
 
           <button type="button" key={`btnuw-${iunit}`}
             className="button sidebar"
             onClick={() => clickOpenWindow(unit)}>
-            {`Abrir Unidad ${iunit + 1}`}
+            {`Abrir ${unit}`}
           </button>
 
         </div>

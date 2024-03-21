@@ -1,13 +1,13 @@
-import  {Isocket} from '../components/socketInterface'
+import { Isocket } from '../components/socketInterface' 
 
 
-export default class FileApi { 
+export default class FileApi {
 
     static async downloadjson(fileName) {
 
-        try { 
+        try {
 
-            const url = `http://192.168.1.100:3001/apiHs/downloadjson?fileName=${fileName}`;
+            const url = `http://192.168.1.100:3001/jsonAPI/downloadjson?fileName=${fileName}`;
 
             const options = {
                 method: 'GET',
@@ -17,17 +17,16 @@ export default class FileApi {
                 }
             }
 
-            const res = await fetch(url, options);  
+            const res = await fetch(url, options);
             const resData = await res.json();
 
-            if (!res.ok) {
-                throw new Error(`${resData} \n ${res.status} ${res.statusText}`);
-            }    
- 
-            const modDate = res.headers.get('last-modified'); 
-            console.log('lm:', modDate); 
+            if (!res.ok) {  
+                throw new Error(resData); 
+            }
 
-            return {resData, modDate};
+            const modDate = res.headers.get('last-modified'); 
+
+            return { resData, modDate };
 
         }
         catch (e) {
@@ -35,22 +34,35 @@ export default class FileApi {
         }
     }
 
-
-
+ 
+//falta  validar el metadata en el servidor 
 
     static async saveJson(report, place) { 
-        
+
         try {
 
             const dateNow = new Date();
-            const dateFormat = dateNow.toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' });
-            const fileName = `informe-${place}-${dateFormat.replace(/\//g, '-')}.json`; 
-            report[0].handshake.fileID = fileName;
+            const hours = dateNow.getHours();    
+
+            if (hours < 7) {
+                dateNow.setDate(dateNow.getDate() - 1);
+            }            
+
+            const dateFormat = dateNow.toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' }); 
+            const fileName = `informe-${place}-${dateFormat.replace(/\//g, '-')}.json`;
+
+            const isDay =  hours > 7 && hours < 19? true: false;   
+
+            if (!window.confirm(`Va a guardar el documento como: ${fileName} ${isDay ? '☀️' : '🌙'}`)) {
+                return ('Has denegado la acción');
+            }  
+
+            report[0].metaData.fileID = fileName;   
+            isDay ? report[0].metaData.DayNight = 'Día' : report[0].metaData.DayNight = 'Noche';   
 
             const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json", });
-
-            // const url = 'http://localhost:3001/apiHs/saveJson';
-            const url = 'http://192.168.1.100:3001/apiHs/saveJson'; 
+ 
+            const url = 'http://192.168.1.100:3001/jsonAPI/saveJson';
 
             const options = {
                 method: 'POST',
@@ -76,8 +88,10 @@ export default class FileApi {
             }
 
             const resData = await res.json();
-
-            // isSaveJson.upload = true;
+ 
+            if (Isocket.isOn) {
+                Isocket.docSaveNotifyFn(Isocket.socket);
+            }
 
             return resData;
 
@@ -87,16 +101,46 @@ export default class FileApi {
         }
     }
 
+ 
+//mover a multimedia api
+    // static async deleteFile(urlFile) {
+
+    //     console.log("deleteFile", urlFile);
+
+    //     try {
+
+    //         const url = `http://localhost:3001/mediaAPI/delete-file?urlFile=${urlFile}`;
+
+    //         const res = await fetch(url);
+
+    //         if (!res.ok) {
+    //             throw new Error(`delete-file Error: ${res.status}, ${res.statusText}`);
+    //         }
+
+    //         const data = await res.json();
+    //         return data;
+    //     }
+
+    //     catch (e) {
+    //         throw e;
+    //     }
+    // }
+
+
+ 
+
+}
 
 
 
+// puppetter se ha remplazado por screenshot en filebuttons
     // static async downloadPDF( fileId ) {
 
     //     console.log("downloadPDF", fileId); 
 
     //     return;
     //     try {
- 
+
     //         const url = `http://localhost:3001/apiHs/download-pdf?fileId=${fileId}`;
 
     //         const options = {
@@ -111,7 +155,7 @@ export default class FileApi {
     //         if (!res.ok) {
     //             throw new Error(`download PDF Error: ${res.status},  ${res.statusText}`);
     //         } else {
- 
+
     //             const h = res.headers; 
     //             const cd = h.get('Content-Disposition'); 
     //             const cl = h.get('content-length');
@@ -143,116 +187,4 @@ export default class FileApi {
     //         throw e;
     //     }
     // }
-
-
-
-
-
-    static async uploadImage(formData) {
-
-        try {
-            const response = await fetch('http://localhost:3001/apiHs/upload-img', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}, ${response.statusText}`);
-            }
-
-            const responseData = await response.json();
-            return responseData;
-
-        }
-
-        catch (e) {
-            throw e;
-        }
-    }
-
-
-
-
-    static async uploadVideo(formData) {
-
-        try {
-            const response = await fetch('http://localhost:3001/apiHs/uploadvideo', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}, ${response.statusText}`);
-            }
-
-            const responseData = await response.json();
-            return responseData;
-        }
-
-        catch (e) {
-            throw e;
-        }
-    }
-
-
-    static async uploadAudio(formData) {
-
-        try {
-            const response = await fetch('http://localhost:3001/apiHs/uploadaudio', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}, ${response.statusText}`);
-            }
-
-            const responseData = await response.json();
-            return responseData;
-        }
-
-        catch (e) {
-            throw e;
-        }
-    }
-
-
-
-
-
-
-    static async deleteFile(urlFile) {
-
-        console.log("deleteFile", urlFile);
-
-        try {
-
-            const url = `http://localhost:3001/apiHs/delete-file?urlFile=${urlFile}`;
-
-            const res = await fetch(url);
-
-            if (!res.ok) {
-                throw new Error(`delete-image Error: ${res.status}, ${res.statusText}`);
-            }
-
-            const data = await res.json();
-            return data;
-        }
-
-        catch (e) {
-            throw e;
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-}
-
 

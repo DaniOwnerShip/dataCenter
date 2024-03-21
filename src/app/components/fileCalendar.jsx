@@ -1,35 +1,18 @@
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import React, { useState } from "react";
-import FileApi from "../apis/fileApi";
-
- 
 
 
-export default function FileCalendar({ setReport, place }) {
 
-  const [startDate, setStartDate] = useState(new Date()); 
 
-  const reportReq = {
-    file: "informe",
-    place: place,
-    date: formatDate(startDate),
-    type: ".json"
-}
+export default function FileCalendar({ place, callbackDatePicker }) {
 
- 
+  const [startDate, setStartDate] = useState(new Date());
 
-  const downloadjson = () => {
- 
+
+  const requestFile = () => {
     const fileName = `informe-${place}-${formatDate(startDate)}.json`;
- 
-    FileApi.downloadJsonObj(reportReq)
-      .then(data => {
-        setReport(data);
-        window.alert(`✅ Datos descargados al formualario \n\n archivo: ${fileName}`);
-      })
-      .catch((e) => { window.alert(`❌ ${e.message}`); });   
+    callbackDatePicker(fileName);
 
   };
 
@@ -37,7 +20,7 @@ export default function FileCalendar({ setReport, place }) {
 
     <div className="flex center datepicker">
 
-      <button type="button" className="button" onClick={downloadjson}>
+      <button type="button" className="button" onClick={requestFile}>
         ▶️ Descargar informe
       </button>
 
@@ -51,12 +34,12 @@ export default function FileCalendar({ setReport, place }) {
 
     </div>
 
-  ); 
+  );
 
- 
+
 }
- 
- 
+
+
 
 
 const formatDate = (date) => {
