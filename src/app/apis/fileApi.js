@@ -62,8 +62,8 @@ export default class FileApi {
             const isDay =  hours > 7 && hours < 19? true: false;   
 
             const nameDoc = `${docname} ${isDay ? '☀️' : '🌙'}`
-            const alertMsg = isNew?`El documento, ${nameDoc}, está marcado como "COMPLETADO", si continúa ya no podrá editarlo, ¿continuar?`:
-            `Guardar el documento como: ${fileName} ${isDay ? '☀️' : '🌙'} ¿continuar?`;
+            const alertMsg = isNew?`El documento a guardar [ ${nameDoc} ] ha sido marcado como 'COMPLETADO'. Si continúas, ya no será posible editarlo. ¿Continuar?`:
+            `Guardar el documento como: [ ${nameDoc} ] ¿continuar?`;
 
 
             if (!window.confirm(alertMsg)) { 
@@ -76,7 +76,7 @@ export default class FileApi {
             const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json", });
  
             // const url = 'http://192.168.1.100:3001/jsonAPI/saveJson';
-            const url = 'http://loalhost:3001/jsonAPI/saveJson';
+            const url = 'http://localhost:3001/jsonAPI/saveJson';
 
             const options = {
                 method: 'POST',
@@ -112,91 +112,9 @@ export default class FileApi {
             throw e;
         }
     }
-
- 
-//mover a multimedia api
-    // static async deleteFile(urlFile) {
-
-    //     console.log("deleteFile", urlFile);
-
-    //     try {
-
-    //         const url = `http://localhost:3001/mediaAPI/delete-file?urlFile=${urlFile}`;
-
-    //         const res = await fetch(url);
-
-    //         if (!res.ok) {
-    //             throw new Error(`delete-file Error: ${res.status}, ${res.statusText}`);
-    //         }
-
-    //         const data = await res.json();
-    //         return data;
-    //     }
-
-    //     catch (e) {
-    //         throw e;
-    //     }
-    // }
-
-
  
 
 }
 
 
-
-// puppetter se ha remplazado por screenshot en filebuttons
-    // static async downloadPDF( fileId ) {
-
-    //     console.log("downloadPDF", fileId); 
-
-    //     return;
-    //     try {
-
-    //         const url = `http://localhost:3001/apiHs/download-pdf?fileId=${fileId}`;
-
-    //         const options = {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Accept': 'application/pdf',
-    //             }
-    //         }
-
-    //         const res = await fetch(url, options)
-
-    //         if (!res.ok) {
-    //             throw new Error(`download PDF Error: ${res.status},  ${res.statusText}`);
-    //         } else {
-
-    //             const h = res.headers; 
-    //             const cd = h.get('Content-Disposition'); 
-    //             const cl = h.get('content-length');
-    //             const ct = h.get('content-type');
-    //             const lm = h.get('last-modified');
-    //             const content = cd ? cd.split(';')[0] : 'undefined'; 
-
-    //             if (cl > 10 * (1024 ** 2) || !ct.startsWith('application/pdf') || content != 'attachment') {
-    //                 throw new Error(`Error: La respuesta no cumple los requisitos`);
-    //             }
-
-    //             const blob = await res.blob();
-    //             const fileName = cd.split('filename=')[1].replace(/"/g, '');
-    //             const downloadLink = document.createElement('a');
-    //             const Wurl = window.URL.createObjectURL(blob);
-
-    //             downloadLink.href = Wurl;
-    //             downloadLink.download = fileName;
-    //             document.body.appendChild(downloadLink);
-    //             downloadLink.click();
-    //             document.body.removeChild(downloadLink);
-    //             window.URL.revokeObjectURL(Wurl);
-
-    //             return { fileName, lm };
-    //         }
-    //     }
-
-    //     catch (e) {
-    //         throw e;
-    //     }
-    // }
-
+ 

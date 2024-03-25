@@ -4,6 +4,7 @@ import MediaImages from "./mediaImages";
 import MediaVideo from "./mediaVideos"; 
 import MediaAudio from "./mediaAudios"; 
  
+//revisar  multimedia refact
 
 export default function MediaTabs({report, area, indexArea }) {
 

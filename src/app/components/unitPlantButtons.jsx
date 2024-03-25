@@ -18,11 +18,11 @@ export default function UnitPlantButtons() {
   
   const clickOpenWindow = (unit) => { 
 
-    const fileName = `informe-${unit}-last.json`
+    const fileName = `informe-${unit}-last.json` 
 
     FileApi.downloadjson(fileName)
-      .then(res => {
-        setReport(res.resData);
+      .then(res => { 
+        setReport(res);
         setIsShow(true);
         setActiveUnit(unit);
       })

@@ -16,12 +16,13 @@ export default function MediaImages({ report, area, indexArea, setnImages }) {
 
   const idArea = area.areaName;
   const imgs = area.urlImages;
-  const docFileName = report[0].metaData.fileID;
+  const docID = report[0].metaData.fileID;
+  const checksum = report[0].metaData.checksum; 
   const areaIndex = indexArea; 
 
   const [mediaFile, setMediaFile] = useState(null);
   const [mediaName, setMediaName] = useState('🔂 Seleccionar');
-
+ 
 
   const imageSelection = (e) => {
     setMediaFile(e.target.files[0]);
@@ -29,12 +30,16 @@ export default function MediaImages({ report, area, indexArea, setnImages }) {
   };
 
 
-  
+
   const uploadImage = (mediaType) => {
 
-    if (!mediaFile) { return window.alert('Selecciona un archivo'); } 
+    if (checksum) {
+      return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+    }
 
-    MediaAPI.mediaupload(mediaFile, mediaType, docFileName, areaIndex)
+    if (!mediaFile) { return window.alert('Selecciona un archivo'); }
+
+    MediaAPI.mediaupload(mediaFile, mediaType, docID, areaIndex)
       .then(res => {
         console.log('res:', res);
         imgs.push(res.mediaURL);
@@ -51,6 +56,10 @@ export default function MediaImages({ report, area, indexArea, setnImages }) {
   const deleteImage = (e, url, mediaType) => {
     e.preventDefault();
 
+    if (checksum) {
+      return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+    }
+
     const deleteImg = window.confirm('¿BORRAR IMAGEN?');
     const indexUrl = imgs?.findIndex((u) => u === url);
 
@@ -58,7 +67,7 @@ export default function MediaImages({ report, area, indexArea, setnImages }) {
 
       const mediaURL = imgs[indexUrl];
 
-      MediaAPI.mediaDeleteFile(docFileName, areaIndex, mediaType, mediaURL)
+      MediaAPI.mediaDeleteFile(docID, areaIndex, mediaType, mediaURL)
         .then(res => {
           console.log('res:', res);
           imgs.splice(indexUrl, 1);

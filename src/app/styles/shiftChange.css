@@ -481,7 +481,8 @@ BUTTONS
 }
 
 .button.media {
-    border: none;
+    border: none; 
+    color: white;
 }
 
 .button.socket {
@@ -541,14 +542,12 @@ input {
 textarea {
     resize: vertical;
     height: 1.2rem;
-    width: 95%;
-    margin: 0 5px;
-    padding: 1px 2px 2px 7px;
+    width: 97%; 
+    padding: 1px 0px 1px 15px;
     font-family: system-ui;
     outline: none;
     background-color: transparent;
-    border: 1px solid rgb(0, 0, 0);
-    border-radius: 5px;
+    border: 1px solid rgb(0, 0, 0); 
     color: var(--body-txt-color);
     overflow: hidden;
 }
@@ -562,6 +561,7 @@ textarea {
     font-size: .7rem;
     background-color: white;
     border: 1px solid rgb(255 255 255);
+    border-radius: 5px;
 }
 
 
@@ -569,13 +569,11 @@ textarea:focus,
 input:focus {
     background-color: rgb(10 10 10);
     color: limegreen;
-}
-
+} 
 
 .textarea-button {
     position: absolute;
-    right: 3px;
-    top: 1px;
+    right: -3px;
     width: 10px;
     height: 10px;
     display: flex;
@@ -588,7 +586,7 @@ input:focus {
 
 .textarea-button:hover {
     cursor: pointer;
-    scale: 1.1;
+    scale: 1.5;
 }
 
 .textarea-container {
@@ -683,8 +681,7 @@ hr {
     flex-direction: column;
     align-content: center;
     margin-left: 230px; 
-    font-size: 8rem; 
-    background-color: rgb(0, 0, 0);
+    font-size: 8rem;  
    }
    .loadingtext {   
     font-size: 3rem;

@@ -22,7 +22,8 @@ export default function MediaAudio({ report, area, indexArea, setnAudios }) {
 
     const areaId = area.areaName;
     const audios = area.urlAudios;
-    const docFileName = report[0].metaData.fileID;
+    const docID = report[0].metaData.fileID;
+    const checksum = report[0].metaData.checksum;
     const areaIndex = indexArea;
 
     const [mediaFile, setMediaFile] = useState(null);
@@ -39,9 +40,13 @@ export default function MediaAudio({ report, area, indexArea, setnAudios }) {
 
     const uploadAudio = async (mediaType) => {
 
-        if (!mediaFile) { return window.alert('Selecciona un archivo'); } 
+        if (checksum) {
+            return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+        }
 
-        MediaAPI.mediaupload(mediaFile, mediaType, docFileName, areaIndex)
+        if (!mediaFile) { return window.alert('Selecciona un archivo'); }
+
+        MediaAPI.mediaupload(mediaFile, mediaType, docID, areaIndex)
             .then(res => {
                 console.log('res:', res);
                 audios.push(res.mediaURL);
@@ -58,6 +63,10 @@ export default function MediaAudio({ report, area, indexArea, setnAudios }) {
     const deleteAudio = (e, url, mediaType) => {
         e.preventDefault();
 
+        if (checksum) {
+            return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+        }
+        
         const deleteAudio = window.confirm('¿BORRAR AUDIO?');
         const indexUrl = audios.findIndex((u) => u === url);
 
@@ -65,7 +74,7 @@ export default function MediaAudio({ report, area, indexArea, setnAudios }) {
 
             const mediaURL = audios[indexUrl];
 
-            MediaAPI.mediaDeleteFile(docFileName, areaIndex, mediaType, mediaURL)
+            MediaAPI.mediaDeleteFile(docID, areaIndex, mediaType, mediaURL)
                 .then(res => {
                     console.log('res:', res);
                     audios.splice(indexUrl, 1);
@@ -77,7 +86,7 @@ export default function MediaAudio({ report, area, indexArea, setnAudios }) {
 
     };
 
-  
+
 
 
 

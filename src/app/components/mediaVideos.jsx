@@ -15,11 +15,12 @@ export default function MediaVideo({ report, area, indexArea, setnVideos }) {
         'video/x-matroska',  // .mkv
         'video/x-msvideo',   // .avi
         'video/x-ms-asf'     // .asf
-    ]; 
+    ];
 
     const idArea = area.areaName;
     const urlVideos = area.urlVideos;
-    const docFileName = report[0].metaData.fileID;
+    const docID = report[0].metaData.fileID;
+    const checksum = report[0].metaData.checksum;
     const areaIndex = indexArea;
 
     const [mediaFile, setMediaFile] = useState(null);
@@ -34,11 +35,15 @@ export default function MediaVideo({ report, area, indexArea, setnVideos }) {
 
 
 
-    const uploadVideo = (mediaType) => { 
+    const uploadVideo = (mediaType) => {
 
-        if (!mediaFile) { return window.alert('Selecciona un archivo'); } 
+        if (checksum) {
+            return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+        }
 
-        MediaAPI.mediaupload(mediaFile, mediaType, docFileName, areaIndex)
+        if (!mediaFile) { return window.alert('Selecciona un archivo'); }
+
+        MediaAPI.mediaupload(mediaFile, mediaType, docID, areaIndex)
             .then(res => {
                 console.log('res:', res);
                 urlVideos.push(res.mediaURL);
@@ -48,24 +53,28 @@ export default function MediaVideo({ report, area, indexArea, setnVideos }) {
             })
             .catch((e) => { window.alert(`❌ ${e.message}`); });
     };
-  
+
 
 
     const deleteVideo = (e, url, mediaType) => {
         e.preventDefault();
-        
+
+        if (checksum) {
+            return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+        }
+
         const deleteVideo = window.confirm('¿BORRAR Video?');
         const indexUrl = urlVideos.findIndex((u) => u === url);
 
         if (deleteVideo && indexUrl !== -1) {
-            const mediaURL = urlVideos[indexUrl]; 
+            const mediaURL = urlVideos[indexUrl];
 
-            MediaAPI.mediaDeleteFile(docFileName, areaIndex, mediaType, mediaURL)
+            MediaAPI.mediaDeleteFile(docID, areaIndex, mediaType, mediaURL)
                 .then(res => {
                     console.log('res:', res);
                     urlVideos.splice(indexUrl, 1);
-                    setnVideos(urlVideos.length); 
-                    window.alert(`✅ ${res}`);  
+                    setnVideos(urlVideos.length);
+                    window.alert(`✅ ${res}`);
                 })
                 .catch((e) => { window.alert(`❌ ${e.message}`); });
         }
@@ -105,8 +114,8 @@ export default function MediaVideo({ report, area, indexArea, setnVideos }) {
 
 
             <div className="media-items-container" >
-                
-                {urlVideos?.map((url, index) => ( 
+
+                {urlVideos?.map((url, index) => (
 
                     <figure key={`vid-${indexArea}-${index}`} className="media-figure" >
 

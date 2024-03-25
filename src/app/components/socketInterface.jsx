@@ -12,9 +12,7 @@ import "../styles/animation.css"
 
 export default function SocketInterface({ report, callback, isDocReserved }) {
 
-    const docID = report[0].metaData.fileID;
-    
-    console.log('SocketInterface', docID);
+    const docID = report[0].metaData.fileID; 
 
     const [messages, setMessages] = useState([]);
     const [myUser, setMyUser] = useState({ "alias": 'usuario', "socketID": "" });
@@ -56,17 +54,21 @@ export default function SocketInterface({ report, callback, isDocReserved }) {
         });
 
         newSocket.on('docReserveRes', (res) => {
+            const msg = res.message; 
             if (res.succes) {
                 callback(true, false);
-                document.documentElement.style.setProperty('--line-anim-color', '#BA372D');
+                document.documentElement.style.setProperty('--line-anim-color', '#BA372D'); 
             }
+            setMessages(prevMsg => [...prevMsg, msg]);
         });
 
         newSocket.on('releaseDocRes', (res) => {
+            const msg = res.message; 
             if (res.succes) {
                 callback(false, false);
                 document.documentElement.style.setProperty('--line-anim-color', 'lime');
             }
+            setMessages(prevMsg => [...prevMsg, msg]);
         });
 
         newSocket.on("disconnect", () => {
@@ -120,7 +122,7 @@ export default function SocketInterface({ report, callback, isDocReserved }) {
 
     const reserveDoc = () => {
         if (report[0].metaData.checksum) {
-           return window.alert('⚠️ El archivo completado y no se puede editar');
+           return window.alert(`⚠️ El archivo ${docID} está completado y no se puede editar`);
         }
         mySocket.connected ? mySocket.emit("docReserveReq", docID) : window.alert("conexión inactiva");
     };
