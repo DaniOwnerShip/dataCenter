@@ -16,12 +16,11 @@ export default function SocketInterface({ report, callback, isDocReserved }) {
     
     console.log('SocketInterface', docID);
 
-
-    const [mySocket, setMySocket] = useState();
     const [messages, setMessages] = useState([]);
     const [myUser, setMyUser] = useState({ "alias": 'usuario', "socketID": "" });
-    const [users, setUsers] = useState(SocketAPI.socket.users);
+    const [users, setUsers] = useState([]);
     const [comment, setComment] = useState('');
+    const [mySocket, setMySocket] = useState();
 
     const socketRef = useRef(null);
     const lastMsgRef = useRef(null);
@@ -35,9 +34,9 @@ export default function SocketInterface({ report, callback, isDocReserved }) {
         SocketAPI.connect(myUser.alias)
             .then((newSocket) => {
                 setMySocket(newSocket);
-                setMyUser({ ...myUser, socketID: newSocket.id }); 
                 setMessages(msgs => [...msgs, 'Conectado como: ' + myUser.alias]);
-                addEvents(newSocket);
+                addEvents(newSocket); 
+                newSocket.emit("userReq");
                 setStylePanel({ Wsize: 200, Hsize: 300 }) 
             })
             .catch(err => { window.alert(`❌ ${err}`); });
@@ -52,7 +51,7 @@ export default function SocketInterface({ report, callback, isDocReserved }) {
         });
 
         newSocket.on('usersOn', (usersOn) => {
-            console.log('usersOn',usersOn);
+            console.log('usersOn22',usersOn);
             setUsers(usersOn);
         });
 
@@ -194,7 +193,6 @@ export default function SocketInterface({ report, callback, isDocReserved }) {
                                     <div className="socket-box">
 
                                     {`Mensajes Recibidos (${messages.length}) :`}
-                                        Mensajes Recibidos:
 
                                         <ul className="socket-list" ref={lastMsgRef} >
                                             {messages.map((msg, index) => (

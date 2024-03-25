@@ -23,7 +23,8 @@ export default class SocketAPI {
                 return null;
             } 
 
-            const newSocket = io("http://192.168.1.100:3001", {
+            // const newSocket = io("http://192.168.1.100:3001", {
+            const newSocket = io("http://localhost:3001", {
                 query: {
                     userAlias: userAlias
                 }

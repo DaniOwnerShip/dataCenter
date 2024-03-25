@@ -10,7 +10,7 @@ export default function FileMetadata({ reportMetadata, unit }) {
             <h4 className="noMargin">{reportMetadata.place}&nbsp;</h4>
 
             <h4 className="noMargin paddingL">📑{reportName}</h4>
-            <p className="noMargin">&nbsp;&nbsp;T.{reportMetadata.DayNight}&nbsp;{`${reportMetadata.DayNight === 'Día' ? '☀️' : '🌙'}`}</p>
+            <p className="noMargin">&nbsp;{`${reportMetadata.DayNight === 'Día' ? '☀️' : '🌙'}`}</p>
 
             <p className="noMargin paddingL">Última edición:&nbsp;&nbsp;</p>
             <h4 className="noMargin">{reportMetadata.lastEdit}</h4>
