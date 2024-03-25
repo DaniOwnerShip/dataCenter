@@ -11,12 +11,21 @@ export default function FileButtons({ report, setReport, place, refToPDF }) {
 
     const saveJson = () => {
 
-        FileApi.saveJson(report, place)
-            .then(res => { 
-                window.alert(`✅ ${res}`); 
-                setReport(null);
+        let isNew = false;
+        if (report[0].metaData.checksum) {
+            return window.alert('⚠️ El archivo ya está completado y no puede ser editado');
+        } else if (report[0].metaData.isComplete) {
+            isNew = true;
+        }
+
+        FileApi.saveJson(report, place, isNew)
+            .then(res => {
+                if (res != false) {
+                    window.alert(`✅ ${res}`);
+                    setReport(null);
+                }
             })
-            .catch((e) => { window.alert(`❌ ${e.message}`); }); 
+            .catch((e) => { window.alert(`❌ ${e.message}`); });
     };
 
 
@@ -81,8 +90,8 @@ export default function FileButtons({ report, setReport, place, refToPDF }) {
     return (
 
         <div className="flex" >
-            <button type="button" className="button" onClick={downloadPDF}>🔽 Descargar PDF</button>
-            <button type="button" className="button" onClick={saveJson}>⏏️ Guardar Informe</button>
+            <button type="button" className="button files" onClick={downloadPDF}>🔽 Descargar PDF</button>
+            <button type="button" className="button files" onClick={saveJson}>⏏️ Guardar Informe</button>
         </div>
 
     );

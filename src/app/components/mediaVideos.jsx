@@ -105,15 +105,28 @@ export default function MediaVideo({ report, area, indexArea, setnVideos }) {
 
 
             <div className="media-items-container" >
-                {urlVideos?.map((url, index) => (
-                    <a href={url} target="_blank" rel="noopener noreferrer" key={`vid-${indexArea}-${index}`}>
-                        <video
-                            src={url}
-                            alt={`vid-${indexArea}-${index}`}
-                            className="media-item"
-                            onContextMenu={(e) => deleteVideo(e, url, 'video')}
-                        />
-                    </a>
+                
+                {urlVideos?.map((url, index) => ( 
+
+                    <figure key={`vid-${indexArea}-${index}`} className="media-figure" >
+
+                        <a href={url} target="_blank" rel="noopener noreferrer">
+                            <video
+                                src={url}
+                                alt={`vid-${indexArea}-${index}`}
+                                className="media-item"
+                                onContextMenu={(e) => deleteVideo(e, url, 'video')}
+                            />
+                        </a>
+
+                        <figcaption className="media-caption">{url.split('/')[5].split('_')[1]}</figcaption>
+
+                    </figure>
+
+
+
+
+
                 ))}
 
             </div>

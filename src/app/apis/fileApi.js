@@ -1,4 +1,5 @@
-import { Isocket } from '../components/socketInterface' 
+
+import SocketAPI from "./socketAPI";
 
 
 export default class FileApi {
@@ -24,9 +25,9 @@ export default class FileApi {
                 throw new Error(resData); 
             }
 
-            const modDate = res.headers.get('last-modified'); 
+            // const modDate = res.headers.get('last-modified'); 
 
-            return { resData, modDate };
+            return resData;
 
         }
         catch (e) {
@@ -37,7 +38,12 @@ export default class FileApi {
  
 //falta  validar el metadata en el servidor 
 
-    static async saveJson(report, place) { 
+    static async saveJson(report, place, isNew) { 
+        
+        if (!SocketAPI.socket.isOn) {
+            window.alert('⚠️ Necesita reservar el documento');
+            return false;
+        }
 
         try {
 
@@ -49,12 +55,18 @@ export default class FileApi {
             }            
 
             const dateFormat = dateNow.toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' }); 
-            const fileName = `informe-${place}-${dateFormat.replace(/\//g, '-')}.json`;
+            const docname =  `informe-${place}-${dateFormat.replace(/\//g, '-')}`;
+            const fileName = `${docname}.json`;
 
             const isDay =  hours > 7 && hours < 19? true: false;   
 
-            if (!window.confirm(`Va a guardar el documento como: ${fileName} ${isDay ? '☀️' : '🌙'}`)) {
-                return ('Has denegado la acción');
+            const nameDoc = `${docname} ${isDay ? '☀️' : '🌙'}`
+            const alertMsg = isNew?`El documento, ${nameDoc}, está marcado como "COMPLETADO", si continúa ya no podrá editarlo, ¿continuar?`:
+            `Guardar el documento como: ${fileName} ${isDay ? '☀️' : '🌙'} ¿continuar?`;
+
+
+            if (!window.confirm(alertMsg)) { 
+                return false;
             }  
 
             report[0].metaData.fileID = fileName;   
@@ -88,10 +100,8 @@ export default class FileApi {
             }
 
             const resData = await res.json();
- 
-            if (Isocket.isOn) {
-                Isocket.docSaveNotifyFn(Isocket.socket);
-            }
+  
+            SocketAPI.broadcast("Archivo Actualizado"); 
 
             return resData;
 

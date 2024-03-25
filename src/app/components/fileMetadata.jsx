@@ -1,7 +1,7 @@
 
 
-export default function FileMetadata({reportMetadata, unit} ) {
- 
+export default function FileMetadata({ reportMetadata, unit }) {
+
 
     const reportName = reportMetadata.fileID.split('.')[0];
 
@@ -15,8 +15,8 @@ export default function FileMetadata({reportMetadata, unit} ) {
             <p className="noMargin paddingL">Última edición:&nbsp;&nbsp;</p>
             <h4 className="noMargin">{reportMetadata.lastEdit}</h4>
 
-            {unit === 'main1' && <><p className="noMargin paddingL">Completado:&nbsp;&nbsp;</p>
-            <h4 className="noMargin">{reportMetadata.isComplete ? "sí" : "no"}</h4></>  }
+            {unit === 'main1' && <><p className="noMargin paddingL">Estado:&nbsp;&nbsp;</p>
+                <h4 className="noMargin">{reportMetadata.checksum ? "completado📗" : "en edición📖"}</h4></>}
         </div>
     );
 }

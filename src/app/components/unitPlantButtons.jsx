@@ -2,9 +2,9 @@
 
 import UnitPlantWindow from "./unitPlantWindow";
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react';
-import { Isocket } from "./socketInterface";
+import React, { useState } from 'react'; 
 import FileApi from "../apis/fileApi";
+import SocketAPI from "../apis/socketAPI";
 
 
 export default function UnitPlantButtons() {
@@ -16,11 +16,7 @@ export default function UnitPlantButtons() {
   const [activeUnit, setActiveUnit] = useState('');
 
   
-  const clickOpenWindow = (unit) => {
-
-    // if (isShow) {
-    //   return setIsShow(false);
-    // }
+  const clickOpenWindow = (unit) => { 
 
     const fileName = `informe-${unit}-last.json`
 
@@ -39,12 +35,12 @@ export default function UnitPlantButtons() {
 
   const clickToUnit = (unit) => { 
 
-    if (Isocket.isOn) {
+    if (SocketAPI.socket.isOn) {
       window.alert('necesita desconectar la interfaz');
       return;
     }
 
-    router.push(`/pages/shiftChange/plantUnits/${unit}`);
+    router.push(`/pages/shiftchangedoc/${unit}`);
 
   }
 

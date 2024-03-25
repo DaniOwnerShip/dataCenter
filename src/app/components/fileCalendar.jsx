@@ -20,7 +20,7 @@ export default function FileCalendar({ place, callbackDatePicker }) {
 
     <div className="flex center datepicker">
 
-      <button type="button" className="button" onClick={requestFile}>
+      <button type="button" className="button files" onClick={requestFile}>
         ▶️ Descargar informe
       </button>
 

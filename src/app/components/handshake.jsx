@@ -1,12 +1,25 @@
 import { useState } from "react";
 
 
-export default function Handshake({ hs }) {
+export default function Handshake({ report }) {
+
+    const hs = report[1].handshake;
+    const meta = report[0].metaData;
 
     const [forceRender, setForceRender] = useState(false);
-    const [isChecked, setIsChecked] = useState(false);
-    const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
+    const [isComplete, setIsComplete] = useState(meta.isComplete);
+
+    const onComplete = () => {
+        if (meta.checksum) {
+            return window.alert('⚠️ El archivo ya está completado y no se puede modificar');
+        }
+        else if (meta.isComplete) {
+            meta.isComplete = false;
+            setIsComplete(false);
+            return;
+        }
+        meta.isComplete = true;
+        setIsComplete(true); 
     };
 
     const onChangeNum = (event, indexTeam) => {
@@ -59,14 +72,17 @@ export default function Handshake({ hs }) {
 
                     </div>
                 ))}
-                <div className="flex paddingL">
-                    <label>Completado: </label>
-                    <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={handleCheckboxChange}
-                    />
-                </div>
+
+                {!meta.checksum && <div className="flex paddingL">
+                        <p className="noMargin">✒️Estado:&nbsp;</p>
+                    <button type="button"
+                        className={`button docComplete ${isComplete ? 'isComplete' : ''}`}
+                        onClick={() => onComplete()}>
+                        <p className="noMargin">{`${isComplete ? 'COMPLETADO' : 'EDICIÓN'}`}</p>
+                        {/* <h4 className="noMargin"> {`${meta.isComplete ? '✅' : '❌'}`}</h4> */}
+                    </button>
+
+                </div>}
 
             </section >
         </>

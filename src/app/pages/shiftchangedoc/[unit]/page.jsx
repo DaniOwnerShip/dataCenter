@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';
 import FileApi from "@/apis/fileApi";
 import Area from "@/components/area";
 import Loading from "@/components/loading";
@@ -10,43 +10,55 @@ import SocketInterface from "@/components/socketInterface";
 import SocketFastReq from "@/components/socketFastReq";
 import Handshake from "@/components/handshake";
 import "@/styles/shiftChange.css"
-import "@/styles/scrollbar.css" 
+import "@/styles/scrollbar.css"
 import "react-resizable/css/styles.css";
 
+import crypto from 'crypto';
 
- 
 export default function PlantUnit({ params }) {
 
-  const unit = params.unit; 
+  const unit = params.unit;
   const refToPDF = useRef(null);
-  const reportMetadata = useRef();
 
   const [report, setReport] = useState();
-  const [isDocReserved, setIsDocReserved] = useState(false); 
-  const [isFastSocket, setIsFastSocket] = useState(false); 
-  const [isExpanded, setIsExpanded] = useState(true); 
+  const [isDocReserved, setIsDocReserved] = useState(false);
+  const [isFastSocket, setIsFastSocket] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpandApp = () => {
     setIsExpanded(!isExpanded);
   };
 
 
-  let fileNameReq = `informe-${unit}-last.json`; 
- 
+  let fileNameReq = `informe-${unit}-last.json`;
 
-  const callbackDatePicker = (_fileNameReq) => { 
+
+  const callbackDatePicker = (_fileNameReq) => {
     getReport(_fileNameReq, true);
-  };  
-  
- 
-  const getReport = (_fileNameReq, isFromDatePicker = false) => {
-    console.log('getReport');
+  };
+
+  const checkChecksum = (report) => { 
+    const reportchecksum = report[0].metaData.checksum;  
+    report[0].metaData.checksum = "" 
+    const hash = crypto.createHash('sha256');
+    hash.update(JSON.stringify(report));
+    const checksum = hash.digest('hex');    
+    report[0].metaData.checksum = reportchecksum;    
+    if (report[0].metaData.checksum !== checksum) { 
+      return false;
+    }
+    return true;
+  }
+
+  const getReport = (_fileNameReq, isFromDatePicker = false) => { 
     FileApi.downloadjson(_fileNameReq)
-      .then(res => {
-        setReport(res.resData); 
-        reportMetadata.current = {...res.resData[0].metaData, lastEdit: res.modDate};
-        // reportMetadata.current = res.resData[0].metaData;
-        // reportMetadata.current.lastEdit = res.modDate; 
+      .then(resData => {  
+        if (resData[0].metaData.isComplete) { 
+          if (!checkChecksum(resData)) {
+            return window.alert('❌ Error de integridad en la firma de seguridad. Es posible que el archivo haya sido alterado después de haberlo completado.');
+          }
+        }  
+        setReport(resData);
         if (isFromDatePicker) {
           window.alert(`✅ Documento descargado: ${_fileNameReq}`);
         }
@@ -56,17 +68,15 @@ export default function PlantUnit({ params }) {
 
 
   useEffect(() => { 
-    console.log('useEffect UNIT isDocReserved:', isDocReserved);
     if (!report) {
       getReport(fileNameReq);
       console.log('useEffectxx');
-    }    
+    }
   }, [report]);
 
   const callbackSocket = (isDocReserve, isFast) => {
     setIsDocReserved(isDocReserve);
-    setIsFastSocket(isFast);
-    console.log('callbackFastSocket');
+    setIsFastSocket(isFast); 
   }
 
 
@@ -79,11 +89,10 @@ export default function PlantUnit({ params }) {
         <div className="app" >
 
           {!isFastSocket ? (
-            <SocketInterface fileID={report[0].metaData.fileID} callbackSocket={callbackSocket} isDocReserved={isDocReserved} />) :
-            (<div className="socket-interface"><p><em><strong>Fast Reserve</strong></em></p>
-              <div className="lineAnim-background"></div>
-              <div className="lineAnim"></div>
-            </div>)
+            <SocketInterface report={report} callback={callbackSocket} isDocReserved={isDocReserved} />)
+            :
+            (<div className="socket-interface"><h4><em> &nbsp;reserva rápida&nbsp; </em></h4>
+              <div className="lineAnim-background"></div> <div className="lineAnim"></div></div>)
           }
 
 
@@ -93,22 +102,29 @@ export default function PlantUnit({ params }) {
 
 
               <div className="flex center rightpos">
-                <SocketFastReq callbackSocket={callbackSocket} isDocReserved={isDocReserved} />
-                {isDocReserved ? '🔓' : '🔒'}&nbsp;&nbsp;
+                {!report[0].metaData.checksum && <>
+                  <SocketFastReq docID={report[0].metaData.fileID} callback={callbackSocket} />
+                {isDocReserved ? '🔓' : '🔒'}&nbsp;&nbsp;</>
+                }
+
+
                 <button type="button" className="button" onClick={() => toggleExpandApp()}>  {`${isExpanded ? "➖" : "➕"}`}</button>
+
               </div>
 
 
-              <FileMetadata reportMetadata={reportMetadata.current} unit={unit} />
+              <FileMetadata reportMetadata={report[0].metaData} unit={unit} />
 
 
 
               {isExpanded && <div className={`areas-container ${isDocReserved ? 'enabled' : 'disabled'}`}>
 
                 {unit === 'main1' &&
-                  <Handshake hs={report[1].handshake} />
+                  <Handshake report={report} />
                 }
-
+                {report[0].metaData.checksum &&
+                  <p className="noMargin segSing paddingL enabled"><em>Firma de seguridad: </em><strong>{report[0].metaData.checksum}</strong></p>
+                }
                 <section className="areas-container">
                   {report[2].areas.map((area, indexArea) => (
                     <div key={`area-${indexArea}`} className="area">
@@ -134,9 +150,9 @@ export default function PlantUnit({ params }) {
 
         <Loading />
 
-      ) 
+      )
 
-      } 
+      }
 
     </>
 

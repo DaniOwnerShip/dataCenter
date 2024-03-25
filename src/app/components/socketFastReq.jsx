@@ -1,38 +1,55 @@
 
-import { Isocket } from "./socketInterface";
+import { useState } from "react"; 
+import SocketAPI from "../apis/socketAPI.mjs";
 
-export default function SocketFastReq({ callbackSocket, isDocReserved }) {
-    console.log('SocketFastReq');
+export default function SocketFastReq({  docID, callback }) { 
 
+    const [mySocket, setMySocket] = useState();  
 
-    const startFastSocket = () => { 
+    const connectSocket = () => {
 
-        if (!Isocket.isOn) { 
-            Isocket.fastdocreserve.isReq = true;
-            Isocket.fastdocreserve.initFn()
-                .then(() => { 
-                    callbackSocket(true, true);
-                })
-                .catch(err => { window.alert(`❌ ${err}`); }); 
+        if (mySocket) {
+            SocketAPI.disconnect(mySocket); 
             return;
         } 
-        else if (!Isocket.fastdocreserve.isActive) {
-            window.alert('ya tienes una conexión activa');
-            return;
-        }
 
-        Isocket.fastdocreserve.endFn(Isocket.socket)
-            .then(() => {
-                callbackSocket(false, false);
+        SocketAPI.connect("userFast")
+            .then((newSocket) => {
+                addEvents(newSocket);
+                setMySocket(newSocket); 
+                newSocket.emit("docReserveReq", docID);
             })
-            .catch(res => { window.alert(`❌ ${res}`); });
-    };
+            .catch(err => { window.alert(`❌ ${err}`); });
+    }
 
-  
+
+
+    const addEvents = (newSocket) => {
+         
+        newSocket.on('docReserveRes', (res) => {
+            const succes = res.succes;
+            const msg = res.message; 
+            if (succes) { 
+                callback(true, true);
+                window.alert(msg);
+            }else{
+                SocketAPI.disconnect(mySocket); 
+                window.alert(msg);
+            }
+        });
+
+        newSocket.on("disconnect", () => { 
+            callback(false, false);
+            setMySocket(null);
+        }); 
+    }
+
+
+ 
 
     return (
 
-        <button title='reserva rápida' type="button" className="button" onClick={startFastSocket}>  {`${isDocReserved ? '📖' : '🗝️'}`}</button> 
+        <button title='reserva rápida' type="button" className="button" onClick={connectSocket}>  {`${mySocket ? '📖' : '🗝️'}`}</button>
 
     );
 }
