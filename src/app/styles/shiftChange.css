@@ -184,31 +184,31 @@ mainContainer
     cursor: grabbing;
 }
 
-.UnitPlantWindow.main1 {
+.UnitPlantWindow.Termosol_dia {
     background-color: rgb(200 200 200);
     border: 2px solid rgba(100, 100, 100, 0.5);
 }
 
-.UnitPlantWindow.main1.isDragging {
+.UnitPlantWindow.Termosol.isDragging {
     background-color: rgba(200, 200, 200, 0.5);
 }
 
 
-.UnitPlantWindow.unit1 {
+.UnitPlantWindow.Termosol_1_dia {
     background-color: rgb(15, 134, 12);
     border: 2px solid rgba(6, 224, 2, 0.5);
 }
 
-.UnitPlantWindow.unit1.isDragging {
+.UnitPlantWindow.Termosol_1_dia.isDragging {
     background-color: rgba(6, 224, 2, 0.5);
 }
 
-.UnitPlantWindow.unit2 {
+.UnitPlantWindow.Termosol_2_dia {
     background-color: rgb(40 80 187);
     border: 2px solid rgb(0 68 255);
 }
 
-.UnitPlantWindow.unit2.isDragging {
+.UnitPlantWindow.Termosol_2_dia.isDragging {
     background-color: rgba(0, 68, 255, 0.5);
 }
 
@@ -613,7 +613,7 @@ SOCKET ITERFACE
     color: #000;
     position: fixed;
     z-index: 1;
-    top: 130px;
+    top: 160px;
     left: 5px;
 }
 

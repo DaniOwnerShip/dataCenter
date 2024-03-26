@@ -2,7 +2,7 @@
 
 import UnitPlantWindow from "./unitPlantWindow";
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import FileApi from "../apis/fileApi";
 import SocketAPI from "../apis/socketAPI";
 
@@ -10,18 +10,26 @@ import SocketAPI from "../apis/socketAPI";
 export default function UnitPlantButtons() {
 
   const router = useRouter();
-  const units = ['main1','unit1', 'unit2'];
+
+  const units = [
+    'Termosol-dia',
+    'Termosol-noche',
+    'Termosol-1-dia',
+    'Termosol-1-noche',
+    'Termosol-2-dia',
+    'Termosol-2-noche'];
+    
   const [report, setReport] = useState(null);
   const [isShow, setIsShow] = useState(false);
   const [activeUnit, setActiveUnit] = useState('');
 
-  
-  const clickOpenWindow = (unit) => { 
 
-    const fileName = `informe-${unit}-last.json` 
+  const clickOpenWindow = (unit) => {
+
+    const fileName = `informe-${unit}-last.json`
 
     FileApi.downloadjson(fileName)
-      .then(res => { 
+      .then(res => {
         setReport(res);
         setIsShow(true);
         setActiveUnit(unit);
@@ -33,7 +41,7 @@ export default function UnitPlantButtons() {
 
 
 
-  const clickToUnit = (unit) => { 
+  const clickToUnit = (unit) => {
 
     if (SocketAPI.socket.isOn) {
       window.alert('necesita desconectar la interfaz');
@@ -57,7 +65,7 @@ export default function UnitPlantButtons() {
           <button type="button" key={`btnup-${iunit}`}
             className="button sidebar"
             onClick={() => clickToUnit(unit)}>
-            {`Ir a ${unit}`}
+            {`${unit}`}
             {/* {`Ir a Unidad ${iunit + 1}`} */}
           </button>
 
