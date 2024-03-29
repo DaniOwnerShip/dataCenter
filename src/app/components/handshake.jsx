@@ -19,7 +19,7 @@ export default function Handshake({ report }) {
             return;
         }
         meta.isComplete = true;
-        setIsComplete(true); 
+        setIsComplete(true);
     };
 
     const onChangeNum = (event, indexTeam) => {
@@ -48,21 +48,28 @@ export default function Handshake({ report }) {
             <hr />
             <section className="flex">
 
-                {hs.party.map((team, indexTeam) => (
+                {hs.party.map((party, indexTeam) => (
 
                     <div key={`party-${indexTeam}`} className="flex paddingL" >
 
-                        <p> ⚒️ {team.type + " Nº "}  </p>
-
-                        <input
+                        {/* <p> ⚒️ {party.type + " Nº "}  </p> */}
+                        <p> {party.type}  </p>
+                        {party.number !== "" && <input
                             type="text"
                             className="input-num"
                             id={`txt-num-${indexTeam}`}
                             onChange={(event) => onChangeNum(event, indexTeam)}
                             value={hs.party[indexTeam].number}
-                        />
+                        />}
 
-                        <p> PTL </p>
+                        {/* <input
+                            type="text"
+                            className="input-num"
+                            id={`txt-num-${indexTeam}`}
+                            onChange={(event) => onChangeNum(event, indexTeam)}
+                            value={hs.party[indexTeam].number}
+                        /> */}
+                        {party.number ? <p> PTL </p> : ""}
                         <input
                             type="text"
                             id={`txt-PTL-${indexTeam}`}
@@ -73,16 +80,17 @@ export default function Handshake({ report }) {
                     </div>
                 ))}
 
-                {!meta.checksum && <div className="flex paddingL">
+                {!meta.checksum &&
+                    <div className="flex paddingL">
                         <p className="noMargin">✒️Estado:&nbsp;</p>
-                    <button type="button"
-                        className={`button docComplete ${isComplete ? 'isComplete' : ''}`}
-                        onClick={() => onComplete()}>
-                        <p className="noMargin">{`${isComplete ? 'COMPLETADO' : 'EDICIÓN'}`}</p>
-                        {/* <h4 className="noMargin"> {`${meta.isComplete ? '✅' : '❌'}`}</h4> */}
-                    </button>
+                        <button type="button"
+                            className={`button docComplete ${isComplete ? 'isComplete' : ''}`}
+                            onClick={() => onComplete()}>
+                            <p className="noMargin">{`${isComplete ? 'COMPLETADO' : 'EDICIÓN'}`}</p>
+                            {/* <h4 className="noMargin"> {`${meta.isComplete ? '✅' : '❌'}`}</h4> */}
+                        </button>
 
-                </div>}
+                    </div>}
 
             </section >
         </>

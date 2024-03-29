@@ -2,23 +2,27 @@ import { useEffect, useState } from "react";
 import MediaTabs from "./mediaTabs";  
 
 
-export default function Area({report, unit, area, indexArea, windowKey }) { 
+export default function Area({report, spot, _area, indexArea, windowKey, isDocReserved}) { 
 
-    const [expandArea, setExpandArea] = useState(true);   
+    const [expandArea, setExpandArea] = useState(true);    
+
+    //console.log('area', _area.urlImages?.length);
+    // const unitN = spot.split('-')[1];(area.urlImages?.length
+    const unitN = spot.split('-')[1]; 
 
     return (
         <>
-            <AreaTittle unit={unit} area={area} expandArea={expandArea} setExpandArea={setExpandArea} />
+            <AreaTittle spot={spot} area={_area} expandArea={expandArea} setExpandArea={setExpandArea} />
            
             {expandArea && <div className="area-items-container">
 
-                {area.areaItems.map((area, indexItem) => (
+                {_area.areaItems.map((item, indexItem) => (
                     <div key={`item-${indexArea}-${indexItem}`} className="area-items" > 
-                        <AreaItem area={area} uKey={`${windowKey}-${unit}-${indexArea}-${indexItem}`} /> 
+                        <AreaItem area={item} uKey={`${windowKey}-${spot}-${indexArea}-${indexItem}`} /> 
                     </div>
                 ))}
                 
-                {unit === 'main1' && <MediaTabs report={report} area={area} indexArea={indexArea} />}
+                {unitN === '0' && <MediaTabs report={report} _area={_area} indexArea={indexArea} isDocReserved={isDocReserved}/>}
 
             </div>}  
         </> 
@@ -27,9 +31,12 @@ export default function Area({report, unit, area, indexArea, windowKey }) {
 
 
 
-function AreaTittle({ unit, area, expandArea, setExpandArea }) {
+function AreaTittle({ spot, area, expandArea, setExpandArea }) {
+    const unitN = '_' + spot.split('-')[1];
+    // console.log('unitN', unitN );
+    
     return (
-        <div className={` ${expandArea ? `area-tittle expand ${unit}` : `area-tittle ${unit}`} `} >
+        <div className={` ${expandArea ? `area-tittle expand ${unitN}` : `area-tittle ${spot}`} `} >
              {area.areaName} 
             <div className="flex center">{area.units} </div>
              Comentarios 

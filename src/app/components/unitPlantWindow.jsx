@@ -7,13 +7,16 @@ import { ResizableBox } from 'react-resizable';
 // import 'react-resizable/css/styles.css';  
 
 
-export default function UnitPlantWindow({ place, report, setIsShow }) {
+export default function UnitPlantWindow({ _spot, report, setIsShow }) {
 
     const nodeRef = useRef(null);
     const fname = report[0].metaData.fileID.split('.')[0];
     const [isDisableDragg, setIsDisableDragg] = useState(true);
-    const unit = place;
-    const [windowStyle, setWindowStyle] = useState({ place: unit, isDraggable: '', isDragging: '' });
+    const spot = _spot;
+    
+    const unitN = '_' + spot.split('-')[1];
+    console.log('unitN', unitN );
+    const [windowStyle, setWindowStyle] = useState({ place: unitN, isDraggable: '', isDragging: '' });
 
     const toggleShow = () => { setIsShow(false); }
 
@@ -32,8 +35,8 @@ export default function UnitPlantWindow({ place, report, setIsShow }) {
     };
 
     useEffect(() => {
-        setWindowStyle(style => ({ ...style, place: unit }));
-    }, [unit]);
+        setWindowStyle(style => ({ ...style, place: unitN }));
+    }, [spot]);
 
 
     return (
@@ -69,7 +72,7 @@ export default function UnitPlantWindow({ place, report, setIsShow }) {
                                 <section className="areas-container">
                                     {report[2].areas.map((area, indexArea) => (
                                         <div key={`areaw-${indexArea}`} className="area">
-                                            <Area report={report} unit={unit} area={area} indexArea={indexArea} windowKey={'w2'} />
+                                            <Area report={report} spot={spot} area={area} indexArea={indexArea} windowKey={'w2'} />
                                         </div>
                                     ))}
                                 </section>

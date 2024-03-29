@@ -3,7 +3,7 @@ import FileApi from "../apis/fileApi";
 import MediaAPI from '../apis/multimediaAPI.mjs';
 
 
-export default function MediaImages({ report, area, indexArea, setnImages }) {
+export default function MediaImages({ report, area, indexArea, setnImages, isDocReserved }) {
 
   const imageMimes = [
     'image/jpeg',  // .jpg, .jpeg
@@ -52,12 +52,17 @@ export default function MediaImages({ report, area, indexArea, setnImages }) {
   };
 
 
-
+   
   const deleteImage = (e, url, mediaType) => {
     e.preventDefault();
 
+    //se puede eliminar..
     if (checksum) {
       return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+    }
+   
+    if (!isDocReserved) {  
+      return;
     }
 
     const deleteImg = window.confirm('¿BORRAR IMAGEN?');
@@ -115,7 +120,7 @@ export default function MediaImages({ report, area, indexArea, setnImages }) {
       </div>
 
 
-      <div className="media-items-container" >
+      <div className="media-items-container enabled" >
 
         {imgs?.map((url, index) => (
 

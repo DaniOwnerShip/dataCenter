@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import MediaImages from "./mediaImages";
 import MediaVideo from "./mediaVideos"; 
@@ -6,13 +6,23 @@ import MediaAudio from "./mediaAudios";
  
 //revisar  multimedia refact
 
-export default function MediaTabs({report, area, indexArea }) {
+export default function MediaTabs({report, _area, indexArea, isDocReserved }) {
 
     const [activeTab, setActiveTab] = useState(0);
-    const [nImages, setnImages] = useState(area.urlImages?.length);
-    const [nVideos, setnVideos] = useState(area.urlVideos?.length);
-    const [nAudios, setnAudios] = useState(area.urlAudios?.length);
-
+    // const nImages = _area.urlImages.length;
+    // const nVideos = _area.urlVideos.length;
+    // const nAudios = _area.urlAudios.length;
+    const [nImages, setnImages] = useState();
+    const [nVideos, setnVideos] = useState();
+    const [nAudios, setnAudios] = useState(); 
+     //console.log('_area nImages', nImages);
+     useEffect(() => {
+        console.log('MediaTabs');
+        setnImages(_area.urlImages.length);
+        setnVideos(_area.urlVideos.length);
+        setnAudios(_area.urlAudios.length);
+      } );
+    
 
     const clickTab = (e, n) => {
         e.stopPropagation();
@@ -27,7 +37,7 @@ export default function MediaTabs({report, area, indexArea }) {
         <section className={areaStyle}>
 
 
-            <div className="media-tab-bar flex">
+            <div className="media-tab-bar flex enabled">
 
                 <div
                     className={`${activeTab === 0 ? "media-tab active" : "media-tab"}`}
@@ -58,11 +68,11 @@ export default function MediaTabs({report, area, indexArea }) {
 
             {activeTab !== 0 && <div className="media-container">
 
-                {activeTab === 1 && <MediaImages report={report} area={area} indexArea={indexArea} setnImages={setnImages} />}
+                {activeTab === 1 && <MediaImages report={report} area={_area} indexArea={indexArea} setnImages={setnImages} isDocReserved={isDocReserved} />}
 
-                {activeTab === 2 && <MediaVideo report={report} area={area} indexArea={indexArea} setnVideos={setnVideos} />}
+                {activeTab === 2 && <MediaVideo report={report} area={_area} indexArea={indexArea} setnVideos={setnVideos} isDocReserved={isDocReserved} />}
                 
-                {activeTab === 3 && <MediaAudio report={report} area={area} indexArea={indexArea} setnAudios={setnAudios} />}
+                {activeTab === 3 && <MediaAudio report={report} area={_area} indexArea={indexArea} setnAudios={setnAudios} isDocReserved={isDocReserved} />}
 
             </div>}
 

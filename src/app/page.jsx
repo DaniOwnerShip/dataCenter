@@ -10,7 +10,7 @@ export default function Home() {
       </h1>
 
       <p>
-        <Link href="/pages/shiftchangedoc/main1">main1</Link> 
+        <Link href="/pages/termosolreport/Termosol-0-dia">Termosol-0-dia</Link> 
       </p>
       <p> 
         <Link href="/pages/shiftchangedoc/unit1">unit1</Link> 

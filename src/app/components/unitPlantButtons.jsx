@@ -7,32 +7,31 @@ import FileApi from "../apis/fileApi";
 import SocketAPI from "../apis/socketAPI";
 
 
-export default function UnitPlantButtons() {
+export default function UnitPlantButtons({ spot }) {
 
   const router = useRouter();
 
-  const units = [
-    'Termosol-dia',
-    'Termosol-noche',
-    'Termosol-1-dia',
-    'Termosol-1-noche',
-    'Termosol-2-dia',
-    'Termosol-2-noche'];
-    
+  const spots = [
+    ['Termosol-0-dia', 'Termosol-0-noche'],
+    ['Termosol-1-dia', 'Termosol-1-noche'],
+    ['Termosol-2-dia', 'Termosol-2-noche']];
+
   const [report, setReport] = useState(null);
   const [isShow, setIsShow] = useState(false);
-  const [activeUnit, setActiveUnit] = useState('');
+  const [activeSpot, setActiveSpot] = useState('');
+  const [btnUrlActive, setBtnUrlActive] = useState(spot);
+  const [btnWindowActive, setBtnWindowActive] = useState(null);
 
 
-  const clickOpenWindow = (unit) => {
-
-    const fileName = `informe-${unit}-last.json`
+  const clickOpenWindow = (_spot) => {
+    const fileName = `informe_${_spot}_last.json`
 
     FileApi.downloadjson(fileName)
       .then(res => {
         setReport(res);
         setIsShow(true);
-        setActiveUnit(unit);
+        setActiveSpot(_spot);
+        setBtnWindowActive(_spot);
       })
       .catch((e) => { window.alert(`❌ ${e.message}`); });
 
@@ -41,14 +40,15 @@ export default function UnitPlantButtons() {
 
 
 
-  const clickToUnit = (unit) => {
+  const clickToUnit = (_spot) => {
 
     if (SocketAPI.socket.isOn) {
       window.alert('necesita desconectar la interfaz');
       return;
     }
 
-    router.push(`/pages/shiftchangedoc/${unit}`);
+    router.push(`/pages/termosolreport/${_spot}`);
+    setBtnUrlActive(_spot);
 
   }
 
@@ -58,29 +58,39 @@ export default function UnitPlantButtons() {
 
     <>
 
-      {units.map((unit, iunit) => (
+      {spots.map((_spot, index) => (
 
-        <div className="flex" key={`unit-${iunit}`}>
+        <div className="button-sidebar-Box" key={`x-${index}`}>
 
-          <button type="button" key={`btnup-${iunit}`}
-            className="button sidebar"
-            onClick={() => clickToUnit(unit)}>
-            {`${unit}`}
-            {/* {`Ir a Unidad ${iunit + 1}`} */}
-          </button>
+          <p className="noMargin">Termosol {index === 0 ? 'Admin' : index}</p>
 
-          <button type="button" key={`btnuw-${iunit}`}
-            className="button sidebar"
-            onClick={() => clickOpenWindow(unit)}>
-            {`Abrir ${unit}`}
-          </button>
+           {_spot.map((spotDN, iunit) => (
+           
+           <div key={`spot-${index}-${iunit}`}>
 
-        </div>
+           <div className="flex" key={`spot-${index}-${iunit}`}>
+              <button type="button"  
+                className={`button sidebar ${btnUrlActive === spotDN ? 'BSactive' : ''}`}
+                onClick={() => clickToUnit(spotDN)}>
+                {`${spotDN.split('-')[2]}`} 
+              </button>
 
-      ))}
+              <button type="button"  
+                className={`button BSWindow ${btnWindowActive === spotDN && isShow ? 'BSactive' : ''}`}
+                onClick={() => clickOpenWindow(spotDN)}> 
+                {`👁️`}
+              </button> 
+
+            </div>
+
+          </div>
+          
+          ))}
+          
+        </div>))}
 
 
-      {report && isShow && <UnitPlantWindow place={activeUnit} report={report} setIsShow={setIsShow} />}
+      {report && isShow && <UnitPlantWindow _spot={activeSpot} report={report} setIsShow={setIsShow} />}
 
 
     </>

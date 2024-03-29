@@ -3,7 +3,7 @@ import { useState } from 'react';
 // import FileApi from "../apis/fileApi"; 
 import MediaAPI from '../apis/multimediaAPI.mjs';
 
-export default function MediaVideo({ report, area, indexArea, setnVideos }) {
+export default function MediaVideo({ report, area, indexArea, setnVideos, isDocReserved }) {
 
     const videoMimes = [
         'video/mp4',         // .mp4

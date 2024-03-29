@@ -3,7 +3,7 @@ import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';   
 
 
-export default function FileButtons({ report, setReport, place, refToPDF }) {
+export default function FileButtons({ report, setReport, spot, refToPDF }) {
 
     const fileId = report[0].metaData.fileID;
     const pdfName = fileId.split('.')[0]; 
@@ -18,11 +18,11 @@ export default function FileButtons({ report, setReport, place, refToPDF }) {
             isNew = true;
         }
 
-        FileApi.saveJson(report, place, isNew)
+        FileApi.saveJson(report, spot, isNew)
             .then(res => {
                 if (res != false) {
                     window.alert(`✅ ${res}`);
-                    setReport(null);
+                    // setReport(null);
                 }
             })
             .catch((e) => { window.alert(`❌ ${e.message}`); });
@@ -32,7 +32,7 @@ export default function FileButtons({ report, setReport, place, refToPDF }) {
 
     const downloadPDF = () => {
 
-        const scaleFactor = 0.65;
+        const scaleFactor = 0.6;
         const pageWidthA4 = 595;
         const pageHeightA4 = 842;
         const backgroundColor = 'black';
@@ -40,7 +40,7 @@ export default function FileButtons({ report, setReport, place, refToPDF }) {
         const mainContainer = refToPDF.current; 
 
 
-        mainContainer.style.margin = '2px';
+        // mainContainer.style.margin = '2px';
         mainContainer.style.backgroundColor = 'black';
 
         setTimeout(() => {
@@ -77,7 +77,7 @@ export default function FileButtons({ report, setReport, place, refToPDF }) {
 
                         pdf.save(`${pdfName}.pdf`);
 
-                        mainContainer.style.margin = 'auto';
+                        // mainContainer.style.margin = 'auto';
                         mainContainer.style.backgroundColor = '#383945';
                     });
 
@@ -90,8 +90,8 @@ export default function FileButtons({ report, setReport, place, refToPDF }) {
     return (
 
         <div className="flex" >
-            <button type="button" className="button files" onClick={downloadPDF}>🔽 Descargar PDF</button>
             <button type="button" className="button files" onClick={saveJson}>⏏️ Guardar Informe</button>
+            <button type="button" className="button files" onClick={downloadPDF}>🔽 Descargar PDF</button>
         </div>
 
     );

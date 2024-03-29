@@ -20,15 +20,24 @@ export default class FileApi {
             }
 
             const res = await fetch(url, options);
-            const resData = await res.json();
+            const data = await res.json();
 
             if (!res.ok) {  
-                throw new Error(resData); 
+                throw new Error(data); 
             }
+            const fileType = res.headers.get('X-File-Type');
+            console.log('isTemplate', fileType);
+            if (fileType === 'template') {
+
+                console.log('isTemplate1zzzzz', fileType);
+              } else {
+
+                console.log('isTemplate2', fileType);
+              }
 
             // const modDate = res.headers.get('last-modified'); 
 
-            return resData;
+            return {data, fileType};
 
         }
         catch (e) {
@@ -39,7 +48,7 @@ export default class FileApi {
  
 //falta  validar el metadata en el servidor 
 
-    static async saveJson(report, place, isNew) { 
+    static async saveJson(report, spot, isNew) { 
         
         if (!SocketAPI.socket.isOn) {
             window.alert('⚠️ Necesita reservar el documento');
@@ -48,30 +57,48 @@ export default class FileApi {
 
         try {
 
-            const dateNow = new Date();
-            const hours = dateNow.getHours();    
+            // const dateNow = new Date();
+            // const hours = dateNow.getHours();    
+            // const isDay =  hours > 7 && hours < 19? true: false;  
+            const _fileName =  report[0].metaData.fileID ;
+            const _dayDate =  report[0].metaData.dayDate ;
+            const _checksum =  report[0].metaData.checksum ;
+            const _tittle =  report[0].metaData.tittle ;
+            // report[0].metaData.fileID = fileName;   
+            // report[0].metaData.dayDate = dayDate;   
+            
+            // isDay ? report[0].metaData.DayNight = 'Día' : report[0].metaData.DayNight = 'Noche';   
 
-            if (hours < 7) {
-                dateNow.setDate(dateNow.getDate() - 1);
-            }            
+        console.log('_fileName', _fileName);
+        console.log('_dayDate', _dayDate);
+        console.log('_checksum', _checksum);
+        console.log('_tittle', _tittle);
 
-            const dateFormat = dateNow.toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' }); 
-            const docname =  `informe-${place}-${dateFormat.replace(/\//g, '-')}`;
-            const fileName = `${docname}.json`;
+   
+            // if (hours < 7) {
+            //     dateNow.setDate(dateNow.getDate() - 1);
+            // }            
 
-            const isDay =  hours > 7 && hours < 19? true: false;   
+        // if (_checksum) {
+            
+        // }
 
-            const nameDoc = `${docname} ${isDay ? '☀️' : '🌙'}`
-            const alertMsg = isNew?`El documento a guardar [ ${nameDoc} ] ha sido marcado como 'COMPLETADO'. Si continúas, ya no será posible editarlo. ¿Continuar?`:
-            `Guardar el documento como: [ ${nameDoc} ] ¿continuar?`;
+
+
+            // const dateFormat = dateNow.toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' }); 
+            // const dayDate = dateFormat.replace(/\//g, '-');
+            // const docname =  `informe_${place}_${dayDate}`;
+            // const fileName = `${docname}.json`;
+console.log('fileNamezzzzzzzzzzzzz', _fileName);
+ 
+            const alertMsg = isNew?`⚠️ El documento a guardar [ ${_fileName} ] ha sido marcado como 'COMPLETADO'. Si continúas, ya no será posible editarlo nunca más ⚠️ . ¿Continuar?`:
+            `Guardar el documento como: [ ${_fileName} ] ¿continuar?`;
 
 
             if (!window.confirm(alertMsg)) { 
                 return false;
             }  
 
-            report[0].metaData.fileID = fileName;   
-            isDay ? report[0].metaData.DayNight = 'Día' : report[0].metaData.DayNight = 'Noche';   
 
             const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json", });
  
