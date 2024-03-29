@@ -8,7 +8,7 @@ import FileApi from "../apis/fileApi";
 import crypto from 'crypto';
 
 
-export default function FileDatePicker({ setReport, spot }) {
+export default function FileDatePicker({ setReport, spot, setPickerDate }) {
   console.log('FileDatePicker');
 
   const [pickDate, setPickDate] = useState(new Date());
@@ -48,6 +48,8 @@ export default function FileDatePicker({ setReport, spot }) {
       getReport(fileRequested)
     }
     setIsStart(true); // if (!report) {
+      
+  setPickerDate(pickDateFormated);
     //   getReport(fileNameReq);
     // }
     // FileApi.downloadjson(fileRequested)
@@ -91,11 +93,7 @@ export default function FileDatePicker({ setReport, spot }) {
 
   return (
 
-    <div className="flex center datepicker">
-
-      <button type="button" className="button files" onClick={requestFile}>
-        ▶️ Descargar informe
-      </button>
+    <div className="datepicker"> 
 
       <DatePicker
         id="calendar"
@@ -103,6 +101,10 @@ export default function FileDatePicker({ setReport, spot }) {
         onChange={(date) => setPickDate(date)}
         dateFormat="dd-MM-yy"
       />
+
+      <button type="button" className="button sidebar" onClick={requestFile}>
+        ▶️ Cargar informe
+      </button>
 
       {/* <FileButtons spot={params.spot}/> */}
 

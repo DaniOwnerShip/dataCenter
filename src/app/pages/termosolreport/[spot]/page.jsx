@@ -25,6 +25,7 @@ export default function Spot({ params }) {
   const refToPDF = useRef(null);
 
   const [report, setReport] = useState();
+  const [pickerDate, setPickerDate] = useState();
   const [foreceRender, setForeceRender] = useState(false);
   const [template, setTemplate] = useState('Plantilla hidratada');
   const [isDocReserved, setIsDocReserved] = useState(false);
@@ -113,11 +114,11 @@ export default function Spot({ params }) {
 
       <div className="sideBarLeft">
         <div className="sidebarBox" >
-          <UnitPlantButtons spot={spot} />
-          <FileDatePicker setReport={setReport} spot={spot} />
-          {report && <FileButtons report={report.data} setReport={setReport} spot={spot} refToPDF={refToPDF} />}
-          {/* <FileButtons spot={params.spot}/> */}
+          <UnitPlantButtons spot={spot} pickerDate={pickerDate}/>
+          {/* <FileButtons spot={params.spot}/> setPickerDate*/}
         </div>
+          {report && <FileButtons report={report.data} spot={spot} refToPDF={refToPDF} />}
+          <FileDatePicker setReport={setReport} spot={spot} setPickerDate={setPickerDate} />
       </div>
 
       {report ? (<>

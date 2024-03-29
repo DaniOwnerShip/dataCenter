@@ -7,7 +7,7 @@ import FileApi from "../apis/fileApi";
 import SocketAPI from "../apis/socketAPI";
 
 
-export default function UnitPlantButtons({ spot }) {
+export default function UnitPlantButtons({ spot, pickerDate }) {
 
   const router = useRouter();
 
@@ -21,14 +21,19 @@ export default function UnitPlantButtons({ spot }) {
   const [activeSpot, setActiveSpot] = useState('');
   const [btnUrlActive, setBtnUrlActive] = useState(spot);
   const [btnWindowActive, setBtnWindowActive] = useState(null);
+  console.log('pickerDate', pickerDate);
 
 
   const clickOpenWindow = (_spot) => {
-    const fileName = `informe_${_spot}_last.json`
+    const fileName = `informe_${_spot}_${pickerDate}.json`
+    console.log('fileNamefileNamefileNamefileNamefileName', fileName);
 
     FileApi.downloadjson(fileName)
       .then(res => {
-        setReport(res);
+        if (res.fileType === 'Plantilla hidratada') {
+          return window.alert('❌ no existe el archivo : ' + fileName.split('.')[0]);
+        }
+        setReport(res.data);
         setIsShow(true);
         setActiveSpot(_spot);
         setBtnWindowActive(_spot);
@@ -78,7 +83,7 @@ export default function UnitPlantButtons({ spot }) {
               <button type="button"  
                 className={`button BSWindow ${btnWindowActive === spotDN && isShow ? 'BSactive' : ''}`}
                 onClick={() => clickOpenWindow(spotDN)}> 
-                {`👁️`}
+                {`🔎`}
               </button> 
 
             </div>

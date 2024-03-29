@@ -11,6 +11,7 @@ export default function UnitPlantWindow({ _spot, report, setIsShow }) {
 
     const nodeRef = useRef(null);
     const fname = report[0].metaData.fileID.split('.')[0];
+    console.log('UnitPlantWindow fname', fname );
     const [isDisableDragg, setIsDisableDragg] = useState(true);
     const spot = _spot;
     
@@ -72,7 +73,7 @@ export default function UnitPlantWindow({ _spot, report, setIsShow }) {
                                 <section className="areas-container">
                                     {report[2].areas.map((area, indexArea) => (
                                         <div key={`areaw-${indexArea}`} className="area">
-                                            <Area report={report} spot={spot} area={area} indexArea={indexArea} windowKey={'w2'} />
+                                            <Area report={report} spot={spot} _area={area} indexArea={indexArea} windowKey={'w2'} />  
                                         </div>
                                     ))}
                                 </section>

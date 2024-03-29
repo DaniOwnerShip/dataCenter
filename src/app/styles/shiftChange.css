@@ -453,6 +453,10 @@ BUTTONS
     font-size: 1.3rem;
     border: none;
 }
+.button.template:hover { 
+    background-color: transparent; 
+    scale: 1.3;
+}
 
 .button.files:hover {
     color: black;
@@ -460,10 +464,11 @@ BUTTONS
 
 .button.expandArea {
     border: none;
+    pointer-events:all;
 }
 
 .button.sidebar {
-    width: 110px; 
+    width: 115px; 
     text-align: justify;
 }
 .button-sidebar-Box {
@@ -617,8 +622,9 @@ input:focus {
 
 .datepicker {
     padding: 5px;
-    border: 1px solid #343541;
+    /* border: 1px solid #343541; */
     border-radius: 10px;
+    margin-left: 5px;
 }
 
 
@@ -634,7 +640,7 @@ SOCKET ITERFACE
     color: #000;
     position: fixed;
     z-index: 1;
-    top: 400px;
+    top: 450px;
     left: 5px;
 }
 

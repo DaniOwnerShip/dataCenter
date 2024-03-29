@@ -36,7 +36,7 @@ function AreaTittle({ spot, area, expandArea, setExpandArea }) {
     // console.log('unitN', unitN );
     
     return (
-        <div className={` ${expandArea ? `area-tittle expand ${unitN}` : `area-tittle ${spot}`} `} >
+        <div className={` ${expandArea ? `area-tittle expand ${unitN}` : `area-tittle ${unitN}`} `} >
              {area.areaName} 
             <div className="flex center">{area.units} </div>
              Comentarios 

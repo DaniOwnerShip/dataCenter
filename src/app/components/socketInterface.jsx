@@ -24,7 +24,7 @@ export default function SocketInterface({ report, callback, isDocReserved }) {
     const lastMsgRef = useRef(null);
     const [isDisableDragg, setIsDisableDragg] = useState(true);
     const [windowStyle, setWindowStyle] = useState({ isDraggable: '', isDragging: '' });
-    const [stylePanel, setStylePanel] = useState({ Wsize: 200, Hsize: 80 });
+    const [stylePanel, setStylePanel] = useState({ Wsize: 200, Hsize: 70 });
 
 
 

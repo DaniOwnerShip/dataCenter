@@ -3,7 +3,7 @@ import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';   
 
 
-export default function FileButtons({ report, setReport, spot, refToPDF }) {
+export default function FileButtons({ report, spot, refToPDF }) {
 
     const fileId = report[0].metaData.fileID;
     const pdfName = fileId.split('.')[0]; 
@@ -89,9 +89,9 @@ export default function FileButtons({ report, setReport, spot, refToPDF }) {
 
     return (
 
-        <div className="flex" >
-            <button type="button" className="button files" onClick={saveJson}>⏏️ Guardar Informe</button>
-            <button type="button" className="button files" onClick={downloadPDF}>🔽 Descargar PDF</button>
+        <div className="datepicker" >
+            <button type="button" className="button sidebar" onClick={saveJson}>🔼 Guardar Informe</button>
+            <button type="button" className="button sidebar" onClick={downloadPDF}>🔽 Descargar PDF</button>
         </div>
 
     );
