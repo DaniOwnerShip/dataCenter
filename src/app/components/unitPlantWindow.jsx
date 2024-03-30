@@ -57,7 +57,7 @@ export default function UnitPlantWindow({ _spot, report, setIsShow }) {
 
                         {report ? (
 
-                            <div className="mainContainer window" >
+                            <div className="mainContainer window disabled" >
 
                                 {fname}
 

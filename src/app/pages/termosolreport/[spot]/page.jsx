@@ -26,8 +26,8 @@ export default function Spot({ params }) {
 
   const [report, setReport] = useState();
   const [pickerDate, setPickerDate] = useState();
-  const [foreceRender, setForeceRender] = useState(false);
-  const [template, setTemplate] = useState('Plantilla hidratada');
+  // const [foreceRender, setForeceRender] = useState(false);
+  const [template, setTemplate] = useState({isTemplate: false, type: 'Plantilla hidratada'});
   const [isDocReserved, setIsDocReserved] = useState(false);
   const [isFastSocket, setIsFastSocket] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -38,63 +38,14 @@ export default function Spot({ params }) {
   };
 
 
-  // let fileNameReq = `informe_${spot}_last.json`;
-
-
-  //  function datepikerReqReport(_spot) {
-  //   console.log('datepikerReqReport' ); 
-  // }
-
-  // let unitNTiite = '_' + spot.split('-')[0];
-  // unitNTiite = unitNTiite.replace('_','');
-
-
-  // const callbackDatePicker = (_fileNameReq) => {
-  //   getReport(_fileNameReq, true);
-  // };
-
-  // const checkChecksum = (report) => {
-  //   const reportchecksum = report[0].metaData.checksum;
-  //   report[0].metaData.checksum = ""
-  //   const hash = crypto.createHash('sha256');
-  //   hash.update(JSON.stringify(report));
-  //   const checksum = hash.digest('hex');
-  //   report[0].metaData.checksum = reportchecksum;
-  //   if (report[0].metaData.checksum !== checksum) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
-  // const getReport = (_fileNameReq, isFromDatePicker = false) => {console.log('_fileNameReq', _fileNameReq);
-  //   FileApi.downloadjson(_fileNameReq)
-  //     .then(resData => {
-  //       if (resData[0].metaData.isComplete) {
-  //         if (!checkChecksum(resData)) {
-  //           return window.alert('❌ Error de integridad en la firma de seguridad. Es posible que el archivo haya sido alterado después de haberlo completado.');
-  //         }
-  //       }
-  //       setReport(resData);
-  //       if (isFromDatePicker) {
-  //         window.alert(`✅ Documento descargado: ${_fileNameReq}`);
-  //       }
-  //     })
-  //     .catch((e) => { window.alert(`❌ ${e.message}`); });
-  // };
-
-
-  useEffect(() => {
-    console.log('useEffectxx');
-    // ISetReport = setReport;
-    // if (!report) {
-    //   getReport(fileNameReq);
-    // }
-  }, [report]);
+  // useEffect(() => {
+  // }, [report]);
 
   const callbackSocket = (isDocReserve, isFast) => {
     setIsDocReserved(isDocReserve);
     setIsFastSocket(isFast);
   }
+
   const clearTemplate = ( ) => {
     console.log('clearTemplate'); 
     report.data[2].areas.forEach(area => {
@@ -104,8 +55,8 @@ export default function Spot({ params }) {
       });
     });
     setReport(report);
-    setForeceRender(!foreceRender);
-    setTemplate('Plantilla vacía');
+    // setForeceRender(!foreceRender);
+    setTemplate({...template, type: 'Plantilla vacía'});
   } 
 
   return (
@@ -115,24 +66,22 @@ export default function Spot({ params }) {
       <div className="sideBarLeft">
         <div className="sidebarBox" >
           <UnitPlantButtons spot={spot} pickerDate={pickerDate}/>
-          {/* <FileButtons spot={params.spot}/> setPickerDate*/}
         </div>
-          {report && <FileButtons report={report.data} spot={spot} refToPDF={refToPDF} />}
-          <FileDatePicker setReport={setReport} spot={spot} setPickerDate={setPickerDate} />
+          <FileDatePicker setReport={setReport} spot={spot} setPickerDate={setPickerDate}  setTemplate={setTemplate}/>
+          {report && <FileButtons report={report.data} spot={spot} refToPDF={refToPDF}  setTemplate={setTemplate}/>}
       </div>
 
       {report ? (<>
 
-        <h1 className="flex center header">{report.data[0].metaData.tittle}</h1>
+        <h1 className="flex center header">{report.data[0].metaData.tittle}&nbsp;{report.data[0].metaData.DayNight === 'Día' ? '☀️' : '🌙'}</h1>
 
-        {report.fileType === 'Plantilla hidratada' && 
+        {template.isTemplate && 
         <div className="flex center header noMargin">
-        <h3 ><em>{template}</em></h3> 
+        <h3 ><em>{template.type}</em></h3> 
 
-        {template === 'Plantilla hidratada' && <button type="button"  title='limpiar' className="button template" onClick={clearTemplate}>🧹</button>}
+        {template.type === 'Plantilla hidratada' && <button type="button"  title='limpiar' className="button template" onClick={clearTemplate}>🧹</button>}
 
         </div>
-        
         
         }
 

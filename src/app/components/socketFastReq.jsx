@@ -31,7 +31,7 @@ export default function SocketFastReq({  docID, callback }) {
             const msg = res.message; 
             if (succes) { 
                 callback(true, true);
-                window.alert(msg);
+                window.alert(`✅ ${msg}`);
             }else{
                 SocketAPI.disconnect(mySocket); 
                 window.alert(msg);

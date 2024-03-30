@@ -3,7 +3,7 @@ import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';   
 
 
-export default function FileButtons({ report, spot, refToPDF }) {
+export default function FileButtons({ report, spot, refToPDF, setTemplate }) {
 
     const fileId = report[0].metaData.fileID;
     const pdfName = fileId.split('.')[0]; 
@@ -18,11 +18,14 @@ export default function FileButtons({ report, spot, refToPDF }) {
             isNew = true;
         }
 
-        FileApi.saveJson(report, spot, isNew)
+        console.log('saveJson', report[0].metaData.fileID);
+
+        FileApi.saveJson(report, isNew)
             .then(res => {
                 if (res != false) {
                     window.alert(`✅ ${res}`);
-                    // setReport(null);
+                    setTemplate({ isTemplate: false, type: "" });
+                    window.location.reload();
                 }
             })
             .catch((e) => { window.alert(`❌ ${e.message}`); });
@@ -89,7 +92,7 @@ export default function FileButtons({ report, spot, refToPDF }) {
 
     return (
 
-        <div className="datepicker" >
+        <div className="filebuttonsBox" >
             <button type="button" className="button sidebar" onClick={saveJson}>🔼 Guardar Informe</button>
             <button type="button" className="button sidebar" onClick={downloadPDF}>🔽 Descargar PDF</button>
         </div>

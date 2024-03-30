@@ -1,14 +1,16 @@
 "use client"
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import es from 'date-fns/locale/es';
+registerLocale('es', es);
 import 'react-datepicker/dist/react-datepicker.css';
 import React, { useState, useEffect } from "react";
 // import FileButtons from "./fileButtons";
 
 import FileApi from "../apis/fileApi";
-import crypto from 'crypto';
+import crypto from 'crypto'; 
 
 
-export default function FileDatePicker({ setReport, spot, setPickerDate }) {
+export default function FileDatePicker({ setReport, spot, setPickerDate, setTemplate }) {
   console.log('FileDatePicker');
 
   const [pickDate, setPickDate] = useState(new Date());
@@ -38,7 +40,7 @@ export default function FileDatePicker({ setReport, spot, setPickerDate }) {
   const requestFile = () => {
     const fileName = `informe_${spot}_${formatDate(pickDate)}.json`;
     console.log('requestFile fileName', fileName);
-    getReport(fileName)
+    getReport(fileName);
   };
 
   useEffect(() => {
@@ -64,6 +66,7 @@ export default function FileDatePicker({ setReport, spot, setPickerDate }) {
   const getReport = (_fileNameReq) => {
 
     console.log('_fileNameReq', _fileNameReq);
+    const docName = _fileNameReq.split('.')[0];
 
     FileApi.downloadjson(_fileNameReq)
       .then(res => {
@@ -73,8 +76,9 @@ export default function FileDatePicker({ setReport, spot, setPickerDate }) {
           }
         }
         if (res.fileType === 'Plantilla hidratada') {
+          setTemplate({isTemplate: true, type: 'Plantilla hidratada'});
           const lastDate = res.data[0].metaData.lastEdit;
-          window.alert('⚠️ El archivo solicitado no existe. Como alternativa, se ha proporcionado una plantilla predefinida, que contiene datos del último documento guardado el día ' + lastDate );
+          window.alert(`⚠️ El archivo solicitado [ ${docName} ] no existe. Como alternativa, se ha proporcionado una plantilla, con datos del último documento guardado el día ${lastDate}`);
           res.data[0].metaData.dayDate = pickDateFormated;
           res.data[0].metaData.fileID = fileRequested;
 
@@ -93,18 +97,18 @@ export default function FileDatePicker({ setReport, spot, setPickerDate }) {
 
   return (
 
-    <div className="datepicker"> 
+    <div className="flex"> 
 
       <DatePicker
         id="calendar"
+        locale="es" 
         selected={pickDate}
         onChange={(date) => setPickDate(date)}
         dateFormat="dd-MM-yy"
+        popperPlacement="top"
       />
 
-      <button type="button" className="button sidebar" onClick={requestFile}>
-        ▶️ Cargar informe
-      </button>
+      <button type="button" className="button" onClick={requestFile}>▶️</button>
 
       {/* <FileButtons spot={params.spot}/> */}
 

@@ -133,15 +133,16 @@ SIDE BAR
     left: 0;
     top: 0;
     height: 100%;
-    width: 230px;
+    width: 210px;
+    padding-left: 20px;
     padding-top: 42px;
     z-index: 1;
     background-color: var(--triada-base-color);
     /* background-color: var(--triada2-color); */
 }
 
-.sidebarBox { 
-    margin-left: 20px;
+.sidebarBox {  
+    margin-bottom: 20px;
 }
 
 
@@ -229,15 +230,10 @@ AREAS
 }
 
 .area {
-    margin: 7px 0;
+    margin: 10px 0;
     border-radius: 10px;
     background-color: rgb(0, 0, 0);
     border: 2px solid black;
-    /*padding: 3px;
-    border: 2px solid #000000; 
-    border: 1px solid #595959;
-    box-shadow: -4px -4px 3px -5px white;
-    box-shadow: 0px 0px 5px 1px black;*/
 }
 
 .area-tittle {
@@ -246,7 +242,7 @@ AREAS
     font-size: medium;
     font-weight: 700;
     grid-template-columns: 45% 11% auto 10%;
-    padding: 3px;
+    padding: 1px 7px;
     border-radius: 7px;
     /* border: 1px solid whitesmoke; */
 }
@@ -522,18 +518,18 @@ BUTTONS
     height: 37px;
     border-radius: 30px;
     margin-top: 7px;
+    font-weight: 900;
 }
 
 .button.docComplete.isComplete {
     color: var(--triada-base-color);
-    border: none;
-    margin: 0;
     border: 3px solid var(--triada-base-color);
 }
 
 .button.docComplete:hover {
-    background-color: transparent; 
-    border-width: 1px;
+    background-color: var(--triada1-color);
+    color:black;
+    /* border-width: 1px; */
 
 }
 
@@ -620,11 +616,13 @@ input:focus {
 }
 
 
-.datepicker {
+.filebuttonsBox {
     padding: 5px;
-    /* border: 1px solid #343541; */
+    border: 1px solid #343541;
     border-radius: 10px;
-    margin-left: 5px;
+    margin-top: 20px; 
+    /* margin: 15px; */
+    width: min-content;
 }
 
 
@@ -712,6 +710,12 @@ hr {
    }
    .loadingtext {   
     font-size: 3rem;
+   }
+
+
+   #calendar{
+    width: 100px;
+    /* color: blue; */
    }
 
 /* .react-datepicker-wrapper {

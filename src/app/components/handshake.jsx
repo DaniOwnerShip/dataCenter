@@ -87,7 +87,6 @@ export default function Handshake({ report }) {
                             className={`button docComplete ${isComplete ? 'isComplete' : ''}`}
                             onClick={() => onComplete()}>
                             <p className="noMargin">{`${isComplete ? 'COMPLETADO' : 'EDICIÓN'}`}</p>
-                            {/* <h4 className="noMargin"> {`${meta.isComplete ? '✅' : '❌'}`}</h4> */}
                         </button>
 
                     </div>}
