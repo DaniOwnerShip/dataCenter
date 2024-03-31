@@ -233,7 +233,8 @@ AREAS
     margin: 10px 0;
     border-radius: 10px;
     background-color: rgb(0, 0, 0);
-    border: 2px solid black;
+    border: 1px solid #5b6517;
+    /* border: 2px solid black; */
 }
 
 .area-tittle {
