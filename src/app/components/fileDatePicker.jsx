@@ -83,6 +83,7 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
           res.data[0].metaData.fileID = fileRequested;
 
         } else {
+          setTemplate({isTemplate: false, type: ''});
           window.alert(`✅ Documento descargado: ${fileRequested.split('.')[0]}`);
         }
         setReport(res);

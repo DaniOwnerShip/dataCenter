@@ -68,7 +68,7 @@ export default function Spot({ params }) {
           <UnitPlantButtons spot={spot} pickerDate={pickerDate}/>
         </div>
           <FileDatePicker setReport={setReport} spot={spot} setPickerDate={setPickerDate}  setTemplate={setTemplate}/>
-          {report && <FileButtons report={report.data} spot={spot} refToPDF={refToPDF}  setTemplate={setTemplate}/>}
+          {report && <FileButtons report={report.data} refToPDF={refToPDF}  setTemplate={setTemplate}/>}
       </div>
 
       {report ? (<>

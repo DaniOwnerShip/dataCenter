@@ -4,6 +4,7 @@ import Area from "./area";
 import Loading from "./loading";
 import Draggable from 'react-draggable';
 import { ResizableBox } from 'react-resizable';
+import FileMetadata from "./fileMetadata";
 // import 'react-resizable/css/styles.css';  
 
 
@@ -11,12 +12,12 @@ export default function UnitPlantWindow({ _spot, report, setIsShow }) {
 
     const nodeRef = useRef(null);
     const fname = report[0].metaData.fileID.split('.')[0];
-    console.log('UnitPlantWindow fname', fname );
+    console.log('UnitPlantWindow fname', fname);
     const [isDisableDragg, setIsDisableDragg] = useState(true);
     const spot = _spot;
-    
+
     const unitN = '_' + spot.split('-')[1];
-    console.log('unitN', unitN );
+    console.log('unitN', unitN);
     const [windowStyle, setWindowStyle] = useState({ place: unitN, isDraggable: '', isDragging: '' });
 
     const toggleShow = () => { setIsShow(false); }
@@ -57,9 +58,10 @@ export default function UnitPlantWindow({ _spot, report, setIsShow }) {
 
                         {report ? (
 
-                            <div className="mainContainer window disabled" >
+                            <div className="mainContainer window" >
 
-                                {fname}
+                                <FileMetadata reportMetadata={report[0].metaData} />
+
 
                                 <div className="UnitPlantWindowBar" >
                                     <button type="button" className="button" onClick={toggleShow}>
@@ -73,7 +75,7 @@ export default function UnitPlantWindow({ _spot, report, setIsShow }) {
                                 <section className="areas-container">
                                     {report[2].areas.map((area, indexArea) => (
                                         <div key={`areaw-${indexArea}`} className="area">
-                                            <Area report={report} spot={spot} _area={area} indexArea={indexArea} windowKey={'w2'} />  
+                                            <Area report={report} spot={spot} _area={area} indexArea={indexArea} windowKey={'w2'} />
                                         </div>
                                     ))}
                                 </section>

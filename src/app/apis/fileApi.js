@@ -25,17 +25,7 @@ export default class FileApi {
             if (!res.ok) {
                 throw new Error(data);
             }
-            const fileType = res.headers.get('X-File-Type');
-            console.log('isTemplate', fileType);
-            if (fileType === 'template') {
-
-                console.log('isTemplate1zzzzz', fileType);
-            } else {
-
-                console.log('isTemplate2', fileType);
-            }
-
-            // const modDate = res.headers.get('last-modified'); 
+            const fileType = res.headers.get('X-File-Type'); 
 
             return { data, fileType };
 
