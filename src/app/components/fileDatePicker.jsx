@@ -1,14 +1,12 @@
 "use client"
 import DatePicker, { registerLocale } from 'react-datepicker';
 import es from 'date-fns/locale/es';
-registerLocale('es', es);
 import 'react-datepicker/dist/react-datepicker.css';
 import React, { useState, useEffect } from "react";
-// import FileButtons from "./fileButtons";
-
 import FileApi from "../apis/fileApi";
-import crypto from 'crypto'; 
+import crypto from 'crypto';
 
+registerLocale('es', es);
 
 export default function FileDatePicker({ setReport, spot, setPickerDate, setTemplate }) {
 
@@ -16,17 +14,17 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
   const [isStart, setIsStart] = useState(false);
 
   const pickDateFormated = formatDate(pickDate);
-  
+
   const fileRequested = `informe_${spot}_${pickDateFormated}.json`;
-  
+
 
   const checkChecksum = (_report) => {
-    const reportchecksum = _report[0].metaData.checksum; 
+    const reportchecksum = _report[0].metaData.checksum;
     _report[0].metaData.checksum = "";
     const hash = crypto.createHash('sha256');
     hash.update(JSON.stringify(_report));
     const checksum = hash.digest('hex');
-    _report[0].metaData.checksum = reportchecksum; 
+    _report[0].metaData.checksum = reportchecksum;
     if (_report[0].metaData.checksum !== checksum) {
       return false;
     }
@@ -43,18 +41,9 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
     if (!isStart) {
       getReport(fileRequested)
     }
-    setIsStart(true); // if (!report) {
-      
-  setPickerDate(pickDateFormated);
-    //   getReport(fileNameReq);
-    // }
-    // FileApi.downloadjson(fileRequested)
-    //   .then(res => {
-    //     ISetReport(res); 
-    //   })
-    //   .catch((e) => { window.alert(`❌ ${e.message}`); });
+    setIsStart(true); 
+    setPickerDate(pickDateFormated);
 
-    // callbackDatePicker(fileRequested);
   });
 
   const getReport = (_fileNameReq) => {
@@ -69,24 +58,20 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
           }
         }
         if (res.fileType === 'Plantilla hidratada') {
-          setTemplate({isTemplate: true, type: 'Plantilla hidratada'});
+          setTemplate({ isTemplate: true, type: 'Plantilla hidratada' });
           const lastDate = res.data[0].metaData.lastEdit;
-          const dayNight = spot.split('-')[2];
-          console.log('dayNightdayNightdayNightdayNight', dayNight);
+          const dayNight = spot.split('-')[2]; 
           res.data[0].metaData.dayDate = pickDateFormated;
           res.data[0].metaData.fileID = fileRequested;
-          res.data[0].metaData.DayNight = dayNight; 
+          res.data[0].metaData.DayNight = dayNight;
           window.alert(`⚠️ El archivo solicitado [ ${docName} ] no existe. Como alternativa, se ha proporcionado una plantilla, con datos del último documento guardado el día ${lastDate}`);
-         
- 
+
+
         } else {
-          setTemplate({isTemplate: false, type: ''});
+          setTemplate({ isTemplate: false, type: '' });
           window.alert(`✅ Documento descargado: ${fileRequested.split('.')[0]}`);
         }
-        setReport(res);
-        // if (!isStart) {
-        //   window.alert(`✅ Documento descargado: ${_fileNameReq}`);
-        // }
+        setReport(res); 
       })
       .catch((e) => { window.alert(`❌ ${e.message}`); });
 
@@ -95,20 +80,18 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
 
   return (
 
-    <div className="flex"> 
+    <div className="flex">
 
       <DatePicker
         id="calendar"
-        locale="es" 
+        locale="es"
         selected={pickDate}
         onChange={(date) => setPickDate(date)}
         dateFormat="dd-MM-yy"
         popperPlacement="top"
       />
 
-      <button type="button" className="button" onClick={requestFile}>▶️</button>
-
-      {/* <FileButtons spot={params.spot}/> */}
+      <button type="button" className="button" onClick={requestFile}>▶️</button> 
 
     </div>
 

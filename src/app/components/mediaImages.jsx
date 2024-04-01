@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import FileApi from "../apis/fileApi";
+import React, { useState } from 'react'; 
 import MediaAPI from '../apis/multimediaAPI.mjs';
 
 
@@ -14,8 +13,7 @@ export default function MediaImages({ report, area, indexArea, setnImages, isTem
     'image/svg+xml' // .svg
   ];
 
-  const idArea = area.areaName;
-  // const imgs = area.urlImages;
+  const idArea = area.areaName; 
   const imgs = report[2].areas[indexArea].urlImages; 
   const docID = report[0].metaData.fileID;
   const checksum = report[0].metaData.checksum;
@@ -63,12 +61,7 @@ export default function MediaImages({ report, area, indexArea, setnImages, isTem
 
 
   const deleteImage = (e, url, mediaType) => {
-    e.preventDefault();
-
-    //se puede eliminar..
-    // if (checksum) {
-    //   return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
-    // }
+    e.preventDefault(); 
 
     if (!isDocReserved) {
       return window.alert(`⚠️ No puede eliminar archivos si el documento no está reservado`);

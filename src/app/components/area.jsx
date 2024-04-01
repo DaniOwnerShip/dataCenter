@@ -30,8 +30,8 @@ export default function Area({report, spot, _area, indexArea, windowKey, isTempl
 
 
 function AreaTittle({ spot, area, expandArea, setExpandArea }) {
-    const unitN = '_' + spot.split('-')[1];
-    // console.log('unitN', unitN );
+    
+    const unitN = '_' + spot.split('-')[1]; 
     
     return (
         <div className={` ${expandArea ? `area-tittle expand ${unitN}` : `area-tittle ${unitN}`} `} >

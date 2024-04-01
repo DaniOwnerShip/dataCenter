@@ -1,6 +1,5 @@
 import { useState } from 'react';
-
-// import FileApi from "../apis/fileApi"; 
+ 
 import MediaAPI from '../apis/multimediaAPI.mjs';
 
 export default function MediaVideo({ report, area, indexArea, setnVideos, isTemplate, isDocReserved }) {
@@ -62,11 +61,7 @@ export default function MediaVideo({ report, area, indexArea, setnVideos, isTemp
 
     const deleteVideo = (e, url, mediaType) => {
         e.preventDefault();
-
-        // if (checksum) {
-        //     return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
-        // }
-
+ 
         if (!isDocReserved) {
             return window.alert(`⚠️ No puede eliminar archivos si el documento no está reservado`);
         }
@@ -138,10 +133,7 @@ export default function MediaVideo({ report, area, indexArea, setnVideos, isTemp
 
                         <figcaption className="media-caption">{url.split('/')[5].split('_')[1]}</figcaption>
 
-                    </figure>
-
-
-
+                    </figure> 
 
 
                 ))}

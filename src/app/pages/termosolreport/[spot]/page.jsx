@@ -37,8 +37,7 @@ export default function Spot({ params }) {
     setIsFastSocket(isFast);
   }
 
-  const clearTemplate = ( ) => {
-    console.log('clearTemplate'); 
+  const clearTemplate = ( ) => { 
     report.data[2].areas.forEach(area => {
       area.areaItems.forEach(item => {
         item.state.forEach((_state, index) => { item.state[index] = false;});

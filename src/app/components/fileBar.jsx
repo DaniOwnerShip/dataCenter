@@ -1,5 +1,4 @@
-import FileButtons from "./fileButtons";
-// import FileCalendar from "./fileCalendar";
+import FileButtons from "./fileButtons"; 
 
 
 export default function FileBar({ report, setReport, spot, refToPDF }) {
@@ -10,8 +9,7 @@ export default function FileBar({ report, setReport, spot, refToPDF }) {
         <div className="flex fileTransfer enabled" >
 
             <FileButtons report={report} setReport={setReport} spot={spot} refToPDF={refToPDF} />
-            {/* <FileCalendar setReport={setReport} spot={spot} callbackDatePicker={callbackDatePicker} />, callbackDatePicker */}
-
+           
         </div>
 
     );

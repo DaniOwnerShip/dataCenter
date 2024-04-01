@@ -51,8 +51,7 @@ export default function Handshake({ report }) {
                 {hs.party.map((party, indexTeam) => (
 
                     <div key={`party-${indexTeam}`} className="flex paddingL" >
-
-                        {/* <p> ⚒️ {party.type + " Nº "}  </p> */}
+ 
                         <p> {party.type}  </p>
                         {party.number !== "" && <input
                             type="text"
@@ -62,13 +61,6 @@ export default function Handshake({ report }) {
                             value={hs.party[indexTeam].number}
                         />}
 
-                        {/* <input
-                            type="text"
-                            className="input-num"
-                            id={`txt-num-${indexTeam}`}
-                            onChange={(event) => onChangeNum(event, indexTeam)}
-                            value={hs.party[indexTeam].number}
-                        /> */}
                         {party.number ? <p> PTL </p> : ""}
                         <input
                             type="text"

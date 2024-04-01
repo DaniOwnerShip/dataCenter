@@ -17,8 +17,7 @@ export default function FileButtons({ report, refToPDF, setTemplate }) {
         } else if (report[0].metaData.isComplete) {
             isNew = true;
         }
-
-        console.log('saveJson', report[0].metaData.fileID);
+ 
 
         FileApi.saveJson(report, isNew)
             .then(res => {
@@ -41,9 +40,7 @@ export default function FileButtons({ report, refToPDF, setTemplate }) {
         const backgroundColor = 'black';
         const margin = 1;
         const mainContainer = refToPDF.current; 
-
-
-        // mainContainer.style.margin = '2px';
+ 
         mainContainer.style.backgroundColor = 'black';
 
         setTimeout(() => {
@@ -79,8 +76,7 @@ export default function FileButtons({ report, refToPDF, setTemplate }) {
                         }
 
                         pdf.save(`${pdfName}.pdf`);
-
-                        // mainContainer.style.margin = 'auto';
+ 
                         mainContainer.style.backgroundColor = '#383945';
                     });
 

@@ -10,14 +10,11 @@ import FileMetadata from "./fileMetadata";
 
 export default function UnitPlantWindow({ _spot, report, setIsShow }) {
 
-    const nodeRef = useRef(null);
-    const fname = report[0].metaData.fileID.split('.')[0];
-    console.log('UnitPlantWindow fname', fname);
+    const nodeRef = useRef(null); 
     const [isDisableDragg, setIsDisableDragg] = useState(true);
     const spot = _spot;
 
-    const unitN = '_' + spot.split('-')[1];
-    console.log('unitN', unitN);
+    const unitN = '_' + spot.split('-')[1]; 
     const [windowStyle, setWindowStyle] = useState({ place: unitN, isDraggable: '', isDragging: '' });
 
     const toggleShow = () => { setIsShow(false); }

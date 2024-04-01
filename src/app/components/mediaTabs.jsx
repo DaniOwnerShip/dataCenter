@@ -8,14 +8,11 @@ import MediaAudio from "./mediaAudios";
 
 export default function MediaTabs({ report, _area, indexArea, isTemplate, isDocReserved }) {
 
-    const [activeTab, setActiveTab] = useState(0);
-    // const nImages = _area.urlImages.length;
-    // const nVideos = _area.urlVideos.length;
-    // const nAudios = _area.urlAudios.length;
+    const [activeTab, setActiveTab] = useState(0); 
     const [nImages, setnImages] = useState();
     const [nVideos, setnVideos] = useState();
-    const [nAudios, setnAudios] = useState();
-    //console.log('_area nImages', nImages);
+    const [nAudios, setnAudios] = useState(); 
+    
     useEffect(() => { 
         setnImages(_area.urlImages.length);
         setnVideos(_area.urlVideos.length);

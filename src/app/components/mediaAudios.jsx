@@ -66,10 +66,7 @@ export default function MediaAudio({ report, area, indexArea, setnAudios, isTemp
 
     const deleteAudio = (e, url, mediaType) => {
         e.preventDefault();
-
-        // if (checksum) {
-        //     return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
-        // }
+ 
 
         if (!isDocReserved) {
             return window.alert(`⚠️ No puede eliminar archivos si el documento no está reservado`);

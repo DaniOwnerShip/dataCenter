@@ -20,13 +20,10 @@ export default function UnitPlantButtons({ spot, pickerDate }) {
   const [isShow, setIsShow] = useState(false);
   const [activeSpot, setActiveSpot] = useState('');
   const [btnUrlActive, setBtnUrlActive] = useState(spot);
-  const [btnWindowActive, setBtnWindowActive] = useState(null);
-  console.log('pickerDate', pickerDate);
-
+  const [btnWindowActive, setBtnWindowActive] = useState(null);  
 
   const clickOpenWindow = (_spot) => {
-    const fileName = `informe_${_spot}_${pickerDate}.json`
-    console.log('fileNamefileNamefileNamefileNamefileName', fileName);
+    const fileName = `informe_${_spot}_${pickerDate}.json` 
 
     FileApi.downloadjson(fileName)
       .then(res => {
