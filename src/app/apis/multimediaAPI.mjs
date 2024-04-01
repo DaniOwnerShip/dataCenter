@@ -44,8 +44,8 @@ export default class MediaAPI {
 
         console.log('mediaupload');
         
-        // const url = `http://localhost:3001/multimediaAPI/mediaupload`;
-        const url = `http://10.172.1.19:3001/multimediaAPI/mediaupload`;
+        const url = `http://localhost:3001/multimediaAPI/mediaupload`;
+         //const url = `http://10.172.1.19:3001/multimediaAPI/mediaupload`;
 
         console.log('typeFile:', mediaType);
         console.log('url:', url);
@@ -81,8 +81,8 @@ export default class MediaAPI {
             const ai = encodeURIComponent(areaIndex);
             const murl = encodeURIComponent(mediaURL);
 
-            // const url = `http://localhost:3001/multimediaAPI/mediadelete?docFileName=${df}&areaIndex=${ai}&mediaType=${mediaType}&mediaURL=${murl}`;
-            const url = `http://10.172.1.19:3001/multimediaAPI/mediadelete?docFileName=${df}&areaIndex=${ai}&mediaType=${mediaType}&mediaURL=${murl}`;
+            const url = `http://localhost:3001/multimediaAPI/mediadelete?docFileName=${df}&areaIndex=${ai}&mediaType=${mediaType}&mediaURL=${murl}`;
+            // const url = `http://10.172.1.19:3001/multimediaAPI/mediadelete?docFileName=${df}&areaIndex=${ai}&mediaType=${mediaType}&mediaURL=${murl}`;
             const res = await fetch(url);
 
             if (!res.ok) {
