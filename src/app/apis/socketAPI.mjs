@@ -35,12 +35,6 @@ export default class SocketAPI {
             newSocket.on("connect", () => {
                 SocketAPI.socket.isOn = true;
                 SocketAPI.socket.mySocket = newSocket;
-
-
-                // newSocket.on('usersOn', (usersOn) => {
-                //     console.log('usersOn',usersOn); 
-                //     // SocketAPI.socket.users = usersOn;
-                // });
                 resolve(newSocket);
             });
 

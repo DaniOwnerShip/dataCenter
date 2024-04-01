@@ -4,8 +4,6 @@ export const metadata = {
 }
 
 export default function SpotLayout({ children, params }) {
- 
-    console.log('params', params);     
 
     return (
         <> 

@@ -12,12 +12,12 @@ export default function MediaTabs({ report, _area, indexArea, isTemplate, isDocR
     const [nImages, setnImages] = useState();
     const [nVideos, setnVideos] = useState();
     const [nAudios, setnAudios] = useState(); 
-    
+
     useEffect(() => { 
         setnImages(_area.urlImages.length);
         setnVideos(_area.urlVideos.length);
         setnAudios(_area.urlAudios.length);
-    });
+    },[_area.urlImages.length, _area.urlVideos.length, _area.urlAudios.length]);
 
 
     const clickTab = (e, n) => {

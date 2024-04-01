@@ -77,7 +77,7 @@ export default function Handshake({ report }) {
                         <p className="noMargin">✒️Estado:&nbsp;</p>
                         <button type="button"
                             className={`button docComplete ${isComplete ? 'isComplete' : ''}`}
-                            onClick={() => onComplete()}>
+                            onClick={onComplete}>
                             <p className="noMargin">{`${isComplete ? 'COMPLETADO' : 'EDICIÓN'}`}</p>
                         </button>
 

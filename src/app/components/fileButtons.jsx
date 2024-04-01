@@ -3,7 +3,7 @@ import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';   
 
 
-export default function FileButtons({ report, refToPDF, setTemplate }) {
+export default function FileButtons({setReport, report, refToPDF, setTemplate }) {
 
     const fileId = report[0].metaData.fileID;
     const pdfName = fileId.split('.')[0]; 
@@ -23,7 +23,7 @@ export default function FileButtons({ report, refToPDF, setTemplate }) {
             .then(res => {
                 if (res != false) {
                     window.alert(`✅ ${res}`);
-                    setTemplate({ isTemplate: false, type: "" });
+                    setTemplate({ isTemplate: false, type: "" }); 
                     window.location.reload();
                 }
             })

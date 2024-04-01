@@ -2,7 +2,7 @@
 import DatePicker, { registerLocale } from 'react-datepicker';
 import es from 'date-fns/locale/es';
 import 'react-datepicker/dist/react-datepicker.css';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import FileApi from "../apis/fileApi";
 import crypto from 'crypto';
 
@@ -37,19 +37,9 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
     getReport(fileName);
   };
 
-  useEffect(() => {
-    if (!isStart) {
-      getReport(fileRequested)
-    }
-    setIsStart(true); 
-    setPickerDate(pickDateFormated);
-
-  });
-
-  const getReport = (_fileNameReq) => {
-
+  const getReport = useCallback((_fileNameReq) => {
     const docName = _fileNameReq.split('.')[0];
-
+  
     FileApi.downloadjson(_fileNameReq)
       .then(res => {
         if (res.data[0].metaData.isComplete) {
@@ -65,18 +55,24 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
           res.data[0].metaData.fileID = fileRequested;
           res.data[0].metaData.DayNight = dayNight;
           window.alert(`⚠️ El archivo solicitado [ ${docName} ] no existe. Como alternativa, se ha proporcionado una plantilla, con datos del último documento guardado el día ${lastDate}`);
-
-
         } else {
           setTemplate({ isTemplate: false, type: '' });
           window.alert(`✅ Documento descargado: ${fileRequested.split('.')[0]}`);
         }
         setReport(res); 
       })
-      .catch((e) => { window.alert(`❌ ${e.message}`); });
-
-
-  };
+      .catch((e) => { window.alert(`❌ ${e.message}`); }); 
+  }, [pickDateFormated, fileRequested, setReport, setTemplate, spot]);
+  
+  
+  useEffect(() => {
+    if (!isStart) {
+      getReport(fileRequested)
+    }
+    setIsStart(true); 
+    setPickerDate(pickDateFormated);
+  }, [isStart, setPickerDate, pickDateFormated, getReport, fileRequested]);
+  
 
   return (
 

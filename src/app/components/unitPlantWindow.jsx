@@ -35,7 +35,7 @@ export default function UnitPlantWindow({ _spot, report, setIsShow }) {
 
     useEffect(() => {
         setWindowStyle(style => ({ ...style, place: unitN }));
-    }, [spot]);
+    }, [spot, unitN]);
 
 
     return (
