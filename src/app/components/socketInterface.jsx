@@ -122,7 +122,7 @@ export default function SocketInterface({ report, callback, isDocReserved }) {
 
     const reserveDoc = () => {
         if (report[0].metaData.checksum) {
-           return window.alert(`⚠️ El archivo ${docID} está completado y no se puede editar`);
+           return window.alert(`⚠️ El archivo ${docID.split('.')[0]} está completado y no se puede editar`);
         }
         mySocket.connected ? mySocket.emit("docReserveReq", docID) : window.alert("conexión inactiva");
     };

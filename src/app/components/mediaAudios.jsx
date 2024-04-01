@@ -3,7 +3,7 @@ import { useState } from 'react';
 import FileApi from "../apis/fileApi";
 import MediaAPI from '../apis/multimediaAPI.mjs';
 
-export default function MediaAudio({ report, area, indexArea, setnAudios, isDocReserved }) {
+export default function MediaAudio({ report, area, indexArea, setnAudios, isTemplate, isDocReserved }) {
 
     const audioMimes = [
         'audio/mpeg',        // .mp3
@@ -44,6 +44,10 @@ export default function MediaAudio({ report, area, indexArea, setnAudios, isDocR
             return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
         }
 
+        if (isTemplate) {
+            return window.alert(`⚠️ No puede subir archivos si el documento no ha sido guardado`);
+        }
+
         if (!mediaFile) { return window.alert('Selecciona un archivo'); }
 
         MediaAPI.mediaupload(mediaFile, mediaType, docID, areaIndex)
@@ -63,14 +67,18 @@ export default function MediaAudio({ report, area, indexArea, setnAudios, isDocR
     const deleteAudio = (e, url, mediaType) => {
         e.preventDefault();
 
-        if (checksum) {
-            return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+        // if (checksum) {
+        //     return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+        // }
+
+        if (!isDocReserved) {
+            return window.alert(`⚠️ No puede eliminar archivos si el documento no está reservado`);
         }
-        
-        const deleteAudio = window.confirm('¿BORRAR AUDIO?');
+
+        const confirmDelete = window.confirm('¿BORRAR AUDIO?');
         const indexUrl = audios.findIndex((u) => u === url);
 
-        if (deleteAudio && indexUrl !== -1) {
+        if (confirmDelete && indexUrl !== -1) {
 
             const mediaURL = audios[indexUrl];
 
@@ -119,7 +127,7 @@ export default function MediaAudio({ report, area, indexArea, setnAudios, isDocR
 
 
 
-            <div className="media-items-container" >
+            <div className="media-items-container enabled" >
 
                 {audios?.map((url, index) => (
 

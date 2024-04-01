@@ -1,22 +1,18 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react';
-//import FileApi from "@/apis/fileApi";
+import React, { useState, useRef } from 'react'; 
 import Area from "@/components/area";
-import Loading from "@/components/loading";
-//import FileBar from "@/components/fileBar";
+import Loading from "@/components/loading"; 
 import FileMetadata from "@/components/fileMetadata";
 import SocketInterface from "@/components/socketInterface";
 import SocketFastReq from "@/components/socketFastReq";
 import Handshake from "@/components/handshake";
-import "@/styles/shiftChange.css"
-import "@/styles/scrollbar.css"
-import "react-resizable/css/styles.css";
 import UnitPlantButtons from "@/components/unitPlantButtons";
 import FileDatePicker from "@/components/fileDatePicker";
 import FileButtons from "@/components/fileButtons";
-// import crypto from 'crypto';
- 
+import "@/styles/shiftChange.css"
+import "@/styles/scrollbar.css"
+import "react-resizable/css/styles.css";  
 
 export default function Spot({ params }) {
 
@@ -25,8 +21,7 @@ export default function Spot({ params }) {
   const refToPDF = useRef(null);
 
   const [report, setReport] = useState();
-  const [pickerDate, setPickerDate] = useState();
-  // const [foreceRender, setForeceRender] = useState(false);
+  const [pickerDate, setPickerDate] = useState(); 
   const [template, setTemplate] = useState({isTemplate: false, type: 'Plantilla hidratada'});
   const [isDocReserved, setIsDocReserved] = useState(false);
   const [isFastSocket, setIsFastSocket] = useState(false);
@@ -36,11 +31,7 @@ export default function Spot({ params }) {
   const toggleExpandApp = () => {
     setIsExpanded(!isExpanded);
   };
-
-
-  // useEffect(() => {
-  // }, [report]);
-
+ 
   const callbackSocket = (isDocReserve, isFast) => {
     setIsDocReserved(isDocReserve);
     setIsFastSocket(isFast);
@@ -54,8 +45,7 @@ export default function Spot({ params }) {
         item.comments = ""; 
       });
     });
-    setReport(report);
-    // setForeceRender(!foreceRender);
+    setReport(report); 
     setTemplate({...template, type: 'Plantilla vacía'});
   } 
 
@@ -73,7 +63,7 @@ export default function Spot({ params }) {
 
       {report ? (<>
 
-        <h1 className="flex center header">{report.data[0].metaData.tittle}&nbsp;{report.data[0].metaData.DayNight === 'Día' ? '☀️' : '🌙'}</h1>
+        <h1 className="flex center header">{report.data[0].metaData.tittle}&nbsp;{report.data[0].metaData.DayNight === 'dia' ? '☀️' : '🌙'}</h1>
 
         {template.isTemplate && 
         <div className="flex center header noMargin">
@@ -133,12 +123,12 @@ export default function Spot({ params }) {
                 <section className="areas-container">
                   {report.data[2].areas.map((area, indexArea) => (
                     <div key={`area-${indexArea}`} className="area">
-                      <Area report={report.data} spot={spot} _area={area} indexArea={indexArea} windowKey={'w1'} isDocReserved={isDocReserved}/>
+                      <Area report={report.data} spot={spot} _area={area} indexArea={indexArea} windowKey={'w1'} isTemplate={template.isTemplate} isDocReserved={isDocReserved}/>
                     </div>
                   ))}
                 </section>
 
-                {/* <FileBar report={report} setReport={setReport} spot={spot} refToPDF={refToPDF} callbackDatePicker={callbackDatePicker} />
+                {/* <FileBar report={report} setReport={setReport} spot={spot} refToPDF={refToPDF} callbackDatePicker={callbackDatePicker}isDocReserved />
                 <FileBar report={report} setReport={setReport} spot={spot} refToPDF={refToPDF} /> */}
 
               </div>}

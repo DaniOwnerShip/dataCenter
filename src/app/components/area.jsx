@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import MediaTabs from "./mediaTabs";  
 
 
-export default function Area({report, spot, _area, indexArea, windowKey, isDocReserved}) { 
+export default function Area({report, spot, _area, indexArea, windowKey, isTemplate, isDocReserved}) { 
 
     const [expandArea, setExpandArea] = useState(true);    
-
-    //console.log('area', _area.urlImages?.length);
-    // const unitN = spot.split('-')[1];(area.urlImages?.length
+ 
     const unitN = spot.split('-')[1]; 
 
     return (
@@ -22,7 +20,7 @@ export default function Area({report, spot, _area, indexArea, windowKey, isDocRe
                     </div>
                 ))}
                 
-                {unitN === '0' && <MediaTabs report={report} _area={_area} indexArea={indexArea} isDocReserved={isDocReserved}/>}
+                {unitN === '0' && <MediaTabs report={report} _area={_area} indexArea={indexArea} isTemplate={isTemplate} isDocReserved={isDocReserved}/>}
 
             </div>}  
         </> 

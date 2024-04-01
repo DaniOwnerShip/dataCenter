@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 import MediaImages from "./mediaImages";
-import MediaVideo from "./mediaVideos"; 
-import MediaAudio from "./mediaAudios"; 
- 
+import MediaVideo from "./mediaVideos";
+import MediaAudio from "./mediaAudios";
+
 //revisar  multimedia refact
 
-export default function MediaTabs({report, _area, indexArea, isDocReserved }) {
+export default function MediaTabs({ report, _area, indexArea, isTemplate, isDocReserved }) {
 
     const [activeTab, setActiveTab] = useState(0);
     // const nImages = _area.urlImages.length;
@@ -14,15 +14,14 @@ export default function MediaTabs({report, _area, indexArea, isDocReserved }) {
     // const nAudios = _area.urlAudios.length;
     const [nImages, setnImages] = useState();
     const [nVideos, setnVideos] = useState();
-    const [nAudios, setnAudios] = useState(); 
-     //console.log('_area nImages', nImages);
-     useEffect(() => {
-        console.log('MediaTabs');
+    const [nAudios, setnAudios] = useState();
+    //console.log('_area nImages', nImages);
+    useEffect(() => { 
         setnImages(_area.urlImages.length);
         setnVideos(_area.urlVideos.length);
         setnAudios(_area.urlAudios.length);
-      } );
-    
+    });
+
 
     const clickTab = (e, n) => {
         e.stopPropagation();
@@ -48,31 +47,31 @@ export default function MediaTabs({report, _area, indexArea, isDocReserved }) {
                 <div
                     className={`${activeTab === 1 ? "media-tab active" : "media-tab"}`}
                     onClick={(e) => clickTab(e, 1)}>
-                    {`Imágenes (${nImages})`} 
+                    {`Imágenes (${nImages})`}
                 </div>
 
                 <div
                     className={`${activeTab === 2 ? "media-tab active" : "media-tab"}`}
                     onClick={(e) => clickTab(e, 2)}>
-                    {`Vídeos (${nVideos})`} 
+                    {`Vídeos (${nVideos})`}
                 </div>
 
                 <div
                     className={`${activeTab === 3 ? "media-tab active" : "media-tab"}`}
                     onClick={(e) => clickTab(e, 3)}>
-                    {`Audios (${nAudios})`} 
+                    {`Audios (${nAudios})`}
                 </div>
 
             </div>
-            
+
 
             {activeTab !== 0 && <div className="media-container">
 
-                {activeTab === 1 && <MediaImages report={report} area={_area} indexArea={indexArea} setnImages={setnImages} isDocReserved={isDocReserved} />}
+                {activeTab === 1 && <MediaImages report={report} area={_area} indexArea={indexArea} setnImages={setnImages} isTemplate={isTemplate} isDocReserved={isDocReserved} />}
 
-                {activeTab === 2 && <MediaVideo report={report} area={_area} indexArea={indexArea} setnVideos={setnVideos} isDocReserved={isDocReserved} />}
-                
-                {activeTab === 3 && <MediaAudio report={report} area={_area} indexArea={indexArea} setnAudios={setnAudios} isDocReserved={isDocReserved} />}
+                {activeTab === 2 && <MediaVideo report={report} area={_area} indexArea={indexArea} setnVideos={setnVideos} isTemplate={isTemplate} isDocReserved={isDocReserved} />}
+
+                {activeTab === 3 && <MediaAudio report={report} area={_area} indexArea={indexArea} setnAudios={setnAudios} isTemplate={isTemplate} isDocReserved={isDocReserved} />}
 
             </div>}
 

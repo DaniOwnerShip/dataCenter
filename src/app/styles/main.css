@@ -1,3 +1,28 @@
+
+:root {
+  --background-color: #343541;
+  --mainContainer2-color: #3A4F65;
+  --description-color: rgb(247, 238, 248);
+  --txtInput-color: #343541; 
+  --boxArea-color: #A8BA2D; 
+  --team-color: #2D70BA;
+  --buttons-color: #3A4F65; 
+  --line-anim-size: 7px;
+  --line-anim-color: lime; 
+  --triada-base-color: #A8BA2D;
+  --triada1-color: #BA372D;
+  --triada2-color: #2D70BA;
+  --triada4-color: #5F653A;
+  --triada5-color: #3B2D2B;  
+  --body-color: #343541;
+  --body-txt-color: #c7c7c7; 
+  --mainContainer-color: #3e404f;
+  --unit1-color: #04a300;
+  --unit2-color: #336bff;
+
+}
+
+
 body { 
   background-color: var(--background-color);
   color: var(--body-txt-color);
@@ -7,12 +32,12 @@ body {
 
  
 a {
-  color: rgb(66, 148, 255);
+  color: rgb(66, 107, 255);
   text-decoration: none;
 }
 
 a:visited {
-  color: rgb(139, 73, 246);
+  color: rgb(117 152 255);;
 }
 
 a:hover {

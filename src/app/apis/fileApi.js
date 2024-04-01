@@ -8,8 +8,9 @@ export default class FileApi {
 
         try {
 
-            // const url = `http://192.168.1.100:3001/jsonAPI/downloadjson?fileName=${fileName}`;
-            const url = `http://localhost:3001/jsonAPI/downloadjson?fileName=${fileName}`;
+            // const url = `http://192.168.1.100:3001/jsonAPI/downloadjson?fileName=${fileName}`;http://10.172.1.19:3001/
+            // const url = `http://localhost:3001/jsonAPI/downloadjson?fileName=${fileName}`;
+            const url = `http://10.172.1.19:3001/jsonAPI/downloadjson?fileName=${fileName}`;
 
             const options = {
                 method: 'GET',
@@ -60,8 +61,9 @@ export default class FileApi {
 
             const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json", });
 
-            // const url = 'http://192.168.1.100:3001/jsonAPI/saveJson';
-            const url = 'http://localhost:3001/jsonAPI/saveJson';
+            // const url = 'http://192.168.1.100:3001/jsonAPI/saveJson';http://10.172.1.19:3001
+            // const url = 'http://localhost:3001/jsonAPI/saveJson';
+            const url = 'http://10.172.1.19:3001/jsonAPI/saveJson';
 
             const options = {
                 method: 'POST',

@@ -1,26 +1,32 @@
 import Link from 'next/link';
+import "./styles/landpage.css"
 
 export default function Home() {
 
   return (
-    <main >
+    <main className="landpage">
 
-      <h1 >
-        Instantly deploy your Next.js site to a shareable URL with Vercel.
-      </h1>
-
-      <p>
-        <Link href="/pages/termosolreport/Termosol-0-dia">Termosol-0-dia</Link> 
-      </p>
-      <p> 
-        <Link href="/pages/shiftchangedoc/unit1">unit1</Link> 
-      </p>
-      <p> 
-        <Link href="/pages/shiftchangedoc/unit2">unit2</Link> 
-      </p>
-
- 
+      <h1 className="lpHeader">
+        Centro de datos Termosol
+      </h1> 
       
+      <p className="lpHeader cdt">
+        CDT
+      </p> 
+
+      <section className="linksBox">
+        <p>
+          <Link href="/pages/termosolreport/Termosol-0-dia">Informes Cambio de Turno</Link>
+        </p>
+        <p>
+          <Link href="/pages/utils">Utilidades (seguimiento pistones, forzados, filtros, etc.)</Link>
+        </p>
+        <p>
+          <Link href="/pages/test">test</Link>
+        </p>
+      </section>
+
+
 
     </main>
   );

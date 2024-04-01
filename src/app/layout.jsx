@@ -1,9 +1,10 @@
+
 import "./styles/main.css" 
 import "./styles/scrollbar.css"
 
 export const metadata = {
-  title: 'data center',
-  description: 'data center next app',
+  title: 'CDT',
+  description: 'Centro de Datos Termosol',
 }
 
 export const viewport = {

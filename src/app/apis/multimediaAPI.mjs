@@ -43,24 +43,25 @@ export default class MediaAPI {
         formData.append('areaIndex', areaIndex);
 
         console.log('mediaupload');
-
-        const url = `http://localhost:3001/multimediaAPI/mediaupload`;
+        
+        // const url = `http://localhost:3001/multimediaAPI/mediaupload`;
+        const url = `http://10.172.1.19:3001/multimediaAPI/mediaupload`;
 
         console.log('typeFile:', mediaType);
         console.log('url:', url);
 
         try {
-            const response = await fetch(url, {
+            const res = await fetch(url, {
                 method: 'POST',
                 body: formData
             });
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}, ${response.statusText}`);
+            if (!res.ok) {
+                throw new Error(`Error: ${res.status}, ${res.statusText}`);
             }
 
-            const responseData = await response.json();
-            return responseData;
+            const resData = await res.json();
+            return resData;
         }
 
         catch (e) {
@@ -80,8 +81,8 @@ export default class MediaAPI {
             const ai = encodeURIComponent(areaIndex);
             const murl = encodeURIComponent(mediaURL);
 
-            const url = `http://localhost:3001/multimediaAPI/mediadelete?docFileName=${df}&areaIndex=${ai}&mediaType=${mediaType}&mediaURL=${murl}`;
-
+            // const url = `http://localhost:3001/multimediaAPI/mediadelete?docFileName=${df}&areaIndex=${ai}&mediaType=${mediaType}&mediaURL=${murl}`;
+            const url = `http://10.172.1.19:3001/multimediaAPI/mediadelete?docFileName=${df}&areaIndex=${ai}&mediaType=${mediaType}&mediaURL=${murl}`;
             const res = await fetch(url);
 
             if (!res.ok) {

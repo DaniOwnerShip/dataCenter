@@ -12,41 +12,29 @@ base:#A8BA2D
 04a300
 */
 
-
+/* 
 :root {
-    --primary-color: rgb(54, 54, 54);
-    --secondary-color: #2ecc71;
-    --accent-color: aqua;
-    /* --background-color: rgb(43 42 42);
-    --background-color-1: rgb(54, 54, 54); */
     --background-color: #343541;
     --mainContainer2-color: #3A4F65;
     --description-color: rgb(247, 238, 248);
-    --txtInput-color: #343541;
-    /* --boxArea-color: rgb(99, 100, 206);#4f67d7  c7c7c7*/
-    --boxArea-color: #A8BA2D;
-    /* --team-color: #1473E6; var(--body-txt-color)*/
+    --txtInput-color: #343541; 
+    --boxArea-color: #A8BA2D; 
     --team-color: #2D70BA;
-    --buttons-color: #3A4F65;
-
+    --buttons-color: #3A4F65; 
     --line-anim-size: 7px;
-    --line-anim-color: lime;
-
+    --line-anim-color: lime; 
     --triada-base-color: #A8BA2D;
     --triada1-color: #BA372D;
     --triada2-color: #2D70BA;
     --triada4-color: #5F653A;
-    --triada5-color: #3B2D2B;
-
-
+    --triada5-color: #3B2D2B;  
     --body-color: #343541;
-    --body-txt-color: #c7c7c7;
-    /*--body-txt-color: whitesmoke;*/
+    --body-txt-color: #c7c7c7; 
     --mainContainer-color: #3e404f;
     --unit1-color: #04a300;
     --unit2-color: #336bff;
 
-}
+} */
 
 
 .flex {

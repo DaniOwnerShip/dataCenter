@@ -3,7 +3,7 @@ import { useState } from 'react';
 // import FileApi from "../apis/fileApi"; 
 import MediaAPI from '../apis/multimediaAPI.mjs';
 
-export default function MediaVideo({ report, area, indexArea, setnVideos, isDocReserved }) {
+export default function MediaVideo({ report, area, indexArea, setnVideos, isTemplate, isDocReserved }) {
 
     const videoMimes = [
         'video/mp4',         // .mp4
@@ -41,6 +41,10 @@ export default function MediaVideo({ report, area, indexArea, setnVideos, isDocR
             return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
         }
 
+        if (isTemplate) {
+            return window.alert(`⚠️ No puede subir archivos si el documento aún no ha sido guardado`);
+        }
+
         if (!mediaFile) { return window.alert('Selecciona un archivo'); }
 
         MediaAPI.mediaupload(mediaFile, mediaType, docID, areaIndex)
@@ -59,14 +63,18 @@ export default function MediaVideo({ report, area, indexArea, setnVideos, isDocR
     const deleteVideo = (e, url, mediaType) => {
         e.preventDefault();
 
-        if (checksum) {
-            return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+        // if (checksum) {
+        //     return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+        // }
+
+        if (!isDocReserved) {
+            return window.alert(`⚠️ No puede eliminar archivos si el documento no está reservado`);
         }
 
-        const deleteVideo = window.confirm('¿BORRAR Video?');
+        const confirmDelete = window.confirm('¿BORRAR Video?');
         const indexUrl = urlVideos.findIndex((u) => u === url);
 
-        if (deleteVideo && indexUrl !== -1) {
+        if (confirmDelete && indexUrl !== -1) {
             const mediaURL = urlVideos[indexUrl];
 
             MediaAPI.mediaDeleteFile(docID, areaIndex, mediaType, mediaURL)
@@ -113,7 +121,7 @@ export default function MediaVideo({ report, area, indexArea, setnVideos, isDocR
             </div>
 
 
-            <div className="media-items-container" >
+            <div className="media-items-container enabled" >
 
                 {urlVideos?.map((url, index) => (
 

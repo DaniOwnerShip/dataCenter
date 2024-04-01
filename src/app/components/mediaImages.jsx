@@ -3,7 +3,7 @@ import FileApi from "../apis/fileApi";
 import MediaAPI from '../apis/multimediaAPI.mjs';
 
 
-export default function MediaImages({ report, area, indexArea, setnImages, isDocReserved }) {
+export default function MediaImages({ report, area, indexArea, setnImages, isTemplate, isDocReserved }) {
 
   const imageMimes = [
     'image/jpeg',  // .jpg, .jpeg
@@ -12,17 +12,18 @@ export default function MediaImages({ report, area, indexArea, setnImages, isDoc
     'image/bmp',   // .bmp
     'image/webp',  // .webp
     'image/svg+xml' // .svg
-  ]; 
+  ];
 
   const idArea = area.areaName;
-  const imgs = area.urlImages;
+  // const imgs = area.urlImages;
+  const imgs = report[2].areas[indexArea].urlImages; 
   const docID = report[0].metaData.fileID;
-  const checksum = report[0].metaData.checksum; 
-  const areaIndex = indexArea; 
+  const checksum = report[0].metaData.checksum;
+  const areaIndex = indexArea;
 
   const [mediaFile, setMediaFile] = useState(null);
   const [mediaName, setMediaName] = useState('🔂 Seleccionar');
- 
+
 
   const imageSelection = (e) => {
     setMediaFile(e.target.files[0]);
@@ -35,6 +36,10 @@ export default function MediaImages({ report, area, indexArea, setnImages, isDoc
 
     if (checksum) {
       return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+    }
+
+    if (isTemplate) {
+      return window.alert(`⚠️ No puede subir archivos si el documento no ha sido guardado`);
     }
 
     if (!mediaFile) { return window.alert('Selecciona un archivo'); }
@@ -52,23 +57,27 @@ export default function MediaImages({ report, area, indexArea, setnImages, isDoc
   };
 
 
-   
+
+
+
+
+
   const deleteImage = (e, url, mediaType) => {
     e.preventDefault();
 
     //se puede eliminar..
-    if (checksum) {
-      return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
-    }
-   
-    if (!isDocReserved) {  
-      return;
+    // if (checksum) {
+    //   return window.alert(`⚠️ El archivo ${docID.split(".")[0]} está completado y no se puede editar`);
+    // }
+
+    if (!isDocReserved) {
+      return window.alert(`⚠️ No puede eliminar archivos si el documento no está reservado`);
     }
 
-    const deleteImg = window.confirm('¿BORRAR IMAGEN?');
+    const confirmDelete = window.confirm('¿BORRAR IMAGEN?');
     const indexUrl = imgs?.findIndex((u) => u === url);
 
-    if (deleteImg && indexUrl !== -1) {
+    if (confirmDelete && indexUrl !== -1) {
 
       const mediaURL = imgs[indexUrl];
 
@@ -136,7 +145,7 @@ export default function MediaImages({ report, area, indexArea, setnImages, isDoc
             </a>
 
             <figcaption className="media-caption">{url.split('/')[5].split('_')[1]}</figcaption>
-            
+
           </figure>
         ))}
 

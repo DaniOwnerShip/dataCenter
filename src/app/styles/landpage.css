@@ -1,0 +1,25 @@
+.landpage { 
+    background-color: var(--background-color); 
+  }
+  
+  .lpHeader{  
+    margin: 42px;
+    margin-bottom: 0;
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .lpHeader.cdt{
+    font-size: 4rem;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+
+  .linksBox{    
+    display: flex;
+    justify-content: space-evenly;
+    background-color: black;
+    padding: 20px;
+  }
