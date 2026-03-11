@@ -16,7 +16,9 @@ Aplicación web **full stack** desarrollada para facilitar el **traspaso de info
   - **Reserva rápida**, para acceso inmediato al documento.
 - La aplicación incorpora **verificación de integridad de documentos**, evitando modificaciones posteriores una vez finalizado el informe mediante la generación de un **checksum**.
 
----
+##Demo
+![cdt](https://github.com/user-attachments/assets/f46901f3-39ac-469a-8a5c-254fc1019a69)
+
 
 ## Características
 
@@ -56,4 +58,6 @@ La aplicación sigue una arquitectura full stack con:
 ## Notas
 
 ⚠️ En este repositorio se presenta únicamente como **ejemplo técnico del desarrollo de una aplicación web full stack**, sin incluir información sensible ni datos reales.
+
+(server: https://github.com/DaniOwnerShip/serverCDT)
  
