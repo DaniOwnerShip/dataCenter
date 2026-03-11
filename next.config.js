@@ -4,6 +4,8 @@ import path from 'path';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig = {
+  reactStrictMode: false,
+
   webpack: (config) => {
     config.resolve.alias['@'] = path.resolve(__dirname, 'src/app');
     return config;

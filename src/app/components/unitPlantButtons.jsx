@@ -12,9 +12,9 @@ export default function UnitPlantButtons({ spot, pickerDate }) {
   const router = useRouter();
 
   const spots = [
-    ['Termosol-0-dia', 'Termosol-0-noche'],
-    ['Termosol-1-dia', 'Termosol-1-noche'],
-    ['Termosol-2-dia', 'Termosol-2-noche']];
+    ['Unidad-0-dia', 'Unidad-0-noche'],
+    ['Unidad-1-dia', 'Unidad-1-noche'],
+    ['Unidad-2-dia', 'Unidad-2-noche']];
 
   const [report, setReport] = useState(null);
   const [isShow, setIsShow] = useState(false);
@@ -49,7 +49,7 @@ export default function UnitPlantButtons({ spot, pickerDate }) {
       return;
     }
 
-    router.push(`/pages/termosolreport/${_spot}`);
+    router.push(`/pages/unitreport/${_spot}`);
     setBtnUrlActive(_spot);
 
   }
@@ -64,7 +64,7 @@ export default function UnitPlantButtons({ spot, pickerDate }) {
 
         <div className="button-sidebar-Box" key={`x-${index}`}>
 
-          <p className="noMargin">Termosol {index === 0 ? 'Admin' : index}</p>
+          <p className="noMargin">Unidad {index === 0 ? 'Admin' : index}</p>
 
            {_spot.map((spotDN, iunit) => (
            

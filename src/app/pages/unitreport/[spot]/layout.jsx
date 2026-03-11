@@ -1,6 +1,6 @@
 
 export const metadata = {
-    title: 'Informe Termosol',
+    title: 'Informe',
 }
 
 export default function SpotLayout({ children, params }) {

@@ -5,7 +5,6 @@ import SocketAPI from "./socketAPI";
 export default class FileApi {
 
     static async downloadjson(fileName) {
-
         try {
 
             // const url = `http://192.168.1.100:3001/jsonAPI/downloadjson?fileName=${fileName}`;http://10.172.1.19:3001/

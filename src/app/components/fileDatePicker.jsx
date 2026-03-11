@@ -39,7 +39,7 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
 
   const getReport = useCallback((_fileNameReq) => {
     const docName = _fileNameReq.split('.')[0];
-  
+
     FileApi.downloadjson(_fileNameReq)
       .then(res => {
         if (res.data[0].metaData.isComplete) {
@@ -50,29 +50,29 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
         if (res.fileType === 'Plantilla hidratada') {
           setTemplate({ isTemplate: true, type: 'Plantilla hidratada' });
           const lastDate = res.data[0].metaData.lastEdit;
-          const dayNight = spot.split('-')[2]; 
+          const dayNight = spot.split('-')[2];
           res.data[0].metaData.dayDate = pickDateFormated;
           res.data[0].metaData.fileID = fileRequested;
           res.data[0].metaData.DayNight = dayNight;
-          window.alert(`⚠️ El archivo solicitado [ ${docName} ] no existe. Como alternativa, se ha proporcionado una plantilla, con datos del último documento guardado el día ${lastDate}`);
+          window.alert(`⚠️ El archivo [ ${docName} ] no existe. Se ha proporcionado una plantilla con datos del día ${lastDate}`);
         } else {
           setTemplate({ isTemplate: false, type: '' });
           window.alert(`✅ Documento descargado: ${fileRequested.split('.')[0]}`);
         }
-        setReport(res); 
+        setReport(res);
       })
-      .catch((e) => { window.alert(`❌ ${e.message}`); }); 
+      .catch((e) => { window.alert(`❌ ${e.message}`); });
   }, [pickDateFormated, fileRequested, setReport, setTemplate, spot]);
-  
-  
+
+
   useEffect(() => {
     if (!isStart) {
       getReport(fileRequested)
+      setIsStart(true);
     }
-    setIsStart(true); 
     setPickerDate(pickDateFormated);
   }, [isStart, setPickerDate, pickDateFormated, getReport, fileRequested]);
-  
+
 
   return (
 
@@ -87,7 +87,7 @@ export default function FileDatePicker({ setReport, spot, setPickerDate, setTemp
         popperPlacement="top"
       />
 
-      <button type="button" className="button" onClick={requestFile}>▶️</button> 
+      <button type="button" className="button" onClick={requestFile}>▶️</button>
 
     </div>
 
