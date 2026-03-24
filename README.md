@@ -43,7 +43,7 @@ La aplicación sigue una arquitectura full stack con:
 
 ### Frontend
 - Next.js
-- JavaScript
+- TypeScript
 
 ### Backend
 - Node.js
@@ -56,4 +56,17 @@ La aplicación sigue una arquitectura full stack con:
 ## Notas
 
 ⚠️ En este repositorio se presenta únicamente como **ejemplo técnico del desarrollo de una aplicación web full stack**, sin incluir información sensible ni datos reales.
+
+---
+
+## Configuración de entorno (frontend)
+
+1. Copia `.env.local.example` como `.env.local`.
+2. Configura:
+   - `NEXT_PUBLIC_API_BASE_URL` (URL del backend Express)
+   - `NEXT_PUBLIC_SERVER_AUTH_TOKEN` (mismo token que `SERVER_AUTH_TOKEN` del backend)
+
+El frontend envía el token en:
+- `Authorization: Bearer <token>` para REST
+- `auth.token` en el handshake de Socket.IO
  
